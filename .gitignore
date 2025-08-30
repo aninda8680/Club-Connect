@@ -5,3 +5,8 @@ BACKEND/.env
 # React / Frontend
 FRONTEND/node_modules/
 FRONTEND/build/
+
+
+/node_modules
+/package-lock.json
+/package.json
