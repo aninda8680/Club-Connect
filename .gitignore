@@ -1,12 +1,17 @@
-# Node / Backend
-BACKEND/node_modules/
-BACKEND/.env
+# Ignore everything
+*
 
-# React / Frontend
+# But not these folders
+!FRONTEND/
+!BACKEND/
+
+# Ignore node_modules inside frontend and backend
 FRONTEND/node_modules/
+BACKEND/node_modules/
+
+# Ignore env files
+BACKEND/.env
+FRONTEND/.env
+
+# Ignore build folder of React
 FRONTEND/build/
-
-
-/node_modules
-/package-lock.json
-/package.json
