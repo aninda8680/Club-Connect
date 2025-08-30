@@ -1,17 +1,4 @@
-# Ignore everything
-*
-
-# But not these folders
-!FRONTEND/
-!BACKEND/
-
-# Ignore node_modules inside frontend and backend
-FRONTEND/node_modules/
-BACKEND/node_modules/
 
 # Ignore env files
 BACKEND/.env
 FRONTEND/.env
-
-# Ignore build folder of React
-FRONTEND/build/
