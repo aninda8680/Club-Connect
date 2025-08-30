@@ -1,0 +1,19 @@
+{
+  "name": "cc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-frontend": "npm start --prefix FRONTEND",
+    "start-backend": "nodemon server.js --prefix BACKEND",
+    "dev": "concurrently \"npm run start-backend\" \"npm run start-frontend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.10"
+  }
+}
