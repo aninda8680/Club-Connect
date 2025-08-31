@@ -31,6 +31,7 @@ export default function Navbar() {
     { to: "/dashboard", label: "Dashboard", roles: ["admin", "coordinator", "leader", "member", "visitor"] },
     { to: "/AdminClub", label: "Clubs", roles: ["admin"] },
     { to: "/AdminEvents", label: "Events", roles: ["admin"] },
+    { to: "/manageroles", label: "Manage", roles: ["admin"]},
     { to: "/CoordinatorEvents", label: "Events", roles: ["coordinator"] },
     { to: "/coordinator-member", label: "Members", roles: ["coordinator"] },
     { to: "/events", label: "Events", roles: ["member", "visitor"] },

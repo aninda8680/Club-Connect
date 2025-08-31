@@ -7,10 +7,12 @@ import PublicPanel from "./PANELS/PUBLIC/PublicPanel";
 import ProtectedRoute from "./ProtectedRoute";
 import AuthPage from "./pages/AuthPage";
 import ProfileCompletionPage from "./pages/ProfileCompletionPage";
+import Navbar from "./components/Navbar";
+import ManageRoles from "./PANELS/ADMIN/ManageRoles";
 
 function App() {
   return (
-    <div className = "min-h-screen w-screen bg-black text=white">
+    <div className = "h-screen w-screen bg-black overflow-x-hidden text=white">
      <Router>
       <Routes>
         {/* Public routes */}
@@ -24,14 +26,28 @@ function App() {
           path="/adminpanel"
           element={
             <ProtectedRoute role="admin">
+              <Navbar />
               <AdminPanel />
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/manageroles"
+          element={
+            <ProtectedRoute role="admin">
+              <Navbar />
+              <ManageRoles />
+            </ProtectedRoute>
+          }
+        />
+
+
         <Route
           path="/coordinatorpanel"
           element={
             <ProtectedRoute role="coordinator">
+              <Navbar />
               <CoordinatorPanel />
             </ProtectedRoute>
           }
@@ -40,6 +56,7 @@ function App() {
           path="/leaderpanel"
           element={
             <ProtectedRoute role="leader">
+              <Navbar />
               <LeaderPanel />
             </ProtectedRoute>
           }
@@ -48,6 +65,7 @@ function App() {
           path="/publicpanel"
           element={
             <ProtectedRoute role="visitor">
+              <Navbar />
               <PublicPanel />
             </ProtectedRoute>
           }
