@@ -27,12 +27,14 @@ export default function AuthPage() {
           password,
         });
 
-        const {  username, role, isProfileComplete } = res.data;
+        const { username, role, isProfileComplete } = res.data;
 
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("username", username);
-        localStorage.setItem("role", role);
-        localStorage.setItem("isProfileComplete", isProfileComplete.toString());
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("username", username);
+          localStorage.setItem("userId", res.data.userId);
+          localStorage.setItem("role", role);
+          localStorage.setItem("isProfileComplete", isProfileComplete.toString());
+
 
         if (!isProfileComplete) {
           navigate("/complete-profile");
@@ -40,6 +42,7 @@ export default function AuthPage() {
           if (role === "admin") navigate("/adminpanel");
           else if (role === "coordinator") navigate("/coordinatorpanel");
           else if (role === "leader") navigate("/leaderpanel");
+          else if (role === "member") navigate("/memberpanel");
           else navigate("/publicpanel");
         }
 

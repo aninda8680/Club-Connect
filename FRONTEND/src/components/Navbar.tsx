@@ -28,9 +28,9 @@ export default function Navbar() {
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   const baseLinks = [
-    { to: "/dashboard", label: "Dashboard", roles: ["admin", "coordinator", "leader", "member", "visitor"] },
-    { to: "/AdminClub", label: "Clubs", roles: ["admin"] },
-    { to: "/AdminEvents", label: "Events", roles: ["admin"] },
+    { to: "/adminpanel", label: "Dashboard", roles: ["admin", "coordinator", "leader", "member", "visitor"] },
+    { to: "/createclub", label: "Clubs", roles: ["admin"] },
+    //{ to: "/AdminEvents", label: "Events", roles: ["admin"] },
     { to: "/manageroles", label: "Manage", roles: ["admin"]},
     { to: "/CoordinatorEvents", label: "Events", roles: ["coordinator"] },
     { to: "/coordinator-member", label: "Members", roles: ["coordinator"] },

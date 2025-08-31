@@ -73,6 +73,7 @@ router.post("/login", async (req, res) => {
     const redirectPath = getRedirectPath(user.role, user.isProfileComplete);
 
     res.json({
+      _id: user._id,
       token,
       username: user.username,
       role: user.role,

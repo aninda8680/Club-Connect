@@ -9,6 +9,8 @@ import AuthPage from "./pages/AuthPage";
 import ProfileCompletionPage from "./pages/ProfileCompletionPage";
 import Navbar from "./components/Navbar";
 import ManageRoles from "./PANELS/ADMIN/ManageRoles";
+import ManageClubs from "./PANELS/ADMIN/ManageClubs";
+import CreateClub from "./PANELS/ADMIN/CreateClub";
 
 function App() {
   return (
@@ -42,6 +44,25 @@ function App() {
           }
         />
 
+        <Route
+          path="/createclub"
+          element={
+            <ProtectedRoute role="admin">
+              <Navbar />
+              <CreateClub />
+            </ProtectedRoute>
+          }
+        />
+
+          {/* <Route
+          path="/manageclubs"
+          element={
+            <ProtectedRoute role="admin">
+              <Navbar />
+              <ManageClubs />
+            </ProtectedRoute>
+          }
+        /> */}
 
         <Route
           path="/coordinatorpanel"
@@ -52,6 +73,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/leaderpanel"
           element={
@@ -61,6 +83,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/publicpanel"
           element={

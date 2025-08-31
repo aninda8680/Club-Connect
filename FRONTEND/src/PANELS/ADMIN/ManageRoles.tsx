@@ -11,6 +11,7 @@ interface User {
 export default function ManageRoles() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [changedRoles, setChangedRoles] = useState<Record<string, string>>({}); // store role changes
 
   useEffect(() => {
     fetchUsers();
@@ -27,14 +28,28 @@ export default function ManageRoles() {
     }
   };
 
-  const updateRole = async (id: string, role: string) => {
+  // Handle local change only
+  const handleRoleChange = (id: string, role: string) => {
+    setUsers((prev) =>
+      prev.map((u) => (u._id === id ? { ...u, role } : u))
+    );
+    setChangedRoles((prev) => ({ ...prev, [id]: role }));
+  };
+
+  // Send changes to backend when update button is clicked
+  const applyChanges = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/admin/users/${id}/role`, { role });
-      setUsers((prev) =>
-        prev.map((u) => (u._id === id ? { ...u, role } : u))
-      );
+      const updates = Object.entries(changedRoles);
+
+      for (const [id, role] of updates) {
+        await axios.put(`http://localhost:5000/api/admin/users/${id}/role`, { role });
+      }
+
+      setChangedRoles({}); // reset after update
+      alert("Roles updated successfully!");
     } catch (err) {
       console.error(err);
+      alert("Error updating roles");
     }
   };
 
@@ -42,7 +57,18 @@ export default function ManageRoles() {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Manage Users & Roles</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Manage Users & Roles</h2>
+        {Object.keys(changedRoles).length > 0 && (
+          <button
+            onClick={applyChanges}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Update
+          </button>
+        )}
+      </div>
+
       {users.length === 0 ? (
         <p>No users found</p>
       ) : (
@@ -64,7 +90,7 @@ export default function ManageRoles() {
                 <td className="p-2 border">
                   <select
                     value={user.role}
-                    onChange={(e) => updateRole(user._id, e.target.value)}
+                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
                     className="border rounded p-1"
                   >
                     <option value="admin">Admin</option>
