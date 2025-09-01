@@ -11,6 +11,9 @@ import Navbar from "./components/Navbar";
 import ManageRoles from "./PANELS/ADMIN/ManageRoles";
 // import ManageClubs from "./PANELS/ADMIN/ManageClubs";
 import CreateClub from "./PANELS/ADMIN/CreateClub";
+import AdminEvent from "./PANELS/ADMIN/AdminEvent";
+import EventCreate from "./PANELS/COORDINATOR/EventCreate";
+
 
 function App() {
   return (
@@ -54,6 +57,16 @@ function App() {
           }
         />
 
+        <Route
+          path="/adminevent"
+          element={
+            <ProtectedRoute role="admin">
+              <Navbar />
+              <AdminEvent />
+            </ProtectedRoute>
+          }
+        />
+
           {/* <Route
           path="/manageclubs"
           element={
@@ -70,6 +83,16 @@ function App() {
             <ProtectedRoute role="coordinator">
               <Navbar />
               <CoordinatorPanel />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/eventcreate"
+          element={
+            <ProtectedRoute role="coordinator">
+              <Navbar />
+              <EventCreate />
             </ProtectedRoute>
           }
         />
