@@ -4,6 +4,8 @@ import axios from "axios";
 
 export default function CoordinatorPanel() {
   console.log("CoordinatorPanel rendered");
+console.log("userId from localStorage:", localStorage.getItem("userId"));
+console.log("username from localStorage:", localStorage.getItem("username"));
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
   const username = localStorage.getItem("username");
@@ -12,10 +14,8 @@ export default function CoordinatorPanel() {
 
   useEffect(() => {
   const fetchClub = async () => {
-    if (!userId) {
-      console.warn("No userId in localStorage. Cannot fetch club.");
-      return;
-    }
+    const userId = localStorage.getItem("userId");
+    if (!userId) return console.warn("No userId in localStorage");
 
     try {
       const res = await axios.get(`http://localhost:5000/api/coordinator/myclub/${userId}`);
@@ -26,7 +26,8 @@ export default function CoordinatorPanel() {
   };
 
   fetchClub();
-}, [userId]);
+}, []);
+
 
   const handleLogout = () => {
     navigate("/"); // redirect to landing page

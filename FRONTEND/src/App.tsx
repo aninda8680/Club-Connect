@@ -9,12 +9,12 @@ import AuthPage from "./pages/AuthPage";
 import ProfileCompletionPage from "./pages/ProfileCompletionPage";
 import Navbar from "./components/Navbar";
 import ManageRoles from "./PANELS/ADMIN/ManageRoles";
-import ManageClubs from "./PANELS/ADMIN/ManageClubs";
+// import ManageClubs from "./PANELS/ADMIN/ManageClubs";
 import CreateClub from "./PANELS/ADMIN/CreateClub";
 
 function App() {
   return (
-    <div className = "h-screen w-screen bg-black overflow-x-hidden text=white">
+    <div className = "h-screen w-screen bg-black overflow-hidden text=white">
      <Router>
       <Routes>
         {/* Public routes */}

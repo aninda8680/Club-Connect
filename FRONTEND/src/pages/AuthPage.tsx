@@ -31,7 +31,7 @@ export default function AuthPage() {
 
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("username", username);
-          localStorage.setItem("userId", res.data.userId);
+          localStorage.setItem("userId", res.data._id);
           localStorage.setItem("role", role);
           localStorage.setItem("isProfileComplete", isProfileComplete.toString());
 

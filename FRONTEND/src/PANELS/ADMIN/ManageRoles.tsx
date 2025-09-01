@@ -84,14 +84,14 @@ export default function ManageRoles() {
           <tbody>
             {users.map((user) => (
               <tr key={user._id} className="text-center">
-                <td className="p-2 border">{user.username}</td>
-                <td className="p-2 border">{user.email}</td>
-                <td className="p-2 border">{user.role}</td>
-                <td className="p-2 border">
+                <td className="p-2 border text-white">{user.username}</td>
+                <td className="p-2 border text-white">{user.email}</td>
+                <td className="p-2 border text-white">{user.role}</td>
+                <td className="p-2 border text-white">
                   <select
                     value={user.role}
                     onChange={(e) => handleRoleChange(user._id, e.target.value)}
-                    className="border rounded p-1"
+                    className="border rounded text-white p-1"
                   >
                     <option value="admin">Admin</option>
                     <option value="coordinator">Coordinator</option>
