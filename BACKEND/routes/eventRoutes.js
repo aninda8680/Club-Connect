@@ -102,4 +102,17 @@ router.get("/approved/:coordinatorId", async (req, res) => {
   }
 });
 
+// Public: get all approved events
+router.get("/approved", async (req, res) => {
+  try {
+    const events = await Event.find({ status: "approved" })
+      .populate("club", "name logo")           // Club details
+      .populate("createdBy", "name email");    // Coordinator details
+    res.json(events);
+  } catch (err) {
+    console.error("Error fetching approved events:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
 export default router;
