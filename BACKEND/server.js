@@ -13,7 +13,13 @@ import eventRoutes from "./routes/eventRoutes.js";
 dotenv.config();
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173", // local dev
+    "https://your-frontend.vercel.app" // production frontend
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
