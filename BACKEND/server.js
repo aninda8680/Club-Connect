@@ -16,7 +16,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173", // local dev
-    "https://your-frontend.vercel.app" // production frontend
+    "https://club-connectsx.vercel.app" // production frontend
   ],
   credentials: true
 }));
