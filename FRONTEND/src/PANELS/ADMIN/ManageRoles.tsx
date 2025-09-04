@@ -19,7 +19,7 @@ export default function ManageRoles() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/users");
+      const res = await axios.get("https://club-connect-xcq2.onrender.com/api/admin/users");
       setUsers(res.data);
     } catch (err) {
       console.error(err);
@@ -42,7 +42,7 @@ export default function ManageRoles() {
       const updates = Object.entries(changedRoles);
 
       for (const [id, role] of updates) {
-        await axios.put(`http://localhost:5000/api/admin/users/${id}/role`, { role });
+        await axios.put(`https://club-connect-xcq2.onrender.com/api/admin/users/${id}/role`, { role });
       }
 
       setChangedRoles({}); // reset after update

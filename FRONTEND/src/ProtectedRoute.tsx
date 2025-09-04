@@ -25,7 +25,7 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
       }
 
       try {
-        const res = await axios.get("http://localhost:5000/api/auth/me", {
+        const res = await axios.get("https://club-connect-xcq2.onrender.com/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

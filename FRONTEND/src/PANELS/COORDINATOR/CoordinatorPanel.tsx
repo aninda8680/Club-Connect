@@ -4,10 +4,9 @@ import axios from "axios";
 
 export default function CoordinatorPanel() {
   console.log("CoordinatorPanel rendered");
-console.log("userId from localStorage:", localStorage.getItem("userId"));
-console.log("username from localStorage:", localStorage.getItem("username"));
+  console.log("userId from localStorage:", localStorage.getItem("userId"));
+  console.log("username from localStorage:", localStorage.getItem("username"));
   const navigate = useNavigate();
-  const userId = localStorage.getItem("userId");
   const username = localStorage.getItem("username");
   const [clubName, setClubName] = useState("");
 
@@ -18,7 +17,7 @@ console.log("username from localStorage:", localStorage.getItem("username"));
     if (!userId) return console.warn("No userId in localStorage");
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/coordinator/myclub/${userId}`);
+      const res = await axios.get(`https://club-connect-xcq2.onrender.com/api/coordinator/myclub/${userId}`);
       if (res.data.clubName) setClubName(res.data.clubName);
     } catch (err) {
       console.error("Error fetching club", err);

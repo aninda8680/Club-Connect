@@ -25,7 +25,7 @@ export default function EventCreate() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/events/create", {
+      await axios.post("https://club-connect-xcq2.onrender.com/api/events/create", {
         title,
         description,
         date,
@@ -50,7 +50,7 @@ export default function EventCreate() {
   const fetchApprovedEvents = async () => {
     if (!coordinatorId) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/events/approved/${coordinatorId}`);
+      const res = await axios.get(`https://club-connect-xcq2.onrender.com/api/events/approved/${coordinatorId}`);
       setApprovedEvents(res.data);
     } catch (err) {
       console.error("Error fetching approved events:", err);

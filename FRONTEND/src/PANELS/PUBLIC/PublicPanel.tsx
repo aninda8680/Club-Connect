@@ -9,7 +9,7 @@ import EventCard from "../../components/EventCard"; // Add this
 
 export default function PublicPanel() {
   const [clubs, setClubs] = useState<any[]>([]);
-  const [hoveredClub, setHoveredClub] = useState<string | null>(null);
+  const [, setHoveredClub] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<any[]>([]);
 
@@ -17,7 +17,7 @@ export default function PublicPanel() {
     const fetchClubs = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:5000/api/clubs");
+        const res = await axios.get("https://club-connect-xcq2.onrender.com/api/clubs");
         setClubs(res.data);
       } catch (err) {
         console.error("Error fetching clubs", err);
@@ -32,7 +32,7 @@ export default function PublicPanel() {
   useEffect(() => {
   const fetchEvents = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/events/approved");
+      const res = await axios.get("https://club-connect-xcq2.onrender.com/api/events/approved");
       setEvents(res.data);
     } catch (err) {
       console.error("Error fetching events", err);
