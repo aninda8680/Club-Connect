@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-const API_BASE = "https://club-connect-xcq2.onrender.com"; // backend base
 
 interface JoinRequest {
   _id: string;

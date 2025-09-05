@@ -4,7 +4,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { HiMenu, HiX } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, Shield, User, Globe } from "lucide-react";
-import { useAuth } from "@/AuthContext"; // assuming you store user data here
+
 
 
 export default function Navbar() {
@@ -12,7 +12,6 @@ export default function Navbar() {
   const [username, setUsername] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [clubId, setClubId] = useState<string | null>(null);
-  const { user } = useAuth(); // user contains coordinator info
 
 
   const location = useLocation();
