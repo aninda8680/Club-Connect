@@ -22,23 +22,24 @@ export default function AuthPage() {
     try {
       if (isLogin) {
         // login
-        const res = await axios.post("https://club-connect-xcq2.onrender.com/api/auth/login", {
+        const res = await axios.post("http://localhost:5000/api/auth/login", {
           email,
           password,
         });
 
-        const { username, role, isProfileComplete, clubId } = res.data;
+        const { _id, username, role, isProfileComplete, clubId } = res.data;
 
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("username", username);
           localStorage.setItem("userId", res.data._id);
+          localStorage.setItem("userId", _id);
           localStorage.setItem("role", role);
           localStorage.setItem("isProfileComplete", isProfileComplete.toString());
 
-                    // ✅ Save clubId if coordinator
-            if (role === "coordinator" && clubId) {
-              localStorage.setItem("clubId", clubId);
-            }
+          // ✅ Save clubId if coordinator or member
+        if ((role === "coordinator" || role === "member") && clubId) {
+          localStorage.setItem("clubId", clubId);
+        }
 
         if (!isProfileComplete) {
           navigate("/complete-profile");
@@ -52,7 +53,7 @@ export default function AuthPage() {
 
       } else {
         // Register
-        await axios.post("https://club-connect-xcq2.onrender.com/api/auth/register", {
+        await axios.post("http://localhost:5000/api/auth/register", {
           username,
           email,
           password,

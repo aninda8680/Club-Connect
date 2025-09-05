@@ -1,68 +1,53 @@
-// src/PANELS/COORDINATOR/RequestsPage.tsx
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
-
-interface JoinRequest {
+interface Request {
   _id: string;
   user: { username: string; email: string };
-  status: string;
 }
 
 export default function RequestsPage() {
-  const { clubId } = useParams<{ clubId: string }>();
-  const [requests, setRequests] = useState<JoinRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  
+  const [requests, setRequests] = useState<Request[]>([]);
+  const clubId = localStorage.getItem("clubId");
 
   useEffect(() => {
-    if (!clubId) return;
-    console.log("clubId param:", clubId);
-    
+    if (!clubId) {
+      console.warn("⚠️ No clubId found in localStorage");
+      return;
+    }
 
-    const fetchRequests = async () => {
-      try {
-        const res = await fetch(`https://club-connect-xcq2.onrender.com/api/join-requests/club/${clubId}`);
-        if (!res.ok) throw new Error("Failed to fetch requests");
-        const data = await res.json();
+    console.log("Fetching requests for clubId:", clubId);
+
+    fetch(`http://localhost:5000/api/join/club/${clubId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Fetched requests:", data);
         setRequests(data);
-      } catch (err) {
-        console.error("Error fetching requests:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRequests();
+      })
+      .catch((err) => {
+        console.error("Error fetching join requests:", err);
+        setRequests([]);
+      });
   }, [clubId]);
 
-  const handleDecision = async (requestId: string, status: "accepted" | "rejected") => {
-    try {
-      const res = await fetch(`https://club-connect-xcq2.onrender.com/api/join-requests/decision/${requestId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
+  const handleAction = async (id: string, action: string) => {
+    await fetch(`http://localhost:5000/api/join/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action }),
+    });
 
-      if (!res.ok) throw new Error("Failed to update request");
-
-      setRequests(prev =>
-        prev.map(r => (r._id === requestId ? { ...r, status } : r))
-      );
-    } catch (err) {
-      console.error("Error updating request:", err);
-    }
+    setRequests((prev) => prev.filter((r) => r._id !== id));
   };
 
-  if (loading) return <p className="text-white">Loading requests...</p>;
-
   return (
-    <div className="p-6 text-white">
-      <h1 className="text-2xl font-bold mb-6">Join Requests</h1>
-
-      {requests.length === 0 ? (
-        <p>No pending requests for this club.</p>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold text-white mb-4">Join Requests</h1>
+      {!clubId ? (
+        <p className="text-red-400">
+          No clubId found. Please log in as a coordinator.
+        </p>
+      ) : requests.length === 0 ? (
+        <p className="text-gray-400">No pending requests</p>
       ) : (
         <div className="space-y-4">
           {requests.map((req) => (
@@ -70,28 +55,23 @@ export default function RequestsPage() {
               key={req._id}
               className="flex justify-between items-center bg-gray-800 p-4 rounded-lg"
             >
-              <div>
-                <p className="font-semibold">{req.user?.username || "Unknown User"}</p>
-                <p className="text-sm text-gray-400">{req.user?.email}</p>
-                <p className="text-xs">Status: {req.status}</p>
+              <span className="text-white">
+                {req.user?.username} ({req.user?.email})
+              </span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleAction(req._id, "accept")}
+                  className="bg-green-500 px-3 py-1 rounded text-white"
+                >
+                  Accept
+                </button>
+                <button
+                  onClick={() => handleAction(req._id, "reject")}
+                  className="bg-red-500 px-3 py-1 rounded text-white"
+                >
+                  Reject
+                </button>
               </div>
-
-              {req.status === "pending" && (
-                <div className="space-x-2">
-                  <Button
-                    className="bg-green-600 hover:bg-green-700"
-                    onClick={() => handleDecision(req._id, "accepted")}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    className="bg-red-600 hover:bg-red-700"
-                    onClick={() => handleDecision(req._id, "rejected")}
-                  >
-                    Reject
-                  </Button>
-                </div>
-              )}
             </div>
           ))}
         </div>

@@ -17,7 +17,7 @@ export default function PublicPanel() {
     const fetchClubs = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("https://club-connect-xcq2.onrender.com/api/clubs");
+        const res = await axios.get("http://localhost:5000/api/clubs");
         setClubs(res.data);
       } catch (err) {
         console.error("Error fetching clubs", err);
@@ -32,7 +32,7 @@ export default function PublicPanel() {
   useEffect(() => {
   const fetchEvents = async () => {
     try {
-      const res = await axios.get("https://club-connect-xcq2.onrender.com/api/events/approved");
+      const res = await axios.get("http://localhost:5000/api/events/approved");
       setEvents(res.data);
     } catch (err) {
       console.error("Error fetching events", err);
@@ -101,9 +101,9 @@ export default function PublicPanel() {
                   _id={club._id}
                   name={club.name}
                   description={club.description}
-                  coordinator={club.coordinator?.username}
-                  logo={club.logo}
-                  onView={handleViewClub}
+                  // coordinator={club.coordinator?.username}
+                  // logo={club.logo}
+                  // onView={handleViewClub}
                 />
               </motion.div>
             ))}

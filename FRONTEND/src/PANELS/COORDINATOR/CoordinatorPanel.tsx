@@ -17,7 +17,7 @@ export default function CoordinatorPanel() {
     if (!userId) return console.warn("No userId in localStorage");
 
     try {
-      const res = await axios.get(`https://club-connect-xcq2.onrender.com/api/coordinator/myclub/${userId}`);
+      const res = await axios.get(`http://localhost:5000/api/coordinator/myclub/${userId}`);
       if (res.data.clubName) setClubName(res.data.clubName);
     } catch (err) {
       console.error("Error fetching club", err);

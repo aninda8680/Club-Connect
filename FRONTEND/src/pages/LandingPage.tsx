@@ -12,6 +12,7 @@ export default function LandingPage() {
       if (role === "admin") navigate("/adminpanel");
       else if (role === "coordinator") navigate("/coordinatorpanel");
       else if (role === "leader") navigate("/leaderpanel");
+      else if (role === "member") navigate("/memberpanel");
       else navigate("/publicpanel");
     } else {
       // No session -> go to Auth page

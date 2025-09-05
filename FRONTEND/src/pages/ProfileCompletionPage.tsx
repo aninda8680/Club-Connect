@@ -25,7 +25,7 @@ export default function ProfileCompletionPage() {
     try {
   console.log("Token being sent:", token); // 👈 debug here
   const { data } = await axios.put(
-    "https://club-connect-xcq2.onrender.com/api/user/complete-profile",
+    "http://localhost:5000/api/user/complete-profile",
     { dob, gender, stream, phone, course },
     {
       headers: { Authorization: `Bearer ${token}` },

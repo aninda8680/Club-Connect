@@ -1,3 +1,4 @@
+// /components/Navbar.tsx
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
@@ -5,14 +6,11 @@ import { HiMenu, HiX } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, Shield, User, Globe } from "lucide-react";
 
-
-
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [clubId, setClubId] = useState<string | null>(null);
-
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -21,7 +19,7 @@ export default function Navbar() {
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     const storedRole = localStorage.getItem("role");
-    const storedClubId = localStorage.getItem("clubId"); // optional
+    const storedClubId = localStorage.getItem("clubId");
 
     setUsername(storedUsername);
     setRole(storedRole);
@@ -31,31 +29,32 @@ export default function Navbar() {
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   const baseLinks = [
-    //ADMIN
+    // ADMIN
     { to: "/adminpanel", label: "Dashboard", roles: ["admin"] },
     { to: "/createclub", label: "Clubs", roles: ["admin"] },
     { to: "/adminevent", label: "Events", roles: ["admin"] },
-    { to: "/manageroles", label: "Manage", roles: ["admin"]},
+    { to: "/manageroles", label: "Manage", roles: ["admin"] },
 
-    //COORDINATOR
-    { to: "/coordinatorpanel", label:"Dashboard", roles: ["coordinator"]},
+    // COORDINATOR
+    { to: "/coordinatorpanel", label: "Dashboard", roles: ["coordinator"] },
     { to: "/eventcreate", label: "Events", roles: ["coordinator"] },
-    // { to: "/coordinator-member", label: "Members", roles: ["coordinator"] },
-    { to: `/requests/${clubId}` , label: "Requests", roles: ["coordinator"] },
+    { to: `/requests/${clubId}`, label: "Requests", roles: ["coordinator"] },
+    { to: "/coordinator/members", label: "Members", roles: ["coordinator"] }, // ✅ NEW
 
-    { to: "/events", label: "Events", roles: ["member", "visitor"] },
+    // VISITOR & MEMBER
+    { to: "/publicpanel", label: "Events", roles: ["member", "visitor"] },
   ];
 
   const navLinks = [...baseLinks];
 
-  // add Chat for members/coordinators of a club
-  if (["member", "coordinator"].includes(role || "") && clubId) {
-    navLinks.push({
-      to: `/clubs/${clubId}/chat`,
-      label: "Chat",
-      roles: ["member", "coordinator"],
-    });
-  }
+  // // Add Chat for members/coordinators
+  // if (["member", "coordinator"].includes(role || "") && clubId) {
+  //   navLinks.push({
+  //     to: `/clubs/${clubId}/chat`,
+  //     label: "Chat",
+  //     roles: ["member", "coordinator"],
+  //   });
+  // }
 
   const getRoleIcon = () => {
     switch (role) {

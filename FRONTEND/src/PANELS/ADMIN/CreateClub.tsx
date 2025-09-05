@@ -15,7 +15,7 @@ export default function CreateClub() {
   useEffect(() => {
     const fetchCoordinators = async () => {
       try {
-        const res = await axios.get("https://club-connect-xcq2.onrender.com/api/admin/users");
+        const res = await axios.get("http://localhost:5000/api/admin/users");
 
         console.log("Raw response from backend:", res.data);
 
@@ -41,7 +41,7 @@ export default function CreateClub() {
     setLoading(true);
     setMessage("");
     try {
-      await axios.post("https://club-connect-xcq2.onrender.com/api/clubs/create", {
+      await axios.post("http://localhost:5000/api/clubs", {
         name,
         description,
         coordinatorId,

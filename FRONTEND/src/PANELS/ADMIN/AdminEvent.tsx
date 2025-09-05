@@ -16,7 +16,7 @@ export default function AdminEvent() {
 
   const fetchPendingEvents = async () => {
     try {
-      const res = await axios.get("https://club-connect-xcq2.onrender.com/api/events/pending");
+      const res = await axios.get("http://localhost:5000/api/events/pending");
       setEvents(res.data);
     } catch (err) {
       console.error(err);
@@ -25,7 +25,7 @@ export default function AdminEvent() {
 
   const handleAction = async (id: string, status: "approved" | "rejected") => {
     try {
-      await axios.put(`https://club-connect-xcq2.onrender.com/api/events/${id}`, { status });
+      await axios.put(`http://localhost:5000/api/events/${id}`, { status });
       fetchPendingEvents();
     } catch (err) {
       console.error(err);
