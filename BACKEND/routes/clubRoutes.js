@@ -6,21 +6,22 @@ import User from "../models/User.js";
 const router = express.Router();
 
 // Create a new club
-router.post("/", async (req, res) => {
+router.post("/create", async (req, res) => {
   try {
     const { name, description, coordinatorId } = req.body;
 
-    // Create the club
-    const club = new Club({ name, description, coordinator: coordinatorId });
-    await club.save();
+    const club = await Club.create({
+      name,
+      description,
+      coordinator: coordinatorId,
+    });
 
-    // Update coordinator's record
+    // update coordinator's user doc
     await User.findByIdAndUpdate(coordinatorId, { club: club._id });
 
-    res.status(201).json({ message: "Club created successfully", club });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    res.status(201).json(club);
+  } catch (error) {
+    res.status(500).json({ message: "Error creating club" });
   }
 });
 

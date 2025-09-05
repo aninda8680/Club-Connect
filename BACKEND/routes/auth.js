@@ -78,6 +78,7 @@ router.post("/login", async (req, res) => {
       username: user.username,
       role: user.role,
       isProfileComplete: user.isProfileComplete,
+      clubId: user.club ? user.club.toString() : null, // add this
       redirectPath,
     });
   } catch (err) {

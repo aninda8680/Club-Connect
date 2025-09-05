@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
   phone: { type: String },
   course: { type: String },
   isProfileComplete: { type: Boolean, default: false },
-  role: { type: String, default: "visitor" },  // 👈 always starts as visitor
+  role: { type: String, default: "visitor" },
+  club: { type: mongoose.Schema.Types.ObjectId, ref: "Club", default: null },  // 👈 always starts as visitor
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);
