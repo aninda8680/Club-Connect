@@ -7,8 +7,9 @@ import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
 import adminRoutes from "./routes/admin.js";
 import clubRoutes from "./routes/clubRoutes.js";
-import coordinatorRoutes from "./routes/coordinator.js"; // ✅ import here
+import coordinatorRoutes from "./routes/coordinator.js"; 
 import eventRoutes from "./routes/eventRoutes.js";
+import joinRequestsRouter from "./routes/joinRequests.js";
 
 dotenv.config();
 const app = express();
@@ -26,8 +27,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/clubs", clubRoutes);
-app.use("/api/coordinator", coordinatorRoutes); // ✅ use here
+app.use("/api/coordinator", coordinatorRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/join-requests", joinRequestsRouter);
 
 mongoose
   .connect(process.env.MONGO_URI)
