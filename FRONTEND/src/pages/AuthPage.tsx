@@ -27,7 +27,7 @@ export default function AuthPage() {
           password,
         });
 
-        const { username, role, isProfileComplete } = res.data;
+        const { username, role, isProfileComplete, clubId } = res.data;
 
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("username", username);
@@ -35,6 +35,10 @@ export default function AuthPage() {
           localStorage.setItem("role", role);
           localStorage.setItem("isProfileComplete", isProfileComplete.toString());
 
+                    // ✅ Save clubId if coordinator
+            if (role === "coordinator" && clubId) {
+              localStorage.setItem("clubId", clubId);
+            }
 
         if (!isProfileComplete) {
           navigate("/complete-profile");
