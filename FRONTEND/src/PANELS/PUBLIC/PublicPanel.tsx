@@ -43,11 +43,11 @@ export default function PublicPanel() {
   fetchEvents();
 }, []);
 
-  const handleViewClub = (id: string) => {
-    console.log("View club:", id);
-    // Add your club viewing logic here
-    toast.success("Opening club details..."); // Uncomment if using toast
-  };
+  // const handleViewClub = (id: string) => {
+  //   console.log("View club:", id);
+  //   // Add your club viewing logic here
+  //   toast.success("Opening club details..."); // Uncomment if using toast
+  // };
 
   if (loading) {
     return (
