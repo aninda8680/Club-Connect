@@ -35,7 +35,7 @@ export default function ClubCard({
         return;
       }
 
-      const res = await fetch(`/api/join-requests/${_id}`, {
+      const res = await fetch(`https://club-connect-xcq2.onrender.com/api/join-requests/${_id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),

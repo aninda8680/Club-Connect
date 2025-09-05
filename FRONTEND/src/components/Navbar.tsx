@@ -37,7 +37,8 @@ export default function Navbar() {
     //COORDINATOR
     { to: "/coordinatorpanel", label:"Dashboard", roles: ["coordinator"]},
     { to: "/eventcreate", label: "Events", roles: ["coordinator"] },
-    { to: "/coordinator-member", label: "Members", roles: ["coordinator"] },
+    // { to: "/coordinator-member", label: "Members", roles: ["coordinator"] },
+    { to: "/requests", label: "Requests", roles: ["coordinator"]},
 
     { to: "/events", label: "Events", roles: ["member", "visitor"] },
   ];

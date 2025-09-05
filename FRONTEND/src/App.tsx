@@ -13,6 +13,7 @@ import ManageRoles from "./PANELS/ADMIN/ManageRoles";
 import CreateClub from "./PANELS/ADMIN/CreateClub";
 import AdminEvent from "./PANELS/ADMIN/AdminEvent";
 import EventCreate from "./PANELS/COORDINATOR/EventCreate";
+import RequestsPage from "./PANELS/COORDINATOR/RequestsPage";
 
 
 function App() {
@@ -93,6 +94,16 @@ function App() {
             <ProtectedRoute role="coordinator">
               <Navbar />
               <EventCreate />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/requests/:clubId"
+          element={
+            <ProtectedRoute role="coordinator">
+              <Navbar />
+              <RequestsPage />
             </ProtectedRoute>
           }
         />
