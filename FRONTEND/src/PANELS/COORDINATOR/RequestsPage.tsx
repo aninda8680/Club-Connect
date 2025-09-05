@@ -43,7 +43,7 @@ export default function RequestsPage() {
     const res = await fetch(`${API_BASE}/api/join-requests/${requestId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: status === "accepted" ? "accept" : "reject" }),
+      body: JSON.stringify({ status }),
     });
 
       if (!res.ok) throw new Error("Failed to update request");
