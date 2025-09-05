@@ -28,7 +28,7 @@ router.post("/:clubId", async (req, res) => {
 });
 
 // Get all requests for a club (coordinator only)
-router.get("/:clubId", async (req, res) => {
+router.get("/club/:clubId", async (req, res) => {
   try {
     const { clubId } = req.params;
     console.log("Fetching requests for club:", clubId);
@@ -42,7 +42,7 @@ router.get("/:clubId", async (req, res) => {
 });
 
 // Accept/Reject request
-router.put("/:requestId", async (req, res) => {
+router.put("/decision/:requestId", async (req, res) => {
   try {
     const { requestId } = req.params;
     const { status } = req.body; // "accepted" | "rejected"

@@ -14,14 +14,16 @@ export default function RequestsPage() {
   const { clubId } = useParams<{ clubId: string }>();
   const [requests, setRequests] = useState<JoinRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     if (!clubId) return;
     console.log("clubId param:", clubId);
+    
 
     const fetchRequests = async () => {
       try {
-        const res = await fetch(`https://club-connect-xcq2.onrender.com/api/join-requests/${clubId}`);
+        const res = await fetch(`https://club-connect-xcq2.onrender.com/api/join-requests/club/${clubId}`);
         if (!res.ok) throw new Error("Failed to fetch requests");
         const data = await res.json();
         setRequests(data);
@@ -37,7 +39,7 @@ export default function RequestsPage() {
 
   const handleDecision = async (requestId: string, status: "accepted" | "rejected") => {
     try {
-      const res = await fetch(`https://club-connect-xcq2.onrender.com/api/join-requests/${requestId}`, {
+      const res = await fetch(`https://club-connect-xcq2.onrender.com/api/join-requests/decision/${requestId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
