@@ -41,7 +41,7 @@ export default function CreateClub() {
     setLoading(true);
     setMessage("");
     try {
-      await axios.post("https://club-connect-xcq2.onrender.com/api/clubs", {
+      await axios.post("https://club-connect-xcq2.onrender.com/api/clubs/create", {
         name,
         description,
         coordinatorId,
