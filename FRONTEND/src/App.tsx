@@ -19,7 +19,7 @@ import CoordinatorMembers from "./PANELS/COORDINATOR/CoordinatorMember";
 
 function App() {
   return (
-    <div className="h-screen w-screen bg-black overflow-hidden text=white">
+    <div className="h-screen w-screen bg-black overflow-x-hidden text=white">
       <Router>
         <Routes>
           {/* Public routes */}
