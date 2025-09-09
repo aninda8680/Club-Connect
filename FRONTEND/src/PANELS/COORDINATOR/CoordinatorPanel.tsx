@@ -96,7 +96,7 @@ export default function CoordinatorPanel() {
           transition={{ duration: 0.5 }}
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-10 mb-4">
             <motion.div 
               whileHover={{ rotate: 5 }}
               className="p-3 bg-gradient-to-br from-blue-900/70 to-purple-900/70 rounded-xl border border-blue-700/50"
