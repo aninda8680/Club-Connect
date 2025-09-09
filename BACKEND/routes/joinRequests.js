@@ -27,7 +27,7 @@ router.post("/request", async (req, res) => {
 router.get("/club/:clubId", async (req, res) => {
   try {
     const { clubId } = req.params;
-    const requests = await JoinRequest.find({ club: clubId, status: "pending" }).populate("user");
+    const requests = await JoinRequest.find({ club: clubId, status: "pending" }).populate("user", "username email course stream year semester");
     res.json(requests);
   } catch (err) {
     res.status(500).json({ error: err.message });

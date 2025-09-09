@@ -4,9 +4,9 @@ import User from "../models/User.js";
 export const completeProfile = async (req, res) => {
   try {
     const { userId } = req.user; // from JWT
-    const { phone, dob, gender, stream, course, photoURL } = req.body;
+    const { phone, dob, gender, stream, course, year, semester, photoURL } = req.body;
 
-    if (!phone || !dob || !gender || !stream || !course) {
+    if (!phone || !dob || !gender || !stream || !course || !year || !semester) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
@@ -26,6 +26,8 @@ export const completeProfile = async (req, res) => {
         gender,
         stream,
         course,
+        year,
+        semester,
         photoURL,
         isProfileComplete: true,
         role, // 👈 add default role

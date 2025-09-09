@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
   stream: { type: String },
   phone: { type: String },
   course: { type: String },
+  year: { type: String },
+  semester: { type: String },
   isProfileComplete: { type: Boolean, default: false },
   role: { type: String, default: "visitor" },
   club: { type: mongoose.Schema.Types.ObjectId, ref: "Club", default: null },  // 👈 always starts as visitor

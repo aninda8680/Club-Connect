@@ -8,16 +8,16 @@ const router = express.Router();
 // Profile completion endpoint
 router.put("/complete-profile", verifyToken, async (req, res) => {
   try {
-    const { dob, gender, stream, phone, course } = req.body;
+    const { dob, gender, stream, phone, course, year, semester } = req.body; // 👈 added semester
 
-    if (!dob || !gender || !stream || !phone || !course) {
+    if (!dob || !gender || !stream || !phone || !course || !year || !semester) {
       return res.status(400).json({ msg: "All fields are required" });
     }
 
     // Use req.userId (from verifyToken middleware)
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
-      { dob, gender, stream, phone, course, isProfileComplete: true },
+      { dob, gender, stream, phone, course, year, semester, isProfileComplete: true }, // 👈 save semester
       { new: true }
     ).select("-password"); // exclude password from response
 

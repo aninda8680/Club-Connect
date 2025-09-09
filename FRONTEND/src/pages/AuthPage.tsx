@@ -35,7 +35,10 @@ export default function AuthPage() {
           localStorage.setItem("userId", _id);
           localStorage.setItem("role", role);
           localStorage.setItem("isProfileComplete", isProfileComplete.toString());
-
+          localStorage.setItem("Stream", res.data.Stream || "");
+          localStorage.setItem("Course", res.data.Course || "");
+          localStorage.setItem("Year", res.data.Year || "");
+          localStorage.setItem("Semester", res.data.Semester || "");
           // ✅ Save clubId if coordinator or member
         if ((role === "coordinator" || role === "member") && clubId) {
           localStorage.setItem("clubId", clubId);

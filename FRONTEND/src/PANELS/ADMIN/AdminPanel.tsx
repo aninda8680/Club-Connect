@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+
 import { 
   FiUsers, 
   FiPlus, 
   FiCheck, 
-  FiX, 
+  // FiX, 
   FiBell, 
-  FiClock 
+  // FiClock 
 } from "react-icons/fi";
 import {
   Sparkles,
@@ -23,11 +23,7 @@ import {
 export default function AdminPanel() {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
-  const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
   const handleLogout = () => {
     navigate("/");

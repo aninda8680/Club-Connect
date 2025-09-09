@@ -1,3 +1,4 @@
+//components/ClubCard.tsx
 import { useState } from "react";
 
 interface ClubCardProps {

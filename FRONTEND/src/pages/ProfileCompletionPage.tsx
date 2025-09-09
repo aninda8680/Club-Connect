@@ -12,11 +12,21 @@ export default function ProfileCompletionPage() {
   const [stream, setStream] = useState("");
   const [phone, setPhone] = useState("");
   const [course, setCourse] = useState("");
+  const [year, setYear] = useState("");
+  const [semester, setSemester] = useState(""); // 👈 new state
+
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const token = localStorage.getItem("token");
+  const semestersByYear: Record<string, string[]> = {
+  "1st": ["1", "2"],
+  "2nd": ["3", "4"],
+  "3rd": ["5", "6"],
+  "4th": ["7", "8"],
+};
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +36,7 @@ export default function ProfileCompletionPage() {
   console.log("Token being sent:", token); // 👈 debug here
   const { data } = await axios.put(
     "http://localhost:5000/api/user/complete-profile",
-    { dob, gender, stream, phone, course },
+    { dob, gender, stream, phone, course, year, semester },
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -224,6 +234,55 @@ export default function ProfileCompletionPage() {
                   />
                 </div>
               </motion.div>
+              
+              {/* Year */}
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <label className="block mb-1 text-xs text-gray-300">Year *</label>
+                <div className="relative">
+                  <select
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    required
+                    className="w-full pl-3 pr-8 py-2 text-sm rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 appearance-none transition"
+                  >
+                    <option value="">Select Year</option>
+                    <option value="1st">1st Year</option>
+                    <option value="2nd">2nd Year</option>
+                    <option value="3rd">3rd Year</option>
+                    <option value="4th">4th Year</option>
+                  </select>
+                  <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm pointer-events-none" />
+                </div>
+              </motion.div>
+
+              {year && (
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.75 }}
+          >
+            <label className="block mb-1 text-xs text-gray-300">Semester *</label>
+            <div className="relative">
+              <select
+                value={semester}
+                onChange={(e) => setSemester(e.target.value)}
+                required
+                className="w-full pl-3 pr-8 py-2 text-sm rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 appearance-none transition"
+              >
+                <option value="">Select Semester</option>
+                {semestersByYear[year].map((sem) => (
+                  <option key={sem} value={sem}>{sem}</option>
+                ))}
+              </select>
+              <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm pointer-events-none" />
+            </div>
+          </motion.div>
+        )}
+
 
               {/* Gender */}
               <motion.div

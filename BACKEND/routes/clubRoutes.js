@@ -51,7 +51,7 @@ router.get("/:id/members", async (req, res) => {
 
     // Find users who belong to this club
     const members = await User.find({ club: clubId, role: "member" })
-      .select("username email");
+      .select("username email stream course year semester");
 
     res.json(members);
   } catch (err) {
