@@ -42,7 +42,8 @@ export default function Navbar() {
     { to: "/coordinator/members", label: "Members", roles: ["coordinator"] }, // ✅ NEW
 
     // VISITOR & MEMBER
-    { to: "/publicpanel", label: "Events", roles: ["member", "visitor"] },
+    { to: "/events", label: "Events", roles: ["member"] },
+    { to: "/publicpanel", label: "Public", roles: ["member", "visitor"] },
   ];
 
   const navLinks = [...baseLinks];

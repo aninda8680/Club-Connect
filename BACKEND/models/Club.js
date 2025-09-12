@@ -7,9 +7,21 @@ const clubSchema = new mongoose.Schema(
     description: { type: String },
     coordinator: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // links to User model
+      ref: "User",
       required: true,
     },
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    joinRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     createdAt: { type: Date, default: Date.now },
   },
   { versionKey: false }

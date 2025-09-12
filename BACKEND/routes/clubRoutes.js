@@ -60,6 +60,33 @@ router.get("/:id/members", async (req, res) => {
   }
 });
 
+router.get("/:clubId/counts", async (req, res) => {
+  try {
+    const { clubId } = req.params;
+    const club = await Club.findById(clubId);
+
+    if (!club) {
+      return res.status(404).json({ success: false, message: "Club not found" });
+    }
+
+    // ✅ Count members from User collection
+    const memberCount = await User.countDocuments({ club: clubId, role: "member" });
+
+
+
+    res.json({
+      success: true,
+      memberCount,
+
+    });
+  } catch (err) {
+    console.error("Error fetching counts:", err.message);
+    res.status(500).json({ success: false, message: "Error fetching counts" });
+  }
+});
+
+
+
 // Remove a member from a club
 router.delete("/:clubId/members/:userId", async (req, res) => {
   try {

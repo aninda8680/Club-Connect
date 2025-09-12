@@ -1,3 +1,4 @@
+//AdminEvent.tsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,6 +22,7 @@ interface Event {
   status: string;
   createdAt?: string;
   submittedBy?: string;
+  poster?: string;   // ✅ added poster field
 }
 
 export default function AdminEvent() {
@@ -153,9 +155,18 @@ export default function AdminEvent() {
                 >
                   <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-white mb-2">{event.title}</h3>
-                      <p className="text-slate-300 mb-4 line-clamp-2">{event.description}</p>
+                      <h3 className="text-xl font-semibold text-white mb-2">Event Name : { event.title}</h3>
+                      <p className="text-slate-300 mb-4 line-clamp-2">DESCRIPTION : {event.description}</p>
                       
+                      {/* ✅ Poster Preview */}
+                      {event.poster && (
+                        <img
+                          src={`http://localhost:5000${event.poster}`}
+                          alt="Poster"
+                          className="w-64 h-40 object-cover rounded mb-4"
+                        />
+                      )}
+
                       <div className="flex flex-wrap gap-4 text-sm text-slate-400">
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4 text-blue-400" />

@@ -16,6 +16,7 @@ import AdminEvent from "./PANELS/ADMIN/AdminEvent";
 import EventCreate from "./PANELS/COORDINATOR/EventCreate";
 import RequestsPage from "./PANELS/COORDINATOR/RequestsPage";
 import CoordinatorMembers from "./PANELS/COORDINATOR/CoordinatorMember";
+import EventsPage from "./pages/EventsPage";
 
 function App() {
   return (
@@ -140,12 +141,22 @@ function App() {
             }
           />
 
+            <Route
+            path="/events"
+            element={
+              <ProtectedRoute role="member">
+                <Navbar />
+                <EventsPage />
+              </ProtectedRoute>
+            }
+          />
+
+
           {/* Public Panel for visitors & members */}
           <Route
             path="/publicpanel"
             element={
               <ProtectedRoute role="visitor">
-                <Navbar />
                 <PublicPanel />
               </ProtectedRoute>
             }

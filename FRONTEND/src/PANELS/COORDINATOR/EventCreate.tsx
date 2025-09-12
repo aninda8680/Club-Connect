@@ -9,7 +9,10 @@ import {
   CheckCircle,
   Clock,
   Terminal,
-  Sparkles
+  Sparkles,
+  Image as ImageIcon,
+  Heart,
+  Star
 } from "lucide-react";
 
 interface Event {
@@ -20,6 +23,9 @@ interface Event {
   venue: string;
   status: string;
   createdAt?: string;
+  poster?: string;
+  likes?: string[];
+  interested?: string[];
 }
 
 export default function EventCreate() {
@@ -27,6 +33,7 @@ export default function EventCreate() {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [venue, setVenue] = useState("");
+  const [poster, setPoster] = useState<File | null>(null);
   const [approvedEvents, setApprovedEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -38,13 +45,17 @@ export default function EventCreate() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await axios.post("http://localhost:5000/api/events/create", {
-        title,
-        description,
-        date,
-        venue,
-        createdBy: coordinatorId,
-        club: clubId,
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("date", date);
+      formData.append("venue", venue);
+      formData.append("createdBy", coordinatorId!);
+      formData.append("club", clubId!);
+      if (poster) formData.append("poster", poster);
+
+      await axios.post("http://localhost:5000/api/events/create", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       // Reset form
@@ -52,6 +63,7 @@ export default function EventCreate() {
       setDescription(""); 
       setDate(""); 
       setVenue("");
+      setPoster(null);
       
       fetchApprovedEvents(); // refresh approved events after submission
     } catch (err) {
@@ -186,6 +198,24 @@ export default function EventCreate() {
                 </div>
               </div>
 
+              {/* Poster Upload */}
+              <div className="space-y-2">
+                <label className=" text-sm font-medium text-slate-300 flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4 text-pink-400" />
+                  Upload Poster
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setPoster(e.target.files?.[0] || null)}
+                  className="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4
+                             file:rounded-lg file:border-0
+                             file:text-sm file:font-semibold
+                             file:bg-emerald-600 file:text-white
+                             hover:file:bg-emerald-500"
+                />
+              </div>
+
               <motion.button
                 type="submit"
                 disabled={submitting}
@@ -261,6 +291,18 @@ export default function EventCreate() {
                           <span>{event.venue}</span>
                         </div>
                       )}
+                    </div>
+
+                    {/* Likes + Interested counts */}
+                    <div className="mt-3 flex items-center gap-4 text-xs text-slate-400">
+                      <div className="flex items-center gap-1">
+                        <Heart className="w-3 h-3 text-pink-400" />
+                        <span>Likes: {event.likes?.length || 0}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-yellow-400" />
+                        <span>Interested: {event.interested?.length || 0}</span>
+                      </div>
                     </div>
 
                     <div className="mt-3 flex items-center gap-2 text-xs">
