@@ -1,3 +1,5 @@
+//MEMBER/MemberPanel.tsx
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +30,7 @@ export default function MemberPanel() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-blue-900 text-white space-y-6">
+    <div className="flex flex-col items-center justify-center h-screen bg-black text-white space-y-6">
       <h1 className="text-3xl font-bold">
         Welcome Member, {username} 🌍
       </h1>
