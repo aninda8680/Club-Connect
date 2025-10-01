@@ -17,6 +17,8 @@ import EventCreate from "./PANELS/COORDINATOR/EventCreate";
 import RequestsPage from "./PANELS/COORDINATOR/RequestsPage";
 import CoordinatorMembers from "./PANELS/COORDINATOR/CoordinatorMember";
 import EventsPage from "./pages/EventsPage";
+import CreatePostPage from "./pages/CreatePostPage";
+import FeedPage from "./pages/FeedPage";
 
 function App() {
   return (
@@ -27,6 +29,25 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/complete-profile" element={<ProfileCompletionPage />} />
+          <Route path="/feed" element={
+            <>
+              <Navbar />
+              <FeedPage />
+            </>
+          } 
+          />
+
+          <Route
+            path="/create-post"
+            element={
+              <>
+                <Navbar />
+                <CreatePostPage />
+              </>
+            }
+          />
+
+
 
           {/* Protected routes */}
           <Route
@@ -151,6 +172,17 @@ function App() {
             }
           />
 
+          <Route
+            path="/create-post"
+            element={
+              <ProtectedRoute role="member">
+                <Navbar />
+                <CreatePostPage />
+              </ProtectedRoute>
+            }
+          />
+
+
 
           {/* Public Panel for visitors & members */}
           <Route
@@ -161,6 +193,20 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/create-post"
+            element={
+              <ProtectedRoute role="member">
+                <Navbar />
+                <CreatePostPage />
+              </ProtectedRoute>
+            }
+          />
+
+          
+
+          
         </Routes>
       </Router>
     </div>

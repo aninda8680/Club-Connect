@@ -34,6 +34,7 @@ export default function Navbar() {
     { to: "/createclub", label: "Clubs", roles: ["admin"] },
     { to: "/adminevent", label: "Events", roles: ["admin"] },
     { to: "/manageroles", label: "Manage", roles: ["admin"] },
+    { to: "/feed", label: "Feed", roles: ["admin"] },
 
     // COORDINATOR
     { to: "/coordinatorpanel", label: "Dashboard", roles: ["coordinator"] },
@@ -43,7 +44,9 @@ export default function Navbar() {
 
     // VISITOR & MEMBER
     { to: "/events", label: "Events", roles: ["member"] },
-    { to: "/publicpanel", label: "Public", roles: ["member", "visitor"] },
+    { to: "/create-post", label: "Post", roles: ["member", "visitor"] },
+    { to: "/feed", label: "Feed", roles: ["member"] },
+    { to: "/feed", label: "Feed", roles: ["visitor"] },
   ];
 
   const navLinks = [...baseLinks];

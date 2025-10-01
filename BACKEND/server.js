@@ -13,6 +13,7 @@ import clubRoutes from "./routes/clubRoutes.js";
 import coordinatorRoutes from "./routes/coordinator.js";
 import eventRoutes from "./routes/eventRoutes.js";
 import joinRequestRoutes from "./routes/joinRequests.js";
+import postRoutes from "./routes/post.js";
 
 dotenv.config();
 const app = express();
@@ -34,6 +35,8 @@ app.use(express.json());
 
 // ✅ Serve poster uploads statically
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Serve postuploads folder
+app.use("/postuploads", express.static("postuploads"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -42,6 +45,7 @@ app.use("/api/clubs", clubRoutes);
 app.use("/api/coordinator", coordinatorRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/join", joinRequestRoutes);
+app.use("/api/posts", postRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
