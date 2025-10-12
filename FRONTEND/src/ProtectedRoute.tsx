@@ -1,8 +1,8 @@
 // src/ProtectedRoute.tsx
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import axios from "axios";
 import type { ReactNode } from "react";
+import api from "./api";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -25,7 +25,7 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
       }
 
       try {
-        const res = await axios.get("/auth/me", {
+        const res = await api.get("/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
