@@ -4,10 +4,7 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
 import { FiArrowRight, FiUsers, FiCalendar, FiStar, FiTrendingUp, FiMapPin, FiCheck, FiLogIn, FiPlus } from "react-icons/fi";
 import { Typewriter } from 'react-simple-typewriter';
 import axios from 'axios';
-
-// API base URL
-const API_BASE_URL = 'http://localhost:5000/api';
-
+import api from "@/api";
 // --- Types (Kept as is) ---
 interface Club {
   _id: string;
@@ -100,7 +97,7 @@ export default function LandingPage() {
 
   const fetchClubs = async (): Promise<Club[]> => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/clubs`);
+      const response = await axios.get(`/clubs`);
       return response.data;
     } catch (error) {
       console.error('Error fetching clubs:', error);
@@ -110,7 +107,7 @@ export default function LandingPage() {
 
   const fetchEvents = async (): Promise<Event[]> => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/events/approved`);
+      const response = await axios.get(`/events/approved`);
       return response.data.map((event: any) => ({
         ...event,
         clubName: event.club?.name || 'Unknown Club',
