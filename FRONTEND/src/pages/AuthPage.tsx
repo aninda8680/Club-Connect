@@ -29,17 +29,18 @@ export default function AuthPage() {
 
         const { _id, username, role, isProfileComplete, clubId } = res.data;
 
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("username", username);
-          localStorage.setItem("userId", res.data._id);
-          localStorage.setItem("userId", _id);
-          localStorage.setItem("role", role);
-          localStorage.setItem("isProfileComplete", isProfileComplete.toString());
-          localStorage.setItem("Stream", res.data.Stream || "");
-          localStorage.setItem("Course", res.data.Course || "");
-          localStorage.setItem("Year", res.data.Year || "");
-          localStorage.setItem("Semester", res.data.Semester || "");
-          // ✅ Save clubId if coordinator or member
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("username", username);
+        localStorage.setItem("userId", res.data._id);
+        localStorage.setItem("userId", _id);
+        localStorage.setItem("role", role);
+        localStorage.setItem("isProfileComplete", isProfileComplete.toString());
+        localStorage.setItem("Stream", res.data.Stream || "");
+        localStorage.setItem("Course", res.data.Course || "");
+        localStorage.setItem("Year", res.data.Year || "");
+        localStorage.setItem("Semester", res.data.Semester || "");
+
+        // ✅ Save clubId if coordinator or member
         if ((role === "coordinator" || role === "member") && clubId) {
           localStorage.setItem("clubId", clubId);
         }
@@ -53,7 +54,6 @@ export default function AuthPage() {
           else if (role === "member") navigate("/memberpanel");
           else navigate("/publicpanel");
         }
-
       } else {
         // Register
         await api.post(`/auth/register`, {
@@ -163,6 +163,9 @@ export default function AuthPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                autoComplete="username"
+                autoCapitalize="off"
+                spellCheck="false"
                 className="w-full bg-gray-800 border border-gray-700 text-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
             )}
@@ -173,6 +176,9 @@ export default function AuthPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete={isLogin ? "email" : "new-email"}
+              autoCapitalize="off"
+              spellCheck="false"
               className="w-full bg-gray-800 border border-gray-700 text-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
 
@@ -182,6 +188,9 @@ export default function AuthPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete={isLogin ? "current-password" : "new-password"}
+              autoCapitalize="off"
+              spellCheck="false"
               className="w-full bg-gray-800 border border-gray-700 text-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
 
