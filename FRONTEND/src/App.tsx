@@ -19,24 +19,40 @@ import CoordinatorMembers from "./PANELS/COORDINATOR/CoordinatorMember";
 import EventsPage from "./pages/EventsPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import FeedPage from "./pages/FeedPage";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
-    <div className="h-screen w-screen bg-black overflow-x-hidden text=white">
+    <div className="h-screen w-screen bg-black overflow-x-hidden text-white">
       <Router>
         <Routes>
-          {/* Public routes */}
+          {/* ---------- 🌐 PUBLIC ROUTES ---------- */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/complete-profile" element={<ProfileCompletionPage />} />
-          <Route path="/feed" element={
-            <>
-              <Navbar />
-              <FeedPage />
-            </>
-          } 
+
+          <Route
+            path="/profile"
+            element={
+              <>
+                <Navbar />
+                <Profile />
+              </>
+            }
           />
 
+          {/* Feed Page */}
+          <Route
+            path="/feed"
+            element={
+              <>
+                <Navbar />
+                <FeedPage />
+              </>
+            }
+          />
+
+          {/* Create Post (Public Access if needed) */}
           <Route
             path="/create-post"
             element={
@@ -47,9 +63,9 @@ function App() {
             }
           />
 
+          {/* ---------- 🔐 PROTECTED ROUTES ---------- */}
 
-
-          {/* Protected routes */}
+          {/* 🧠 Admin Routes */}
           <Route
             path="/adminpanel"
             element={
@@ -90,6 +106,7 @@ function App() {
             }
           />
 
+          {/* Uncomment if needed */}
           {/* <Route
             path="/manageclubs"
             element={
@@ -100,6 +117,7 @@ function App() {
             }
           /> */}
 
+          {/* 🧩 Coordinator Routes */}
           <Route
             path="/coordinatorpanel"
             element={
@@ -132,15 +150,16 @@ function App() {
           />
 
           <Route
-          path="/coordinator/members"
-          element={
-            <ProtectedRoute role="coordinator">
-              <Navbar />
-              <CoordinatorMembers />
-            </ProtectedRoute>
-          }
-        />
+            path="/coordinator/members"
+            element={
+              <ProtectedRoute role="coordinator">
+                <Navbar />
+                <CoordinatorMembers />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* 🧭 Leader Route */}
           <Route
             path="/leaderpanel"
             element={
@@ -151,7 +170,7 @@ function App() {
             }
           />
 
-
+          {/* 👥 Member Routes */}
           <Route
             path="/memberpanel"
             element={
@@ -162,7 +181,7 @@ function App() {
             }
           />
 
-            <Route
+          <Route
             path="/events"
             element={
               <ProtectedRoute role="member">
@@ -182,9 +201,7 @@ function App() {
             }
           />
 
-
-
-          {/* Public Panel for visitors & members */}
+          {/* 🌍 Public Panel (Visitors & Members) */}
           <Route
             path="/publicpanel"
             element={
@@ -193,20 +210,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route
-            path="/create-post"
-            element={
-              <ProtectedRoute role="member">
-                <Navbar />
-                <CreatePostPage />
-              </ProtectedRoute>
-            }
-          />
-
-          
-
-          
         </Routes>
       </Router>
     </div>

@@ -1,6 +1,13 @@
 // components/PostCard.tsx
 import React, { useState } from "react";
-import { Heart, MessageSquare, Repeat2, Send, Trash2, MoreHorizontal } from "lucide-react"; // Changed ThumbsUp to Heart
+import {
+  Heart,
+  MessageSquare,
+  Repeat2,
+  Send,
+  Trash2,
+  MoreHorizontal,
+} from "lucide-react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -27,11 +34,12 @@ interface PostCardProps {
   };
   likes?: string[];
   comments?: Comment[];
-  // New prop to trigger a re-fetch in the parent component (FeedPage) after deletion
-  onDeletePost?: (postId: string) => void; 
+  tag?: string; // ✅ still supported for older posts
+  onDeletePost?: (postId: string) => void;
+  onTagClick?: (tag: string) => void; // ✅ NEW: for tag-based filtering
 }
 
-// Helper to get a profile color based on the username's first letter
+// Helper to get gradient color
 const getProfileColor = (username: string) => {
   const charCode = username.charCodeAt(0);
   const colors = [
@@ -52,7 +60,9 @@ const PostCard: React.FC<PostCardProps> = ({
   user,
   likes = [],
   comments = [],
-  onDeletePost, // Destructure new prop
+  tag,
+  onDeletePost,
+  onTagClick,
 }) => {
   const [likeCount, setLikeCount] = useState(likes.length);
   const [liked, setLiked] = useState(
@@ -66,12 +76,17 @@ const PostCard: React.FC<PostCardProps> = ({
   const [showOptions, setShowOptions] = useState(false);
 
   const currentUserId = localStorage.getItem("userId");
-  const profileColor = getProfileColor(user.username);
   const currentUserEmail = localStorage.getItem("email");
+  const profileColor = getProfileColor(user.username);
   const isPostOwner = user._id === currentUserId;
 
+  // 🧠 Extract hashtags automatically
+  const hashtags = [
+    ...(tag ? [tag] : []),
+    ...Array.from(new Set((content.match(/#\w+/g) || []).map((t) => t.slice(1)))),
+  ];
 
-  // Like handler with animation
+  // ❤️ Like handler
   const handleLike = async () => {
     try {
       setLoadingLike(true);
@@ -90,10 +105,9 @@ const PostCard: React.FC<PostCardProps> = ({
     }
   };
 
-  // Add comment
+  // 💬 Add comment
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
-
     try {
       setLoadingComment(true);
       const token = localStorage.getItem("token");
@@ -102,39 +116,31 @@ const PostCard: React.FC<PostCardProps> = ({
         { text: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // Comment adding is successful, update local state with populated data
       setCommentList(res.data.comments);
       setNewComment("");
-      // Ensure comments section is visible
-      setShowComments(true); 
+      setShowComments(true);
     } catch (err) {
       console.error("Error adding comment", err);
     } finally {
       setLoadingComment(false);
     }
   };
-  
-  // Delete post (only for post owner)
+
+  // 🗑️ Delete post
   const handleDeletePost = async () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
-
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(
-        `http://localhost:5000/api/posts/${_id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      // Call parent handler to remove post from feed/list
-      if (onDeletePost) {
-        onDeletePost(_id);
-      }
+      await axios.delete(`http://localhost:5000/api/posts/${_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (onDeletePost) onDeletePost(_id);
     } catch (err) {
       console.error("Error deleting post", err);
     }
   };
 
-  // Delete comment
+  // 🗑️ Delete comment
   const handleDeleteComment = async (commentId: string) => {
     try {
       const token = localStorage.getItem("token");
@@ -142,15 +148,13 @@ const PostCard: React.FC<PostCardProps> = ({
         `http://localhost:5000/api/posts/${_id}/comment/${commentId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
       setCommentList(res.data.comments);
     } catch (err) {
       console.error("Error deleting comment", err);
     }
   };
 
-
-  // Threads-style relative time
+  // ⏱️ Relative time formatter
   const formatTimeAgo = (dateString: string) => {
     const now = new Date();
     const past = new Date(dateString);
@@ -163,59 +167,39 @@ const PostCard: React.FC<PostCardProps> = ({
     if (diffInMinutes < 60) return `${diffInMinutes}m`;
     if (diffInHours < 24) return `${diffInHours}h`;
     if (diffInDays < 7) return `${diffInDays}d`;
-    
     return past.toLocaleDateString();
   };
-
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-gray-950 p-4 w-full text-white" // Removed white background
+      className="bg-gray-950 p-4 w-full text-white border-b border-gray-800"
     >
       <div className="flex relative">
-        {/* Left Column: Avatar and Vertical Line */}
+        {/* 🧍 Left column */}
         <div className="flex flex-col items-center flex-shrink-0 mr-3">
-          {/* User Avatar */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             className={`w-10 h-10 rounded-full bg-gradient-to-r ${profileColor} text-white flex items-center justify-center font-bold text-sm shadow-md cursor-pointer`}
           >
             {user.username.charAt(0).toUpperCase()}
           </motion.div>
-          {/* Vertical Connector Line */}
           {(commentList.length > 0 || image) && (
             <div className="w-0.5 bg-gray-700 flex-grow mt-1 mb-1"></div>
           )}
-          {/* Comment Avatars Preview */}
-          {commentList.length > 0 && (
-            <div className="flex -space-x-1">
-              {commentList.slice(0, 2).map((c, index) => (
-                <div 
-                  key={index}
-                  className={`w-4 h-4 rounded-full border-2 border-gray-950 text-xs flex items-center justify-center ${getProfileColor(c.user.username)}`}
-                >
-                  {c.user.username.charAt(0).toUpperCase()}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
-        {/* Right Column: Content and Actions */}
+        {/* 🧾 Right column */}
         <div className="flex-1 min-w-0">
-          {/* User Info & Options */}
+          {/* Header */}
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-semibold text-gray-100 truncate">
               {user.username}
             </h3>
             <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <p className="text-xs">
-                {formatTimeAgo(createdAt)}
-              </p>
-               {/* More/Delete Options */}
+              <p className="text-xs">{formatTimeAgo(createdAt)}</p>
               <div className="relative">
                 <button
                   onClick={() => setShowOptions(!showOptions)}
@@ -223,7 +207,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 >
                   <MoreHorizontal className="w-4 h-4 text-gray-500" />
                 </button>
-                
+
                 <AnimatePresence>
                   {showOptions && (
                     <motion.div
@@ -232,17 +216,16 @@ const PostCard: React.FC<PostCardProps> = ({
                       exit={{ opacity: 0, scale: 0.95 }}
                       className="absolute right-0 top-8 bg-gray-800 rounded-lg shadow-xl border border-gray-700 py-2 z-10 min-w-[120px]"
                     >
-                      {isPostOwner && (
-                        <button 
-                          onClick={handleDeletePost} 
-                          className="w-full px-4 py-2 text-left text-sm hover:bg-gray-700 text-red-400 flex items-center space-x-2"
+                      {isPostOwner ? (
+                        <button
+                          onClick={handleDeletePost}
+                          className="w-full px-4 py-2 text-left text-sm text-red-400 flex items-center space-x-2"
                         >
                           <Trash2 className="w-4 h-4" />
-                          <span>Delete Post</span>
+                          <span>Delete</span>
                         </button>
-                      )}
-                      {!isPostOwner && (
-                        <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-700 text-gray-300 flex items-center space-x-2">
+                      ) : (
+                        <button className="w-full px-4 py-2 text-left text-sm text-gray-300 flex items-center space-x-2 hover:bg-gray-700">
                           <Trash2 className="w-4 h-4" />
                           <span>Report</span>
                         </button>
@@ -254,9 +237,41 @@ const PostCard: React.FC<PostCardProps> = ({
             </div>
           </div>
 
-          {/* Post Content and Image */}
-          <p className="text-gray-300 mb-3 leading-relaxed break-words">{content}</p>
+          {/* Post content with clickable hashtags */}
+          <p className="text-gray-300 mb-3 leading-relaxed break-words">
+            {content.split(/(\#[a-zA-Z0-9_]+)/g).map((part, i) =>
+              part.startsWith("#") ? (
+                <span
+                  key={i}
+                  onClick={() => onTagClick?.(part.slice(1))}
+                  className="text-blue-400 font-medium cursor-pointer hover:underline"
+                >
+                  {part}
+                </span>
+              ) : (
+                part
+              )
+            )}
+          </p>
 
+          {/* Hashtags from props or extracted */}
+          {hashtags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-3">
+              {hashtags.map((t) => (
+                <motion.span
+                  key={t}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => onTagClick?.(t)}
+                  className="text-sm text-blue-400 cursor-pointer hover:underline hover:text-blue-300 transition-colors"
+                >
+                  #{t}
+                </motion.span>
+              ))}
+            </div>
+          )}
+
+          {/* Image */}
           {image && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -272,23 +287,22 @@ const PostCard: React.FC<PostCardProps> = ({
             </motion.div>
           )}
 
-          {/* Actions */}
+          {/* Action buttons */}
           <div className="flex items-center space-x-5 text-gray-400 mb-3">
-            {/* Like */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={handleLike}
               disabled={loadingLike}
               className={`flex items-center transition-colors ${
-                liked 
-                  ? "text-red-500" 
-                  : "hover:text-red-400"
+                liked ? "text-red-500" : "hover:text-red-400"
               }`}
             >
-              <Heart className="w-5 h-5" fill={liked ? "currentColor" : "none"} />
+              <Heart
+                className="w-5 h-5"
+                fill={liked ? "currentColor" : "none"}
+              />
             </motion.button>
 
-            {/* Comment */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setShowComments(!showComments)}
@@ -297,15 +311,13 @@ const PostCard: React.FC<PostCardProps> = ({
               <MessageSquare className="w-5 h-5" />
             </motion.button>
 
-            {/* Repost (Placeholder) */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               className="hover:text-green-400 transition-colors"
             >
               <Repeat2 className="w-5 h-5" />
             </motion.button>
-            
-            {/* Share (Placeholder) */}
+
             <motion.button
               whileTap={{ scale: 0.9 }}
               className="hover:text-purple-400 transition-colors"
@@ -313,22 +325,26 @@ const PostCard: React.FC<PostCardProps> = ({
               <Send className="w-5 h-5" />
             </motion.button>
           </div>
-          
-          {/* Stats/Replies Preview */}
+
+          {/* Stats */}
           <div className="flex items-center space-x-3 text-xs text-gray-500">
             {commentList.length > 0 && (
-              <span 
-                className="hover:underline cursor-pointer" 
+              <span
                 onClick={() => setShowComments(true)}
+                className="hover:underline cursor-pointer"
               >
                 {commentList.length} replies
               </span>
             )}
             {likeCount > 0 && <span>•</span>}
-            {likeCount > 0 && <span className="hover:underline cursor-pointer">{likeCount} likes</span>}
+            {likeCount > 0 && (
+              <span className="hover:underline cursor-pointer">
+                {likeCount} likes
+              </span>
+            )}
           </div>
 
-          {/* Comments Section */}
+          {/* Comments */}
           <AnimatePresence>
             {showComments && (
               <motion.div
@@ -339,7 +355,11 @@ const PostCard: React.FC<PostCardProps> = ({
               >
                 {/* Comment input */}
                 <div className="flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${getProfileColor(currentUserEmail || "")} text-white flex items-center justify-center text-xs font-bold flex-shrink-0`}>
+                  <div
+                    className={`w-8 h-8 rounded-full bg-gradient-to-r ${getProfileColor(
+                      currentUserEmail || ""
+                    )} text-white flex items-center justify-center text-xs font-bold flex-shrink-0`}
+                  >
                     {currentUserEmail?.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 flex items-center space-x-2 bg-gray-800 rounded-full px-4 py-2 border border-gray-700">
@@ -349,7 +369,9 @@ const PostCard: React.FC<PostCardProps> = ({
                       onChange={(e) => setNewComment(e.target.value)}
                       placeholder="Reply to this thread..."
                       className="flex-1 bg-transparent border-none outline-none text-sm text-gray-200 placeholder-gray-500"
-                      onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
+                      onKeyPress={(e) =>
+                        e.key === "Enter" && handleAddComment()
+                      }
                     />
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -357,8 +379,8 @@ const PostCard: React.FC<PostCardProps> = ({
                       onClick={handleAddComment}
                       disabled={loadingComment || !newComment.trim()}
                       className={`p-1 rounded-full transition-colors ${
-                        newComment.trim() 
-                          ? "text-blue-500 hover:text-blue-400" 
+                        newComment.trim()
+                          ? "text-blue-500 hover:text-blue-400"
                           : "text-gray-600"
                       }`}
                     >
@@ -367,7 +389,7 @@ const PostCard: React.FC<PostCardProps> = ({
                   </div>
                 </div>
 
-                {/* List of comments */}
+                {/* Comment list */}
                 <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
                   {commentList.map((c, index) => (
                     <motion.div
@@ -377,7 +399,11 @@ const PostCard: React.FC<PostCardProps> = ({
                       transition={{ delay: index * 0.05 }}
                       className="flex items-start space-x-3 group"
                     >
-                      <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${getProfileColor(c.user.username)} text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-1`}>
+                      <div
+                        className={`w-8 h-8 rounded-full bg-gradient-to-r ${getProfileColor(
+                          c.user.username
+                        )} text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-1`}
+                      >
                         {c.user.username.charAt(0).toUpperCase()}
                       </div>
                       <div className="flex-1 bg-gray-900 px-4 py-3 rounded-xl border border-gray-800 relative">
@@ -389,10 +415,12 @@ const PostCard: React.FC<PostCardProps> = ({
                             {formatTimeAgo(c.createdAt)}
                           </p>
                         </div>
-                        <p className="text-sm text-gray-300 break-words">{c.text}</p>
+                        <p className="text-sm text-gray-300 break-words">
+                          {c.text}
+                        </p>
 
-                        {/* Delete button */}
-                        {(c.user._id === currentUserId || user._id === currentUserId) && (
+                        {(c.user._id === currentUserId ||
+                          user._id === currentUserId) && (
                           <motion.button
                             initial={{ opacity: 0 }}
                             whileHover={{ opacity: 1 }}

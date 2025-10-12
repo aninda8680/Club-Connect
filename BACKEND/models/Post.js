@@ -12,7 +12,8 @@ const postSchema = new mongoose.Schema({
       text: String,
       createdAt: { type: Date, default: Date.now }
     }
-  ]
+  ],
+  tags: [{ type: String }],
 }, { timestamps: true });
 
 export default mongoose.model("Post", postSchema);

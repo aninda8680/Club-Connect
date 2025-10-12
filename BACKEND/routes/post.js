@@ -8,13 +8,22 @@ const router = express.Router();
 // Create a post
 router.post("/", verifyToken, upload.single("image"), async (req, res) => {
   try {
-    const { content } = req.body;
+    const { content, tag } = req.body;
     if (!content) return res.status(400).json({ msg: "Content is required" });
+
+    // Extract hashtags from content using regox
+    const extractedTags = content.match(/#\w+/g)?.map(t => t.substring(1).toLowerCase()) || [];
+    
+    // ✅ Merge manual tag (from dropdown)
+    const finalTags = tag 
+    ? [...new Set([...extractedTags, tag.toLowerCase()])] 
+    : extractedTags;
 
     const newPost = new Post({
       user: req.userId,
       content,
       image: req.file ? `/postuploads/${req.file.filename}` : null, // ✅ updated path
+      tags: finalTags,
     });
 
     await newPost.save();
@@ -24,6 +33,24 @@ router.post("/", verifyToken, upload.single("image"), async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 });
+
+// Get posts by hashtag
+router.get("/tag/:tag", verifyToken, async (req, res) => {
+  try {
+    const tag = req.params.tag.toLowerCase();
+    const posts = await Post.find({ tags: tag })
+      .populate("user", "username email")
+      .populate("comments.user", "username email")
+      .sort({ createdAt: -1 });
+
+    res.json(posts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+
 
 // Get posts
 router.get("/", verifyToken, async (req, res) => {
