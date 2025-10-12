@@ -22,10 +22,8 @@ export default function AuthPage() {
     try {
       if (isLogin) {
         // login
-        const res = await api.post(`/auth/login`, {
-          email,
-          password,
-        });
+        const res = await api.post(`/auth/login`, { email, password });
+
 
         const { _id, username, role, isProfileComplete, clubId } = res.data;
 
