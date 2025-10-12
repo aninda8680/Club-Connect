@@ -22,7 +22,7 @@ export default function AuthPage() {
     try {
       if (isLogin) {
         // login
-        const res = await api.post("/auth/login", {
+        const res = await api.post(`/auth/login`, {
           email,
           password,
         });
@@ -56,7 +56,7 @@ export default function AuthPage() {
 
       } else {
         // Register
-        await api.post("/auth/register", {
+        await api.post(`/auth/register`, {
           username,
           email,
           password,

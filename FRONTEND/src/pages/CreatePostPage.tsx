@@ -3,6 +3,7 @@ import axios from "axios";
 import { Loader2, ImagePlus, X, Smile, Hash } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PostCard from "../components/PostCard";
+import api from "@/api";
 
 const getProfileColor = (username: string) => {
   const charCode = username.charCodeAt(0);
@@ -85,7 +86,7 @@ export default function CreatePostPage() {
   const fetchMyPosts = async () => {
     try {
       setLoadingPosts(true);
-      const res = await axios.get("http://localhost:5000/api/posts/my-posts", {
+      const res = await api.get("/posts/my-posts", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyPosts(res.data);
@@ -107,7 +108,7 @@ export default function CreatePostPage() {
       if (image) formData.append("image", image);
       if (selectedTag) formData.append("tag", selectedTag);
 
-      await axios.post("http://localhost:5000/api/posts", formData, {
+      await api.post("/posts", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
