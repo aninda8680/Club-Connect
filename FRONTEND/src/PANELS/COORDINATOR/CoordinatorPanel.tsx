@@ -87,7 +87,7 @@ export default function CoordinatorPanel() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
+    <div className="min-h-screen bg-black text-white py-25">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
