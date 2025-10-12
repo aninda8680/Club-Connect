@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { FiHeart, FiStar, FiCalendar, FiMapPin, FiUsers, FiCheck, FiX } from "react-icons/fi";
+import { FiHeart, FiStar, FiCalendar, FiMapPin, FiCheck, FiX } from "react-icons/fi";
 
 export interface EventCardProps {
   _id: string;

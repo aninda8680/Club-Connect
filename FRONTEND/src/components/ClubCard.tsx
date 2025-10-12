@@ -77,7 +77,9 @@ useEffect(() => {
         <span className="flex items-center gap-1">
           <Users size={16} /> {memberCount} Members
         </span>
-
+        <span className="flex items-center gap-1">
+          <UserPlus size={16} /> {requestCount} Join Requests
+        </span>
       </div>
 
       {/* Join Button */}

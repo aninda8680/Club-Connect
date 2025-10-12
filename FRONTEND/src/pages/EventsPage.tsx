@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import type { Variants, Easing } from "framer-motion";
-import { FiCalendar, FiStar, FiUsers, FiMapPin, FiClock } from "react-icons/fi";
+import { FiCalendar, FiStar, FiUsers, FiClock } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 import EventCard from "../components/EventCard";
 import type { EventCardProps } from "../components/EventCard";
@@ -226,7 +226,7 @@ const EventsPage: React.FC = () => {
             initial="hidden"
             animate="visible"
           >
-            {filteredEvents.map((event, index) => (
+            {filteredEvents.map((event) => (
               <motion.div
                 key={event._id}
                 variants={fadeUp}

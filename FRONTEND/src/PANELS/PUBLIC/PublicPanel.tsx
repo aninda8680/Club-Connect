@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Star, Calendar, ChevronDown, Code, Cpu, Zap, Sparkles } from "lucide-react";
 import ClubCard from "../../components/ClubCard";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import EventCard from "../../components/EventCard";
 import Navbar from "../../components/Navbar";

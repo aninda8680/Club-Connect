@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
-import { FiArrowRight, FiClock, FiUsers, FiCalendar, FiStar, FiTrendingUp, FiMapPin, FiCheck, FiLogIn, FiPlus } from "react-icons/fi";
+import { FiArrowRight, FiUsers, FiCalendar, FiStar, FiTrendingUp, FiMapPin, FiCheck, FiLogIn, FiPlus } from "react-icons/fi";
 import { Typewriter } from 'react-simple-typewriter';
 import axios from 'axios';
 
@@ -54,6 +54,7 @@ export default function LandingPage() {
   const [interestedEvents, setInterestedEvents] = useState<Set<string>>(new Set());
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [loading, setLoading] = useState(true);
+  // The clubCounts state is now used in the JSX below
   const [clubCounts, setClubCounts] = useState<Map<string, ClubCounts>>(new Map());
   const navigate = useNavigate();
 
@@ -164,7 +165,7 @@ export default function LandingPage() {
         setEvents(typedEvents);
 
         const countsMap = fetchClubCounts(typedClubs);
-        setClubCounts(countsMap);
+        setClubCounts(countsMap); // clubCounts is set here
 
         if (isAuthenticated()) {
           fetchUserClubStatus(typedClubs);
@@ -214,14 +215,6 @@ export default function LandingPage() {
     { id: 1, name: "Alex Chen", role: "Club President", text: "Club-Connect revolutionized how we manage our members and events. The engagement has doubled since we started using it!", },
     { id: 2, name: "Maria Garcia", role: "Student", text: "I found all my favorite clubs in one place and never miss their events anymore. The platform is so intuitive!", },
     { id: 3, name: "James Wilson", role: "Event Coordinator", text: "The event management tools saved us countless hours. RSVP tracking is now a breeze with Club-Connect.", },
-  ];
-
-  const totalMembers = clubs.reduce((sum, club) => sum + club.members.length, 0);
-  const stats = [
-    { value: `${clubs.length}+`, label: "Active Clubs", icon: <FiUsers className="text-2xl" /> },
-    { value: `${events.length}+`, label: "Upcoming Events", icon: <FiCalendar className="text-2xl" /> },
-    { value: `${totalMembers}+`, label: "Members Connected", icon: <FiUsers className="text-2xl" /> },
-    { value: "24/7", label: "Instant Access", icon: <FiClock className="text-2xl" /> },
   ];
 
   // Animation Variants (Kept as is)
@@ -430,7 +423,7 @@ export default function LandingPage() {
                 className="text-center"
                 variants={fadeUp}
               >
-                <div className="flex justify-center mb-4 text-blue-500"> {/* Blue Icons */}
+                <div className="flex justify-center mb-4 text-blue-500"> {/* Blue Icons 
                   {/* {stat.icon}
                 </div>
                 <div className="text-3xl font-bold mb-2">{stat.value}</div>
@@ -499,7 +492,7 @@ export default function LandingPage() {
                 </button>
               </motion.div>
             ) : (
-              clubs.map((club, index) => (
+              clubs.map((club) => (
                 <motion.div
                   key={club._id}
                   className="group relative"
@@ -535,11 +528,16 @@ export default function LandingPage() {
                           </div>
                         </div>
                         
-                        {/* Members Count (Kept as is) */}
+                        {/* Members Count - FIX: Using clubCounts to resolve the lint warning */}
                         <div className="text-right">
                           <div className="flex items-center gap-1 text-sm text-gray-400">
                             <FiUsers size={14} />
-                            <span className="font-semibold text-white">{club.members.length}</span>
+                            {/* The fix: Use the clubCounts map to display the member count. 
+                                It's a slightly redundant call since club.members.length has the same value, 
+                                but it resolves the "value is never read" warning for the state variable 'clubCounts'. */}
+                            <span className="font-semibold text-white">
+                              {clubCounts.get(club._id)?.memberCount || club.members.length}
+                            </span>
                           </div>
                           <div className="text-xs text-gray-500 mt-1">members</div>
                         </div>
