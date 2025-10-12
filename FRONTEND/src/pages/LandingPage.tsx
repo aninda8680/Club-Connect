@@ -98,7 +98,7 @@ export default function LandingPage() {
 
   const fetchClubs = async (): Promise<Club[]> => {
     try {
-      const response = await api.get(`/clubs`);
+      const response = await api.get("/clubs");
       return response.data;
     } catch (error) {
       console.error('Error fetching clubs:', error);
@@ -108,7 +108,7 @@ export default function LandingPage() {
 
   const fetchEvents = async (): Promise<Event[]> => {
     try {
-      const response = await api.get(`/events/approved`);
+      const response = await api.get("/events/approved");
       return response.data.map((event: any) => ({
         ...event,
         clubName: event.club?.name || 'Unknown Club',

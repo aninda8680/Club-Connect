@@ -1,9 +1,9 @@
 // src/pages/AuthPage.tsx
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Terminal, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import api from "../api";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -22,7 +22,7 @@ export default function AuthPage() {
     try {
       if (isLogin) {
         // login
-        const res = await axios.post("http://localhost:5000/api/auth/login", {
+        const res = await api.post("/auth/login", {
           email,
           password,
         });
@@ -56,7 +56,7 @@ export default function AuthPage() {
 
       } else {
         // Register
-        await axios.post("http://localhost:5000/api/auth/register", {
+        await api.post("/auth/register", {
           username,
           email,
           password,
