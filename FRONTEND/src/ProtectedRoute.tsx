@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import api from "./api";
+import { motion } from "framer-motion";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -54,7 +55,17 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
 
   // While verifying
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-white text-lg"
+        >
+          Loading profile...
+        </motion.div>
+      </div>
+    );
   }
 
   // No token or request failed
