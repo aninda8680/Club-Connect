@@ -1,12 +1,12 @@
 // PublicPanel.tsx
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { Star, Calendar, ChevronDown, Code, Cpu, Zap, Sparkles } from "lucide-react";
 import ClubCard from "../../components/ClubCard";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import EventCard from "../../components/EventCard";
 import Navbar from "../../components/Navbar";
+import api from "@/api";
 
 export default function PublicPanel() {
   const [clubs, setClubs] = useState<any[]>([]);
@@ -51,7 +51,7 @@ export default function PublicPanel() {
     const fetchClubs = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:5000/api/clubs");
+        const res = await api.get("/clubs");
         setClubs(res.data);
       } catch (err) {
         console.error("Error fetching clubs", err);
@@ -66,7 +66,7 @@ export default function PublicPanel() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/events/approved");
+        const res = await api.get("/events/approved");
         setEvents(res.data);
       } catch (err) {
         console.error("Error fetching events", err);

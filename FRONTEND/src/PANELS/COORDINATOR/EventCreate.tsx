@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "@/api";
 import { motion } from "framer-motion";
 import { 
   Calendar, 
@@ -54,7 +54,7 @@ export default function EventCreate() {
       formData.append("club", clubId!);
       if (poster) formData.append("poster", poster);
 
-      await axios.post("http://localhost:5000/api/events/create", formData, {
+      await api.post("/events/create", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -77,7 +77,7 @@ export default function EventCreate() {
     if (!coordinatorId) return;
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:5000/api/events/approved/${coordinatorId}`);
+      const res = await api.get(`/events/approved/${coordinatorId}`);
       setApprovedEvents(res.data);
     } catch (err) {
       console.error("Error fetching approved events:", err);

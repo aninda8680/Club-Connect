@@ -7,11 +7,11 @@ import {
   Mail,
   BookOpen,
   GraduationCap,
-  // Calendar,
   Terminal,
   Sparkles,
   AlertCircle
 } from "lucide-react";
+import api from "@/api";
 
 interface Request {
   _id: string;
@@ -22,13 +22,14 @@ interface Request {
     stream: string;
     year: string;
     semester: string;
-  }
+  };
 }
 
 export default function RequestsPage() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState<string | null>(null);
+
   const clubId = localStorage.getItem("clubId");
   const course = localStorage.getItem("Course") || "";
   const stream = localStorage.getItem("Stream") || "";
@@ -45,11 +46,15 @@ export default function RequestsPage() {
     console.log("Fetching requests for clubId:", clubId);
     setLoading(true);
 
-    fetch(`http://localhost:5000/api/join/club/${clubId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Fetched requests:", data);
-        const updatedRequests = data.map((req: Request) => ({
+    // ✅ Using api instead of fetch
+    interface ApiResponse {
+      data: Request[];
+    }
+
+    api.get<ApiResponse>(`/join/club/${clubId}`)
+      .then((res) => {
+        console.log("Fetched requests:", res.data);
+        const updatedRequests: Request[] = res.data.data.map((req: Request) => ({
           ...req,
           course,
           stream,
@@ -58,11 +63,11 @@ export default function RequestsPage() {
         }));
         setRequests(updatedRequests);
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         console.error("Error fetching join requests:", err);
         setRequests([]);
       })
-      .finally(() => {
+      .finally((): void => {
         setLoading(false);
       });
   }, [clubId, course, stream, year, semester]);
@@ -70,12 +75,10 @@ export default function RequestsPage() {
   const handleAction = async (id: string, action: string) => {
     setProcessing(id);
     try {
-      await fetch(`http://localhost:5000/api/join/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
-      });
+      // ✅ Using api.put instead of fetch
+      await api.put(`/join/${id}`, { action });
 
+      // Remove request locally
       setRequests((prev) => prev.filter((r) => r._id !== id));
     } catch (err) {
       console.error("Error processing request:", err);
@@ -83,6 +86,9 @@ export default function RequestsPage() {
       setProcessing(null);
     }
   };
+
+  // ... (your UI rendering logic remains unchanged
+
 
   return (
     <div className="min-h-screen bg-black text-white py-25">
