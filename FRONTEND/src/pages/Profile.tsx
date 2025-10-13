@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/api";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import { User, Phone, Mail, Calendar, BookOpen, GraduationCap } from "lucide-react";
@@ -31,7 +31,7 @@ const Profile: React.FC = () => {
           return;
         }
 
-        const res = await axios.get("http://localhost:5000/api/user/me", {
+        const res = await api.get("/user/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

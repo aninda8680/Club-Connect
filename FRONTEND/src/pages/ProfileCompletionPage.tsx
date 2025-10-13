@@ -1,6 +1,6 @@
 // src/pages/ProfileCompletionPage.tsx
 import { useState } from "react";
-import axios from "axios";
+import api from "@/api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { motion,  AnimatePresence  } from "framer-motion";
@@ -34,8 +34,8 @@ export default function ProfileCompletionPage() {
     setIsSubmitting(true);
     try {
   console.log("Token being sent:", token); // 👈 debug here
-  const { data } = await axios.put(
-    "http://localhost:5000/api/user/complete-profile",
+  const { data } = await api.put(
+    "/user/complete-profile",
     { dob, gender, stream, phone, course, year, semester },
     {
       headers: { Authorization: `Bearer ${token}` },
