@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Loader2, ImagePlus, X, Smile, Hash } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PostCard from "../components/PostCard";
@@ -131,7 +130,7 @@ export default function CreatePostPage() {
 
   const handleDeletePost = async (postId: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+      await api.delete(`/posts/${postId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyPosts(myPosts.filter((p) => p._id !== postId));
