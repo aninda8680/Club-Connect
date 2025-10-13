@@ -1,6 +1,7 @@
 // components/ClubCard.tsx
 import { useState, useEffect } from "react";
 import { Users, UserPlus, Loader2 } from "lucide-react";
+import api from "@/api"; // ✅ Use your centralized axios instance
 
 interface ClubCardProps {
   _id: string;
@@ -23,43 +24,43 @@ export default function ClubCard({
   const [requestCount, setRequestCount] = useState(joinRequests.length);
 
   // 🔹 Fetch live member + request counts from backend
-useEffect(() => {
-  const fetchCounts = async () => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/clubs/${_id}/counts`);
-      const data = await res.json();
-      if (data.success) {
-        setMemberCount(data.memberCount);
-      } else {
-        console.warn("Failed to fetch counts:", data.message);
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const res = await api.get(`/clubs/${_id}/counts`); // ✅ use api
+        const data = res.data;
+        if (data.success) {
+          setMemberCount(data.memberCount);
+          setRequestCount(data.requestCount || requestCount); // optional
+        } else {
+          console.warn("Failed to fetch counts:", data.message);
+        }
+      } catch (err) {
+        console.error("Error fetching counts:", err);
       }
-    } catch (err) {
-      console.error("Error fetching counts:", err);
-    }
-  };
-  fetchCounts();
-}, [_id]);
+    };
+    fetchCounts();
+  }, [_id]);
 
-
+  // 🔹 Handle Join Request
   const handleJoin = async () => {
     const userId = localStorage.getItem("userId");
     if (!userId) {
       setMessage("⚠️ Please login first");
       return;
     }
+
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/api/join/request", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, clubId: _id }),
-      });
-      const data = await res.json();
+      const res = await api.post("/join/request", { userId, clubId: _id }); // ✅ use api.post
+      const data = res.data;
+
       if (data.success) {
-        setRequestCount((prev) => prev + 1); // Optimistic update
+        setRequestCount((prev) => prev + 1); // Optimistic UI update
       }
       setMessage(data.message || "Request sent!");
     } catch (err) {
+      console.error("Join request error:", err);
       setMessage("Something went wrong!");
     } finally {
       setLoading(false);
