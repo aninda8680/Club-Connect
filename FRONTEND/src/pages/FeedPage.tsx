@@ -1,6 +1,5 @@
 // pages/FeedPage.tsx
 import { useEffect, useState } from "react";
-import axios from "axios";
 import PostCard from "../components/PostCard";
 import { Loader2, RefreshCw, Rss, Filter } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
