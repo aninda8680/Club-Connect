@@ -1,12 +1,12 @@
 // src/pages/EventsPage.tsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { motion } from "framer-motion";
 import type { Variants, Easing } from "framer-motion";
 import { FiCalendar, FiStar, FiUsers, FiClock } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 import EventCard from "../components/EventCard";
 import type { EventCardProps } from "../components/EventCard";
+import api from "@/api";
 
 // Create the skeleton component locally
 const EventCardSkeleton: React.FC = () => {
@@ -63,7 +63,7 @@ const EventsPage: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/events/approved");
+        const res = await api.get("/events/approved");
         setEvents(res.data);
       } catch (err) {
         console.error("Error fetching events", err);

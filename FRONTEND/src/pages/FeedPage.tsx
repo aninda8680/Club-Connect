@@ -5,6 +5,7 @@ import PostCard from "../components/PostCard";
 import { Loader2, RefreshCw, Rss, Filter } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
+import api from "@/api";
 
 interface User {
   _id: string;
@@ -63,36 +64,36 @@ export default function FeedPage() {
   ];
 
   const fetchPosts = async (tag: string = "all", showRefresh = false) => {
-    try {
-      if (showRefresh) setRefreshing(true);
-      else setLoading(true);
+  try {
+    if (showRefresh) setRefreshing(true);
+    else setLoading(true);
 
-      const url =
-        tag === "all"
-          ? "http://localhost:5000/api/posts"
-          : `http://localhost:5000/api/posts/tag/${tag}`;
+    const url =
+      tag === "all"
+        ? "/posts"
+        : `/posts/tag/${tag}`;
 
-      const res = await axios.get<Post[]>(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    const res = await api.get<Post[]>(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      setPosts(res.data);
+    setPosts(res.data);
 
-      // ✅ Safely collect unique hashtags
-      const allTags: string[] = res.data
-        .flatMap((post) => post.tags || [])
-        .filter((t): t is string => typeof t === "string");
+    // ✅ Collect unique hashtags safely
+    const allTags: string[] = res.data
+      .flatMap((post) => post.tags || [])
+      .filter((t): t is string => typeof t === "string");
 
-      const uniqueTags = Array.from(new Set(allTags));
-      setDynamicTags(uniqueTags);
-    } catch (err) {
-      console.error("Error fetching posts", err);
-      toast.error("Failed to fetch posts");
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
+    const uniqueTags = Array.from(new Set(allTags));
+    setDynamicTags(uniqueTags);
+  } catch (err) {
+    console.error("Error fetching posts", err);
+    toast.error("Failed to fetch posts");
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+};
 
   const handleRefresh = () => {
     fetchPosts(selectedTag, true);
