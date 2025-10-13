@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/api";
 import { motion } from "framer-motion";
 import { Users, BookOpen, UserCheck, Terminal } from "lucide-react";
 
@@ -15,7 +15,7 @@ export default function CreateClub() {
   useEffect(() => {
     const fetchCoordinators = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/admin/users");
+        const res = await api.get("/admin/users");
 
         // console.log("Raw response from backend:", res.data);
 
@@ -41,7 +41,7 @@ export default function CreateClub() {
     setLoading(true);
     setMessage("");
     try {
-      await axios.post("http://localhost:5000/api/clubs", {
+      await api.post("/clubs", {
         name,
         description,
         coordinatorId,

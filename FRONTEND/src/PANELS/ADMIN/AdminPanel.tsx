@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import ScrollFadeWrapper from "./../../components/ScrollFadeWrapper"; // Adjust path as needed
-
 import { 
   FiUsers, 
   FiPlus, 

@@ -1,6 +1,6 @@
 //AdminEvent.tsx
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/api";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Calendar, 
@@ -32,7 +32,7 @@ export default function AdminEvent() {
   const fetchPendingEvents = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/events/pending");
+      const res = await api.get("/events/pending");
       setEvents(res.data);
     } catch (err) {
       console.error(err);
@@ -43,7 +43,7 @@ export default function AdminEvent() {
 
   const handleAction = async (id: string, status: "approved" | "rejected") => {
     try {
-      await axios.put(`http://localhost:5000/api/events/${id}`, { status });
+      await api.put(`/events/${id}`, { status });
       // Remove the event from the list immediately for better UX
       setEvents(events.filter(event => event._id !== id));
     } catch (err) {

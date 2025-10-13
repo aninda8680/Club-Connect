@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/api";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Users, 
@@ -50,7 +50,7 @@ export default function ManageRoles() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/admin/users");
+      const res = await api.get("/admin/users");
       setUsers(res.data);
       setFilteredUsers(res.data);
     } catch (err) {
@@ -72,7 +72,7 @@ export default function ManageRoles() {
       const updates = Object.entries(changedRoles);
 
       for (const [id, role] of updates) {
-        await axios.put(`http://localhost:5000/api/admin/users/${id}/role`, { role });
+        await api.put(`/admin/users/${id}/role`, { role });
       }
 
       setChangedRoles({});
