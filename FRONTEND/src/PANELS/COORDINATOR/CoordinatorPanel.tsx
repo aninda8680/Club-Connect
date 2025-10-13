@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "@/api";
 import { motion } from "framer-motion";
 import { 
   Terminal, 
@@ -24,7 +24,7 @@ export default function CoordinatorPanel() {
       if (!userId) return console.warn("No userId in localStorage");
 
       try {
-        const res = await axios.get(`http://localhost:5000/api/coordinator/myclub/${userId}`);
+        const res = await api.get(`/coordinator/myclub/${userId}`);
         if (res.data.clubName) {
           setClubName(res.data.clubName);
           setClubId(res.data.clubId || "");

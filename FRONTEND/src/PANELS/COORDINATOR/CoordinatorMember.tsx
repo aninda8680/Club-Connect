@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/api";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Users, 
@@ -43,8 +43,8 @@ export default function CoordinatorMembers() {
     }
     
     setLoading(true);
-    axios
-      .get(`http://localhost:5000/api/clubs/${clubId}/members`)
+    api
+      .get(`/clubs/${clubId}/members`)
       .then((res) => setMembers(res.data))
       .catch((err) => console.error("Error fetching members:", err))
       .finally(() => setLoading(false));
@@ -55,7 +55,7 @@ export default function CoordinatorMembers() {
     
     setRemoving(userId);
     try {
-      await axios.delete(`http://localhost:5000/api/clubs/${clubId}/members/${userId}`);
+      await api.delete(`/clubs/${clubId}/members/${userId}`);
       setMembers((prev) => prev.filter((m) => m._id !== userId));
     } catch (err) {
       console.error("Error removing member:", err);
