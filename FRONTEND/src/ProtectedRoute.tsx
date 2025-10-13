@@ -58,12 +58,32 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-white text-lg"
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ 
+            scale: 1,
+            opacity: 1,
+            rotate: [0, 360]
+          }}
+          transition={{
+            duration: 1.5,
+            ease: "easeInOut",
+            rotate: {
+              repeat: Infinity,
+              duration: 2
+            }
+          }}
+          className="relative"
         >
-          Loading profile...
+          <div className="w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full animate-spin" />
         </motion.div>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="text-blue-400 mt-4 font-medium text-lg"
+        >
+          Loading...
+        </motion.p>
       </div>
     );
   }
