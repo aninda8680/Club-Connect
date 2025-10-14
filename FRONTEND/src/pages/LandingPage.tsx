@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
 import { FiArrowRight, FiUsers, FiCalendar, FiStar, FiTrendingUp, FiMapPin, FiCheck, FiLogIn, FiPlus } from "react-icons/fi";
 import { Typewriter } from 'react-simple-typewriter';
 import api from "../api";
+import Loader from "@/components/Loader";
 
 
 // --- Types (Kept as is) ---
@@ -285,20 +286,12 @@ export default function LandingPage() {
   // --- Main Render ---
 
   if (loading) {
-    return (
-      <div className="bg-black text-white w-full min-h-screen flex items-center justify-center overflow-hidden relative">
-        <AuroraBackground />
-        <div className="relative z-10 flex flex-col items-center gap-4">
-          <motion.span
-            className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full" // Blue Spinner
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-          />
-          <p className="text-sm text-blue-100/80">Loading the latest clubs & events...</p>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <Loader />
+    </div>
+  );
+}
 
 
   return (
@@ -317,7 +310,7 @@ export default function LandingPage() {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.92 }}
       >
-        🚀 {isAuthenticated() ? 'Dashboard' : 'Login / Register'}
+         {isAuthenticated() ? 'Dashboard' : 'Login / Register'}
       </motion.button>
 
       {/* Hero Section */}
