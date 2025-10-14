@@ -5,6 +5,8 @@ import { FiArrowRight, FiUsers, FiCalendar, FiStar, FiTrendingUp, FiMapPin, FiCh
 import { Typewriter } from 'react-simple-typewriter';
 import api from "../api";
 import Loader from "@/components/Loader";
+import DotGrid from '../components/DotGrid';
+
 
 
 // --- Types (Kept as is) ---
@@ -295,9 +297,17 @@ export default function LandingPage() {
 
 
   return (
-    <div className="bg-black text-white w-full overflow-x-hidden scroll-smooth relative">
+    <div className="bg-gradient-to-b from-black via-gray-900 to-black text-white w-full overflow-x-hidden scroll-smooth relative">
       {/* Aurora Background */}
       <AuroraBackground />
+      {/* Global Dot Grid Pattern */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <DotGrid 
+          dotColor="rgba(147, 197, 253, 0.15)"
+          dotSize={1.5}
+          gap={30}
+        />
+      </div>
 
       {/* Floating Login Button */}
       <motion.button
@@ -315,7 +325,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 md:px-6 relative overflow-hidden z-10">
-        <div className="relative z-20">
+        <DotGrid dotColor="rgba(148, 163, 184, 0.15)" dotSize={2} gap={20} />        <div className="relative z-20">
           {/* Main Title */}
           <motion.h1
             className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600" // Blue/Purple gradient title
@@ -428,12 +438,9 @@ export default function LandingPage() {
       {/* --- */}
 
       {/* Featured Clubs */}
-      <section id="clubs-section" className="min-h-screen py-20 px-4 md:px-6 relative z-10 bg-gradient-to-br from-gray-900 via-black to-gray-900">
+      <section id="clubs-section" className="min-h-screen py-20 px-4 md:px-6 relative z-10">
         {/* Animated background elements: Shifted to cool tones */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
-        </div>
+        
         
         <div className="container mx-auto relative z-10">
           <motion.div
@@ -618,7 +625,7 @@ export default function LandingPage() {
       {/* --- */}
 
       {/* Testimonials Widget */}
-      <section className="py-20 relative z-10 bg-black/60 backdrop-blur-sm">
+      <section className="py-20 relative z-10">
         <div className="container mx-auto px-4 md:px-6">
           <motion.h2
             className="text-center text-3xl font-bold mb-12"
@@ -634,7 +641,7 @@ export default function LandingPage() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={testimonials[activeTestimonial].id}
-                className="bg-gray-900/70 border border-gray-800 rounded-xl p-8 absolute inset-0 backdrop-blur-sm flex flex-col justify-center"
+                className="bg-black border border-gray-800 rounded-xl p-8 absolute inset-0 backdrop-blur-sm flex flex-col justify-center"
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
@@ -672,7 +679,7 @@ export default function LandingPage() {
 
       {/* Featured Events */}
       {/* NOTE: This section was duplicated in your prompt, I'm using the original one's ID for placement */}
-      <section id="events-section" className="min-h-screen py-20 px-4 md:px-6 relative z-10 bg-gradient-to-b from-black/80 to-black">
+      <section id="events-section" className="min-h-screen py-20 px-4 md:px-6 relative z-10">
         <div className="container mx-auto">
           <motion.h2
             className="text-center text-3xl font-bold mb-4"
@@ -778,7 +785,7 @@ export default function LandingPage() {
       {/* --- */}
 
       {/* CTA Section */}
-      <section className="py-20 relative z-10 bg-black/70 backdrop-blur-sm">
+      <section className="py-20 relative z-10">
         <div className="container mx-auto px-4 md:px-6">
           <motion.div
             className="bg-gradient-to-r from-black to-gray-900 rounded-2xl p-8 md:p-12 border border-gray-800 shadow-2xl overflow-hidden relative"
@@ -815,6 +822,7 @@ export default function LandingPage() {
           </motion.div>
         </div>
       </section>
+
     </div>
   );
 }
