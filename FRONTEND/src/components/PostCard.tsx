@@ -8,7 +8,7 @@ import {
   Trash2,
   MoreHorizontal,
 } from "lucide-react";
-import axios from "axios";
+import api from "@/api";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Comment {
@@ -91,8 +91,8 @@ const PostCard: React.FC<PostCardProps> = ({
     try {
       setLoadingLike(true);
       const token = localStorage.getItem("token");
-      const res = await axios.put(
-        `http://localhost:5000/api/posts/${_id}/like`,
+      const res = await api.put(
+        `/posts/${_id}/like`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -111,8 +111,8 @@ const PostCard: React.FC<PostCardProps> = ({
     try {
       setLoadingComment(true);
       const token = localStorage.getItem("token");
-      const res = await axios.post(
-        `http://localhost:5000/api/posts/${_id}/comment`,
+      const res = await api.post(
+        `/posts/${_id}/comment`,
         { text: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -131,7 +131,7 @@ const PostCard: React.FC<PostCardProps> = ({
     if (!window.confirm("Are you sure you want to delete this post?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/posts/${_id}`, {
+      await api.delete(`/posts/${_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (onDeletePost) onDeletePost(_id);
@@ -144,8 +144,8 @@ const PostCard: React.FC<PostCardProps> = ({
   const handleDeleteComment = async (commentId: string) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.delete(
-        `http://localhost:5000/api/posts/${_id}/comment/${commentId}`,
+      const res = await api.delete(
+        `/posts/${_id}/comment/${commentId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setCommentList(res.data.comments);
