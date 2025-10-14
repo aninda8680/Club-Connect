@@ -309,18 +309,42 @@ export default function LandingPage() {
         />
       </div>
 
-      {/* Floating Login Button */}
+      {/* Minecraft-themed Login Button */}
       <motion.button
-        className="fixed top-4 right-10 z-50 py-1 rounded-full text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-800 text-white shadow-lg backdrop-blur-sm border border-blue-900/50" // Blue/Purple button
+        className="fixed top-4 right-10 z-50 py-2 px-4 rounded-none text-sm font-bold text-white shadow-lg border-2"
+        style={{
+          background: '#4eab2e', // Minecraft grass block green
+          borderTopColor: '#8FAC87',
+          borderLeftColor: '#8FAC87',
+          borderRightColor: '#5A6C55',
+          borderBottomColor: '#5A6C55',
+          textShadow: '2px 2px #4A5C45',
+          fontFamily: "'Minecraft', monospace"
+        }}
         onClick={handleLoginClick}
         animate={{
-          boxShadow: [ "0 0 10px rgba(96,165,250,0.6)", "0 0 20px rgba(124,58,237,0.8)", "0 0 10px rgba(96,165,250,0.6)", ],
+          boxShadow: [
+            "4px 4px 0px rgba(90,108,85,0.8)",
+            "2px 2px 0px rgba(90,108,85,0.9)",
+            "4px 4px 0px rgba(90,108,85,0.8)"
+          ],
         }}
-        transition={{ repeat: Infinity, duration: 2 }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.92 }}
+        transition={{ repeat: Infinity, duration: 1.5 }}
+        whileHover={{ 
+          scale: 1.05,
+          y: -1,
+          transition: { duration: 0.1 }
+        }}
+        whileTap={{ 
+          scale: 0.95,
+          y: 2,
+          borderTopColor: '#5A6C55',
+          borderLeftColor: '#5A6C55',
+          borderRightColor: '#8FAC87',
+          borderBottomColor: '#8FAC87'
+        }}
       >
-         {isAuthenticated() ? 'Dashboard' : 'Login / Register'}
+        {isAuthenticated() ? '⚡ Dashboard' : '🎮 Login / Register'}
       </motion.button>
 
       {/* Hero Section */}
@@ -364,31 +388,73 @@ export default function LandingPage() {
             After classes comes the real fun — clubs, events, and memories waiting to happen.
           </motion.h3>
 
-          {/* Buttons */}
-          <motion.div
-            className="flex flex-col sm:flex-row justify-center gap-4 mt-8 md:mt-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.8, duration: 0.8 }}
-          >
-            <motion.button
-              className="px-6 py-3 rounded-full text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-800 hover:from-blue-500 hover:to-purple-700 transition flex items-center justify-center gap-2" // Blue/Purple Button
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              onClick={() => document.getElementById("clubs-section")?.scrollIntoView({ behavior: "smooth" })}
-            >
-              🌟 Explore Clubs <FiArrowRight />
-            </motion.button>
+          {/* Minecraft-themed Buttons with Blue/Purple Colors */}
+<motion.div
+  className="flex flex-col sm:flex-row justify-center gap-4 mt-8 md:mt-12"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 1.8, duration: 0.8 }}
+>
+  <motion.button
+    className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
+    style={{
+      background: 'linear-gradient(135deg, #3D5AA6 0%, #8B5FBF 100%)', // Blue to Purple
+      borderTopColor: '#4A6BC6',
+      borderLeftColor: '#4A6BC6',
+      borderRightColor: '#2D4080',
+      borderBottomColor: '#2D4080',
+      color: 'white',
+      textShadow: '2px 2px #2D4080',
+      fontFamily: "'Minecraft', monospace"
+    }}
+    whileHover={{ 
+      scale: 1.05,
+      y: -1
+    }}
+    whileTap={{ 
+      scale: 0.95,
+      y: 2,
+      borderTopColor: '#2D4080',
+      borderLeftColor: '#2D4080',
+      borderRightColor: '#4A6BC6',
+      borderBottomColor: '#4A6BC6'
+    }}
+    onClick={() => document.getElementById("clubs-section")?.scrollIntoView({ behavior: "smooth" })}
+  >
+    🌟 Explore Clubs <FiArrowRight />
+  </motion.button>
 
-            <motion.button
-              className="px-6 py-3 rounded-full text-base font-semibold bg-black border-2 border-blue-600 hover:bg-blue-900/30 transition flex items-center justify-center gap-2" // Blue Border Button
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              onClick={() => document.getElementById("events-section")?.scrollIntoView({ behavior: "smooth" })}
-            >
-              🎉 Explore Events <FiArrowRight />
-            </motion.button>
-          </motion.div>
+  <motion.button
+    className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
+    style={{
+      background: 'transparent',
+      borderTopColor: '#4A6BC6',
+      borderLeftColor: '#4A6BC6',
+      borderRightColor: '#2D4080',
+      borderBottomColor: '#2D4080',
+      color: 'white',
+      textShadow: '2px 2px #2D4080',
+      fontFamily: "'Minecraft', monospace",
+      backgroundColor: 'rgba(45, 64, 128, 0.3)'
+    }}
+    whileHover={{ 
+      scale: 1.05,
+      y: -1,
+      backgroundColor: 'rgba(74, 107, 198, 0.4)'
+    }}
+    whileTap={{ 
+      scale: 0.95,
+      y: 2,
+      borderTopColor: '#2D4080',
+      borderLeftColor: '#2D4080',
+      borderRightColor: '#4A6BC6',
+      borderBottomColor: '#4A6BC6'
+    }}
+    onClick={() => document.getElementById("events-section")?.scrollIntoView({ behavior: "smooth" })}
+  >
+    🎉 Explore Events <FiArrowRight />
+  </motion.button>
+</motion.div>
         </div>
 
         {/* Scrolling indicator */}
