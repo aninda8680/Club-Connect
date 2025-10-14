@@ -1,5 +1,5 @@
 //MEMBER/MemberPanel.tsx
-
+import api from "@/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,22 +20,20 @@ export default function MemberPanel() {
 
   // useEffect hook to fetch club details when the component mounts or clubId changes
   useEffect(() => {
-    if (clubId) {
-      // API call to fetch club data
-      fetch(`http://localhost:5000/api/clubs/${clubId}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return res.json();
-        })
-        .then((data) => setClub(data))
-        .catch((error) => {
-          console.error("Error fetching club details:", error);
-          setClub(null); // Set to null on error to handle the display state
-        });
-    }
-  }, [clubId]);
+  if (clubId) {
+    const fetchClub = async () => {
+      try {
+        const res = await api.get(`/clubs/${clubId}`); // ✅ Auto handles base URL
+        setClub(res.data);
+      } catch (error) {
+        console.error("Error fetching club details:", error);
+        setClub(null); // Handle error state safely
+      }
+    };
+
+    fetchClub();
+  }
+}, [clubId]);
 
   // Handler for user logout
   const handleLogout = () => {
