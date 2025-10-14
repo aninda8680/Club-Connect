@@ -88,7 +88,7 @@ export default function PublicPanel() {
             transition={{ delay: 0.5 }}
             className="text-cyan-400 font-mono"
           >
-            Loading Club-Connect v1.0
+            Loading Club-Connect... 
           </motion.p>
         </div>
       </div>
