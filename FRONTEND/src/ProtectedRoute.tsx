@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import api from "./api";
-import { motion } from "framer-motion";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -56,34 +55,11 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
   // While verifying
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <motion.div
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ 
-            scale: 1,
-            opacity: 1,
-            rotate: [0, 360]
-          }}
-          transition={{
-            duration: 1.5,
-            ease: "easeInOut",
-            rotate: {
-              repeat: Infinity,
-              duration: 2
-            }
-          }}
-          className="relative"
-        >
-          <div className="w-20 h-20 border-t-4 border-blue-500 border-solid rounded-full animate-spin" />
-        </motion.div>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="text-blue-400 mt-4 font-medium text-lg"
-        >
-          Loading...
-        </motion.p>
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-3">
+        <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+        <p className="text-blue-400 text-lg">
+          Loading<span className="animate-[dots_1s_ease-in-out_infinite]">...</span>
+        </p>
       </div>
     );
   }
