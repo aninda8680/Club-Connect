@@ -1,6 +1,8 @@
 // EventCard.tsx
 import React, { useState } from "react";
-import axios from "axios";
+
+import api from "@/api"; 
+import { getBaseUrl } from "../utils/getBaseUrl";
 import { motion } from "framer-motion";
 import { FiHeart, FiStar, FiCalendar, FiMapPin, FiCheck, FiX } from "react-icons/fi";
 
@@ -40,7 +42,7 @@ const EventCard: React.FC<EventCardProps> = ({
     const userId = localStorage.getItem("userId");
     if (!userId) return alert("Please login first");
     try {
-      const res = await axios.post(`http://localhost:5000/api/events/${_id}/like`, { userId });
+      const res = await api.post(`/events/${_id}/like`, { userId });
       setLikes(res.data.likes);
       setIsLiked(!isLiked);
     } catch (err) {
@@ -52,7 +54,7 @@ const EventCard: React.FC<EventCardProps> = ({
     const userId = localStorage.getItem("userId");
     if (!userId) return alert("Please login first");
     try {
-      const res = await axios.post(`http://localhost:5000/api/events/${_id}/interested`, { userId });
+      const res = await api.post(`/events/${_id}/interested`, { userId });
       setInterested(res.data.interested);
       setIsInterested(!isInterested);
     } catch (err) {
@@ -81,7 +83,7 @@ const EventCard: React.FC<EventCardProps> = ({
         {poster ? (
           <div className="relative h-48 overflow-hidden">
             <img
-              src={`http://localhost:5000${poster}`}
+              src={`${getBaseUrl()}${poster}`}
               alt="Event Poster"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
