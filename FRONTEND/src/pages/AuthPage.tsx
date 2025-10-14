@@ -70,30 +70,40 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen w-screen bg-black text-gray-200 font-mono flex items-center justify-center p-4">
-      {/* Background elements */}
-      <div className="fixed inset-0 overflow-hidden opacity-10">
-        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-500 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-1/3 w-40 h-40 bg-purple-600 rounded-full filter blur-3xl"></div>
-        <div className="absolute top-2/3 right-1/4 w-28 h-28 bg-cyan-500 rounded-full filter blur-3xl"></div>
-      </div>
+    <div className="min-h-screen w-screen bg-[#0A0A0A] text-gray-200 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Dark Textured Background */}
+      <div className="fixed inset-0 overflow-hidden">
+        {/* Base dark layer */}
+        <div className="absolute inset-0 bg-[#0A0A0A]" style={{
+          backgroundImage: `radial-gradient(circle at 50% 50%, #111111 2px, transparent 2px)`,
+          backgroundSize: '24px 24px',
+          opacity: 0.4
+        }}></div>
 
-      {/* Binary rain */}
-      <div className="fixed inset-0 overflow-hidden opacity-5 pointer-events-none">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute text-xs text-green-400"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              opacity: Math.random() * 0.5 + 0.1,
-              transform: `scale(${Math.random() * 0.5 + 0.5})`,
-            }}
-          >
-            {Math.random() > 0.5 ? "1" : "0"}
-          </div>
-        ))}
+        {/* Subtle vertical lines */}
+        <div className="absolute inset-0" style={{
+          backgroundImage: `linear-gradient(0deg, transparent 24%, rgba(44, 90, 160, 0.03) 25%, rgba(44, 90, 160, 0.03) 26%, transparent 27%, transparent 74%, rgba(44, 90, 160, 0.03) 75%, rgba(44, 90, 160, 0.03) 76%, transparent 77%, transparent)`,
+          backgroundSize: '60px 60px'
+        }}></div>
+
+        {/* Very subtle animated glow */}
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-pulse"
+              style={{
+                left: `${25 + (i * 25)}%`,
+                top: '50%',
+                width: '1px',
+                height: '70%',
+                background: 'linear-gradient(0deg, transparent, rgba(44, 90, 160, 0.1), transparent)',
+                transform: 'translateY(-50%)',
+                animation: `pulse 4s infinite ${i * 1}s`
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="relative z-10 w-full max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -106,26 +116,27 @@ export default function AuthPage() {
         >
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-gradient-to-br from-blue-900 to-blue-800 border border-blue-700 rounded-lg">
-                <Terminal className="w-8 h-8 text-blue-400" />
+              <div className="p-2 bg-[#2C5AA0] border-b-4 border-[#1D3B6F] hover:border-b-2 hover:mt-0.5 transition-all">
+                <Terminal className="w-8 h-8 text-white" />
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold text-[#5B8DD9] minecraft-text" style={{ textShadow: '2px 2px #1D3B6F' }}>
                 Club-Connect
               </h1>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-100 mb-4">
+            <h2 className="text-2xl font-bold text-[#5B8DD9] mb-4" style={{ textShadow: '2px 2px #1D3B6F' }}>
               Developer Portal
             </h2>
-            <p className="text-gray-400 mb-6 leading-relaxed">
+            <p className="text-[#8BA8D9] mb-6 leading-relaxed border-l-4 border-[#2C5AA0] pl-4">
               Secure access to the Adamas university's club management system.
               Built for developers, by developers.
             </p>
 
             <button
               onClick={() => navigate("/")}
-              className="px-5 py-2 mt-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-medium rounded-lg shadow-lg hover:opacity-90 transition"
+              className="px-5 py-2 mt-4 bg-[#2C5AA0] text-white font-bold border-b-4 border-[#1D3B6F] hover:border-b-2 hover:mt-0.5 transition-all"
+              style={{ imageRendering: 'pixelated' }}
             >
-              Home-Page
+              ⬅️ Back to Home
             </button>
           </div>
 
@@ -142,13 +153,17 @@ export default function AuthPage() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-gray-900/80 backdrop-blur-sm border border-gray-800 rounded-xl p-8 shadow-2xl"
+          className="bg-[#1D3B6F]/90 backdrop-blur-sm border-4 border-[#2C5AA0] p-8"
+          style={{ 
+            boxShadow: '8px 8px 0 rgba(0,0,0,0.2)',
+            imageRendering: 'pixelated'
+          }}
         >
           <div className="text-center mb-8">
-            <h3 className="text-xl font-semibold text-gray-100 mb-2">
-              {isLogin ? "Login to Continue" : "Register a New Account"}
+            <h3 className="text-2xl font-bold text-[#5B8DD9] mb-2" style={{ textShadow: '2px 2px #1D3B6F' }}>
+              {isLogin ? "🏰 Login to Continue" : "📝 Register a New Account"}
             </h3>
-            <p className="text-gray-400">
+            <p className="text-[#8BA8D9]">
               Use your credentials to access the system
             </p>
           </div>
@@ -164,7 +179,8 @@ export default function AuthPage() {
                 autoComplete="username"
                 autoCapitalize="off"
                 spellCheck="false"
-                className="w-full bg-gray-800 border border-gray-700 text-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-[#2C5AA0]/80 border-b-4 border-[#1D3B6F] text-white p-3 font-bold placeholder:text-[#8BA8D9] focus:outline-none focus:border-b-2 focus:mt-0.5 transition-all"
+                style={{ imageRendering: 'pixelated' }}
               />
             )}
 
@@ -177,7 +193,8 @@ export default function AuthPage() {
               autoComplete={isLogin ? "email" : "new-email"}
               autoCapitalize="off"
               spellCheck="false"
-              className="w-full bg-gray-800 border border-gray-700 text-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-[#2C5AA0]/80 border-b-4 border-[#1D3B6F] text-white p-3 font-bold placeholder:text-[#8BA8D9] focus:outline-none focus:border-b-2 focus:mt-0.5 transition-all"
+              style={{ imageRendering: 'pixelated' }}
             />
 
             <input
@@ -189,37 +206,44 @@ export default function AuthPage() {
               autoComplete={isLogin ? "current-password" : "new-password"}
               autoCapitalize="off"
               spellCheck="false"
-              className="w-full bg-gray-800 border border-gray-700 text-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-[#2C5AA0]/80 border-b-4 border-[#1D3B6F] text-white p-3 font-bold placeholder:text-[#8BA8D9] focus:outline-none focus:border-b-2 focus:mt-0.5 transition-all"
+              style={{ imageRendering: 'pixelated' }}
             />
 
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ y: -2 }}
+              whileTap={{ y: 2, borderBottomWidth: '2px', marginTop: '2px' }}
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-medium py-3 px-6 rounded-lg shadow-lg hover:opacity-90 transition"
+              className="w-full bg-[#2C5AA0] text-white font-bold py-3 px-6 border-b-4 border-[#1D3B6F] hover:border-b-2 hover:mt-0.5 transition-all"
+              style={{ imageRendering: 'pixelated' }}
             >
-              {isLoading
-                ? "Please wait..."
-                : isLogin
-                ? "Login"
-                : "Register"}
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="animate-pulse">⏳</span> Mining...
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  {isLogin ? "⚡ Login" : "📝 Register"}
+                </span>
+              )}
             </motion.button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-gray-400">
+          <p className="mt-6 text-center text-sm text-[#8BA8D9]">
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="text-blue-400 hover:text-blue-300 underline"
+              className="text-[#5B8DD9] hover:text-white font-bold px-2 py-1 border-b-2 border-[#2C5AA0] hover:border-b-1 hover:mt-0.5 transition-all"
+              style={{ imageRendering: 'pixelated' }}
             >
               {isLogin ? "Register here" : "Login here"}
             </button>
           </p>
 
-          <div className="mt-8 pt-6 border-t border-gray-800 text-center">
-            <p className="text-gray-500 text-xs">
-              Need help? Contact your system administrator
+          <div className="mt-8 pt-6 border-t-4 border-[#2C5AA0] text-center">
+            <p className="text-[#8BA8D9] text-xs">
+              Need help? Contact your system administrator 🛠️
             </p>
           </div>
         </motion.div>
