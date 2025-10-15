@@ -9,6 +9,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import api from "@/api";
+import { getBaseUrl } from "@/utils/getBaseUrl";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Comment {
@@ -280,7 +281,7 @@ const PostCard: React.FC<PostCardProps> = ({
               className="rounded-xl overflow-hidden mb-4 border border-gray-700"
             >
               <img
-                src={`http://localhost:5000${image}`}
+                src={`${getBaseUrl()}${image}`}
                 alt="Post"
                 className="w-full h-auto max-h-96 object-cover cursor-pointer"
               />
