@@ -62,6 +62,18 @@ app.use("/api/events", eventRoutes);
 app.use("/api/join", joinRequestRoutes);
 app.use("/api/posts", postRoutes);
 
+// ✅ Root Route for Render or Browser Check
+app.get("/", (req, res) => {
+  res.send("✅ Club Connect backend is running successfully!");
+});
+
+// ✅ Health Check Route (optional, useful for monitoring tools)
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "OK", message: "Server is healthy 🚀" });
+});
+
+
+
 // --- Connect to MongoDB and start server ---
 const PORT = process.env.PORT || 5000;
 
