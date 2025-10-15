@@ -7,6 +7,7 @@ import { toast } from "react-hot-toast";
 import EventCard from "../../components/EventCard";
 import Navbar from "../../components/Navbar";
 import api from "@/api";
+import Loader from "@/components/Loader";
 
 export default function PublicPanel() {
   const [clubs, setClubs] = useState<any[]>([]);
@@ -78,22 +79,12 @@ export default function PublicPanel() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="h-screen w-screen bg-black text-white flex items-center justify-center">
-        <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-cyan-400 mb-4"></div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-cyan-400 font-mono"
-          >
-            Loading Club-Connect... 
-          </motion.p>
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <Loader /> 
+    </div>
+  );
+}
 
   // Scroll to section function
   const scrollToSection = (index: number) => {

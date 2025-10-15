@@ -122,6 +122,7 @@ export default function Navbar() {
     { to: "/publicpanel", label: "Dashboard", roles: ["visitor"] },
     { to: "/create-post", label: "Post", roles: ["member", "visitor"] },
     { to: "/feed", label: "Feed", roles: ["member", "visitor"] },
+    { to: "/notifications", label: "Notification", roles: ["member"] },
   ];
 
   // Filter links based on current user role

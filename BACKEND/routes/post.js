@@ -85,6 +85,19 @@ router.put("/:id/like", verifyToken, async (req, res) => {
     }
 
     await post.save();
+
+    // Create notification only if the liker is not the post owner
+    if (!post.user.equals(req.userId) && !alreadyLiked) {
+      const Notification = (await import("../models/Notification.js")).default;
+      await Notification.create({
+        recipient: post.user,
+        sender: req.userId,
+        post: post._id,
+        type: "like",
+        message: "liked your post",
+      });
+    }
+
     res.json({ msg: "Post updated", likes: post.likes.length });
   } catch (err) {
     console.error(err);
@@ -109,6 +122,18 @@ router.post("/:id/comment", verifyToken, async (req, res) => {
 
     post.comments.push(newComment);
     await post.save();
+
+    // Notification for comment
+    if (!post.user.equals(req.userId)) {
+      const Notification = (await import("../models/Notification.js")).default;
+      await Notification.create({
+        recipient: post.user,
+        sender: req.userId,
+        post: post._id,
+        type: "comment",
+        message: "commented on your post",
+      });
+    }
 
     // Populate user info in response
     const populatedPost = await post.populate("comments.user", "username email");

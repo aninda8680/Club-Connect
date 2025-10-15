@@ -20,6 +20,8 @@ import EventsPage from "./pages/EventsPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import FeedPage from "./pages/FeedPage";
 import Profile from "./pages/Profile";
+import Notification from "./pages/NotificationPage";
+
 
 function App() {
   return (
@@ -210,6 +212,19 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+            {/* 🔔 Notifications (Admin, Member, Visitor) */}
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute role="member">
+                <Navbar />
+                <Notification />
+              </ProtectedRoute>
+            }
+          />
+
+
         </Routes>
       </Router>
     </div>

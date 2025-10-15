@@ -6,7 +6,7 @@ import api from "./api";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  role?: string; // required role (optional)
+  role?: string ; // required role (optional)
 }
 
 export default function ProtectedRoute({ children, role }: ProtectedRouteProps) {
