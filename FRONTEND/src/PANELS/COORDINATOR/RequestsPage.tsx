@@ -46,23 +46,21 @@ export default function RequestsPage() {
     console.log("Fetching requests for clubId:", clubId);
     setLoading(true);
 
-    // ✅ Using api instead of fetch
-    interface ApiResponse {
-      data: Request[];
-    }
+    
 
-    api.get<ApiResponse>(`/join/club/${clubId}`)
-      .then((res) => {
-        console.log("Fetched requests:", res.data);
-        const updatedRequests: Request[] = res.data.data.map((req: Request) => ({
-          ...req,
-          course,
-          stream,
-          year,
-          semester,
-        }));
-        setRequests(updatedRequests);
-      })
+    api.get<Request[]>(`/join/club/${clubId}`)
+  .then((res) => {
+    console.log("Fetched requests:", res.data);
+    const updatedRequests: Request[] = res.data.map((req: Request) => ({
+      ...req,
+      course,
+      stream,
+      year,
+      semester,
+    }));
+    setRequests(updatedRequests);
+  })
+
       .catch((err: unknown) => {
         console.error("Error fetching join requests:", err);
         setRequests([]);
