@@ -1,3 +1,4 @@
+// src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import AdminPanel from "./PANELS/ADMIN/AdminPanel";
@@ -8,9 +9,7 @@ import PublicPanel from "./PANELS/PUBLIC/PublicPanel";
 import ProtectedRoute from "./ProtectedRoute";
 import AuthPage from "./pages/AuthPage";
 import ProfileCompletionPage from "./pages/ProfileCompletionPage";
-import Navbar from "./components/Navbar";
 import ManageRoles from "./PANELS/ADMIN/ManageRoles";
-// import ManageClubs from "./PANELS/ADMIN/ManageClubs";
 import CreateClub from "./PANELS/ADMIN/CreateClub";
 import AdminEvent from "./PANELS/ADMIN/AdminEvent";
 import EventCreate from "./PANELS/COORDINATOR/EventCreate";
@@ -21,7 +20,7 @@ import CreatePostPage from "./pages/CreatePostPage";
 import FeedPage from "./pages/FeedPage";
 import Profile from "./pages/Profile";
 import Notification from "./pages/NotificationPage";
-
+import Layout from "./components/Layout"; // 👈 We'll add this file
 
 function App() {
   return (
@@ -33,198 +32,129 @@ function App() {
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/complete-profile" element={<ProfileCompletionPage />} />
 
-          <Route
-            path="/profile"
-            element={
-              <>
-                <Navbar />
-                <Profile />
-              </>
-            }
-          />
+          {/* ---------- ROUTES WITH NAVBAR (Persistent) ---------- */}
+          <Route element={<Layout />}>
+            {/* Public or Semi-public */}
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/feed" element={<FeedPage />} />
+            <Route path="/create-post" element={<CreatePostPage />} />
 
-          {/* Feed Page */}
-          <Route
-            path="/feed"
-            element={
-              <>
-                <Navbar />
-                <FeedPage />
-              </>
-            }
-          />
+            {/* ---------- 🔐 PROTECTED ROUTES ---------- */}
 
-          {/* Create Post (Public Access if needed) */}
-          <Route
-            path="/create-post"
-            element={
-              <>
-                <Navbar />
-                <CreatePostPage />
-              </>
-            }
-          />
+            {/* 🧠 Admin Routes */}
+            <Route
+              path="/adminpanel"
+              element={
+                <ProtectedRoute role="admin">
+                  <AdminPanel />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/manageroles"
+              element={
+                <ProtectedRoute role="admin">
+                  <ManageRoles />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/createclub"
+              element={
+                <ProtectedRoute role="admin">
+                  <CreateClub />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/adminevent"
+              element={
+                <ProtectedRoute role="admin">
+                  <AdminEvent />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* ---------- 🔐 PROTECTED ROUTES ---------- */}
+            {/* 🧩 Coordinator Routes */}
+            <Route
+              path="/coordinatorpanel"
+              element={
+                <ProtectedRoute role="coordinator">
+                  <CoordinatorPanel />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/eventcreate"
+              element={
+                <ProtectedRoute role="coordinator">
+                  <EventCreate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/requests/:clubId"
+              element={
+                <ProtectedRoute role="coordinator">
+                  <RequestsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/coordinator/members"
+              element={
+                <ProtectedRoute role="coordinator">
+                  <CoordinatorMembers />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* 🧠 Admin Routes */}
-          <Route
-            path="/adminpanel"
-            element={
-              <ProtectedRoute role="admin">
-                <Navbar />
-                <AdminPanel />
-              </ProtectedRoute>
-            }
-          />
+            {/* 🧭 Leader */}
+            <Route
+              path="/leaderpanel"
+              element={
+                <ProtectedRoute role="leader">
+                  <LeaderPanel />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/manageroles"
-            element={
-              <ProtectedRoute role="admin">
-                <Navbar />
-                <ManageRoles />
-              </ProtectedRoute>
-            }
-          />
+            {/* 👥 Member */}
+            <Route
+              path="/memberpanel"
+              element={
+                <ProtectedRoute role="member">
+                  <MemberPanel />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/events"
+              element={
+                <ProtectedRoute role="member">
+                  <EventsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute role="member">
+                  <Notification />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/createclub"
-            element={
-              <ProtectedRoute role="admin">
-                <Navbar />
-                <CreateClub />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/adminevent"
-            element={
-              <ProtectedRoute role="admin">
-                <Navbar />
-                <AdminEvent />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Uncomment if needed */}
-          {/* <Route
-            path="/manageclubs"
-            element={
-              <ProtectedRoute role="admin">
-                <Navbar />
-                <ManageClubs />
-              </ProtectedRoute>
-            }
-          /> */}
-
-          {/* 🧩 Coordinator Routes */}
-          <Route
-            path="/coordinatorpanel"
-            element={
-              <ProtectedRoute role="coordinator">
-                <Navbar />
-                <CoordinatorPanel />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/eventcreate"
-            element={
-              <ProtectedRoute role="coordinator">
-                <Navbar />
-                <EventCreate />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Dynamic Requests Page */}
-          <Route
-            path="/requests/:clubId"
-            element={
-              <ProtectedRoute role="coordinator">
-                <Navbar />
-                <RequestsPage />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/coordinator/members"
-            element={
-              <ProtectedRoute role="coordinator">
-                <Navbar />
-                <CoordinatorMembers />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* 🧭 Leader Route */}
-          <Route
-            path="/leaderpanel"
-            element={
-              <ProtectedRoute role="leader">
-                <Navbar />
-                <LeaderPanel />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* 👥 Member Routes */}
-          <Route
-            path="/memberpanel"
-            element={
-              <ProtectedRoute role="member">
-                <Navbar />
-                <MemberPanel />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/events"
-            element={
-              <ProtectedRoute role="member">
-                <Navbar />
-                <EventsPage />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/create-post"
-            element={
-              <ProtectedRoute role="member">
-                <Navbar />
-                <CreatePostPage />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* 🌍 Public Panel (Visitors & Members) */}
-          <Route
-            path="/publicpanel"
-            element={
-              <ProtectedRoute role="visitor">
-                <PublicPanel />
-              </ProtectedRoute>
-            }
-          />
-
-            {/* 🔔 Notifications (Admin, Member, Visitor) */}
-          <Route
-            path="/notifications"
-            element={
-              <ProtectedRoute role="member">
-                <Navbar />
-                <Notification />
-              </ProtectedRoute>
-            }
-          />
-
-
+            {/* 🌍 Public Panel */}
+            <Route
+              path="/publicpanel"
+              element={
+                <ProtectedRoute role="visitor">
+                  <PublicPanel />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
         </Routes>
       </Router>
     </div>
