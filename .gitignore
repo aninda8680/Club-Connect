@@ -1,4 +1,55 @@
+# ==========================
+# Global ignores
+# ==========================
+node_modules/
+dist/
+build/
+.env
+.env.*
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Ignore env files
+# ==========================
+# Root-level files to ignore
+# ==========================
+/package.json
+/package-lock.json
+/yarn.lock
+/.env
+/.env.local
+/.zencode/
+
+# ==========================
+# BACKEND specific ignores
+# ==========================
+BACKEND/node_modules/
+BACKEND/dist/
+BACKEND/build/
 BACKEND/.env
+BACKEND/.env.*
+BACKEND/package.json
+BACKEND/package-lock.json
+BACKEND/yarn.lock
+BACKEND/.zencode/
+
+# ==========================
+# FRONTEND specific ignores
+# ==========================
+FRONTEND/node_modules/
+FRONTEND/dist/
+FRONTEND/build/
 FRONTEND/.env
+FRONTEND/.env.*
+FRONTEND/package-lock.json
+FRONTEND/yarn.lock
+FRONTEND/.zencode/
+
+# ==========================
+# IDE / System files
+# ==========================
+.vscode/
+.idea/
+Thumbs.db
