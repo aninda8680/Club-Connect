@@ -7,7 +7,7 @@ const Layout: React.FC = () => {
   return (
     <>
       <Navbar />
-      <main className="pt-16">
+      <main >
         {/* Add padding if your Navbar is fixed */}
         <Outlet />
       </main>
