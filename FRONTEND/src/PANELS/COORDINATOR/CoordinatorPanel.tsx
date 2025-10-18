@@ -182,7 +182,7 @@ export default function CoordinatorPanel() {
         </motion.div>
 
         {/* Club Status */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
@@ -234,7 +234,7 @@ export default function CoordinatorPanel() {
         </motion.div>
 
         {/* Recent Activity Placeholder */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.5 }}
@@ -270,7 +270,7 @@ export default function CoordinatorPanel() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </motion.div>  */}
       </div>
     </div>
   );

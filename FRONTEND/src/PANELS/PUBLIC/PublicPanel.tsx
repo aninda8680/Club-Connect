@@ -5,7 +5,7 @@ import ClubCard from "../../components/ClubCard";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import EventCard from "../../components/EventCard";
-import Navbar from "../../components/Navbar";
+
 import api from "@/api";
 import Loader from "@/components/Loader";
 
@@ -110,7 +110,7 @@ export default function PublicPanel() {
       </div>
 
       {/* Section 1: Hero Intro */}
-      <Navbar />
+
       <section 
         ref={sectionRefs[0]}
         className="h-screen w-full flex flex-col items-center justify-center px-4 md:px-8 text-center space-y-6 relative overflow-hidden"

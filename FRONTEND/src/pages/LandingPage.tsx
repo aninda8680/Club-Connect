@@ -290,10 +290,13 @@ export default function LandingPage() {
   if (loading) {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center">
-      <Loader />
+      <div className="profile-loader">
+        <Loader />
+      </div>
     </div>
   );
 }
+
 
 
   return (

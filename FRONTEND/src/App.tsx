@@ -20,7 +20,7 @@ import CreatePostPage from "./pages/CreatePostPage";
 import FeedPage from "./pages/FeedPage";
 import Profile from "./pages/Profile";
 import Notification from "./pages/NotificationPage";
-import Layout from "./components/Layout"; // 👈 We'll add this file
+import Layout from "./components/Layout";
 
 function App() {
   return (
@@ -34,14 +34,49 @@ function App() {
 
           {/* ---------- ROUTES WITH NAVBAR (Persistent) ---------- */}
           <Route element={<Layout />}>
-            {/* Public or Semi-public */}
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/feed" element={<FeedPage />} />
-            <Route path="/create-post" element={<CreatePostPage />} />
+            {/* 👤 Profile (any logged-in user) */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
 
-            {/* ---------- 🔐 PROTECTED ROUTES ---------- */}
+            {/* 📰 Feed (for member, visitor, coordinator, leader) */}
+            <Route
+              path="/feed"
+              element={
+                <ProtectedRoute role={["member", "visitor", "coordinator", "leader"]}>
+                  <FeedPage />
+                </ProtectedRoute>
+              }
+            />
 
-            {/* 🧠 Admin Routes */}
+            {/* ✍️ Create Post (for member, visitor, coordinator, leader) */}
+            <Route
+              path="/create-post"
+              element={
+                <ProtectedRoute role={["member", "visitor", "coordinator", "leader"]}>
+                  <CreatePostPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* 🔔 Notification (for member, visitor, coordinator, leader) */}
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute role={["member", "visitor", "coordinator", "leader"]}>
+                  <Notification />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* ---------- 🔐 PROTECTED PANELS ---------- */}
+
+            {/* Admin */}
             <Route
               path="/adminpanel"
               element={
@@ -75,7 +110,7 @@ function App() {
               }
             />
 
-            {/* 🧩 Coordinator Routes */}
+            {/* Coordinator */}
             <Route
               path="/coordinatorpanel"
               element={
@@ -109,7 +144,7 @@ function App() {
               }
             />
 
-            {/* 🧭 Leader */}
+            {/* Leader */}
             <Route
               path="/leaderpanel"
               element={
@@ -119,7 +154,7 @@ function App() {
               }
             />
 
-            {/* 👥 Member */}
+            {/* Member */}
             <Route
               path="/memberpanel"
               element={
@@ -136,16 +171,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/notifications"
-              element={
-                <ProtectedRoute role="member">
-                  <Notification />
-                </ProtectedRoute>
-              }
-            />
 
-            {/* 🌍 Public Panel */}
+            {/* Visitor */}
             <Route
               path="/publicpanel"
               element={

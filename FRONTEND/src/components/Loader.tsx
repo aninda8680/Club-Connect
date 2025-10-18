@@ -29,6 +29,11 @@ const StyledWrapper = styled.div`
     letter-spacing: 1px;
   }
 
+  .profile-loader .loader-text::after {
+  content: " profile";
+}
+
+
   .load {
     background-color: #9A79FF;
     border-radius: 50px;

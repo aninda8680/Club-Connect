@@ -5,6 +5,60 @@ import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
+// Toggle like
+router.put("/:id/like", verifyToken, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ msg: "Post not found" });
+
+    const alreadyLiked = post.likes.includes(req.userId);
+    // Dynamically import Notification model
+    const NotificationModel = (await import("../models/Notification.js")).default;
+
+    if (alreadyLiked) {
+      // 1. Unlike
+      post.likes = post.likes.filter((id) => id.toString() !== req.userId);
+      
+      // 2. Remove notification associated with this unlike action
+      // Only remove if the liker is not the post owner (as per creation logic)
+      if (!post.user.equals(req.userId)) {
+          await NotificationModel.deleteOne({
+              recipient: post.user,
+              sender: req.userId,
+              post: post._id,
+              type: "like",
+          });
+      }
+
+    } else {
+      // 1. Like
+      post.likes.push(req.userId);
+
+      // 2. Create notification only if the liker is not the post owner
+      if (!post.user.equals(req.userId)) {
+        await NotificationModel.create({
+          recipient: post.user,
+          sender: req.userId,
+          post: post._id,
+          type: "like",
+          message: "liked your post",
+        });
+      }
+    }
+
+    await post.save();
+
+    res.json({ msg: "Post updated", likes: post.likes.length });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+
+
+
+
 // Create a post
 router.post("/", verifyToken, upload.single("image"), async (req, res) => {
   try {

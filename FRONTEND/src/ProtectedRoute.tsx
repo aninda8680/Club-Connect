@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import api from "./api";
+import Loader from "./components/Loader";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  role?: string ; // required role (optional)
+  role?: string | string[]; // ✅ allow single or multiple roles
 }
 
 export default function ProtectedRoute({ children, role }: ProtectedRouteProps) {
@@ -30,12 +31,10 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
         });
 
         const { role, isProfileComplete } = res.data;
-
         setUserRole(role);
         setIsProfileComplete(isProfileComplete);
         setAuthorized(true);
 
-        // sync with localStorage
         localStorage.setItem("role", role);
         localStorage.setItem("isProfileComplete", String(isProfileComplete));
       } catch (err) {
@@ -52,44 +51,40 @@ export default function ProtectedRoute({ children, role }: ProtectedRouteProps) 
     fetchUser();
   }, []);
 
-  // While verifying
   if (loading) {
-    return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-3">
-        <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
-        <p className="text-blue-400 text-lg">
-          Loading<span className="animate-[dots_1s_ease-in-out_infinite]">...</span>
-        </p>
-      </div>
-    );
-  }
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <Loader />
+    </div>
+  );
+}
 
-  // No token or request failed
   if (!authorized) {
     return <Navigate to="/" replace />;
   }
 
-  // If profile incomplete → force complete-profile page
   if (isProfileComplete === false) {
     return <Navigate to="/complete-profile" replace />;
   }
 
-  // If route requires a role, but user doesn't match
-  if (role && userRole !== role) {
-    switch (userRole) {
-      case "admin":
-        return <Navigate to="/adminpanel" replace />;
-      case "coordinator":
-        return <Navigate to="/coordinatorpanel" replace />;
-      case "leader":
-        return <Navigate to="/leaderpanel" replace />;
-      case "visitor":
-        return <Navigate to="/publicpanel" replace />;
-      default:
-        return <Navigate to="/" replace />;
+  // ✅ Handle single or multiple allowed roles
+  if (role) {
+    const allowedRoles = Array.isArray(role) ? role : [role];
+    if (!allowedRoles.includes(userRole || "")) {
+      switch (userRole) {
+        case "admin":
+          return <Navigate to="/adminpanel" replace />;
+        case "coordinator":
+          return <Navigate to="/coordinatorpanel" replace />;
+        case "leader":
+          return <Navigate to="/leaderpanel" replace />;
+        case "visitor":
+          return <Navigate to="/publicpanel" replace />;
+        default:
+          return <Navigate to="/" replace />;
+      }
     }
   }
 
-  // ✅ Authorized & matches conditions → render children
   return <>{children}</>;
 }
