@@ -5,7 +5,6 @@ import { Loader2, RefreshCw, Rss, Filter } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
 import api from "@/api";
-import Loader from "@/components/Loader";
 
 interface User {
   _id: string;

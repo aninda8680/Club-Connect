@@ -158,13 +158,13 @@ const NotificationPage: React.FC = () => {
     );
   };
 
-  // if (loading) {
-  //   return (
-  //     <div className="flex justify-center items-center h-screen bg-black">
-  //       <div className="text-gray-400">Loading notifications...</div>
-  //     </div>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-black">
+        <div className="text-gray-400">Loading notifications...</div>
+      </div>
+    );
+  }
 
   const groupedNotifications = groupNotifications();
 
