@@ -1,16 +1,16 @@
-//AdminEvent.tsx
 import { useEffect, useState } from "react";
 import api from "@/api";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Calendar, 
-  MapPin, 
-  Clock, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Calendar,
+  MapPin,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Trash2,
   AlertCircle,
   Terminal,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 
 interface Event {
@@ -22,18 +22,24 @@ interface Event {
   status: string;
   createdAt?: string;
   submittedBy?: string;
-  poster?: string;   // ✅ added poster field
+  poster?: string;
 }
 
 export default function AdminEvent() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [pendingEvents, setPendingEvents] = useState<Event[]>([]);
+  const [approvedEvents, setApprovedEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchPendingEvents = async () => {
+  // Fetch both pending and approved events
+  const fetchEvents = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/events/pending");
-      setEvents(res.data);
+      const [pendingRes, approvedRes] = await Promise.all([
+        api.get("/events/pending"),
+        api.get("/events/approved"),
+      ]);
+      setPendingEvents(pendingRes.data);
+      setApprovedEvents(approvedRes.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -44,24 +50,38 @@ export default function AdminEvent() {
   const handleAction = async (id: string, status: "approved" | "rejected") => {
     try {
       await api.put(`/events/${id}`, { status });
-      // Remove the event from the list immediately for better UX
-      setEvents(events.filter(event => event._id !== id));
+      setPendingEvents(pendingEvents.filter((e) => e._id !== id));
+      if (status === "approved") {
+        // instantly move to approved list for better UX
+        const moved = pendingEvents.find((e) => e._id === id);
+        if (moved) setApprovedEvents((prev) => [...prev, { ...moved, status }]);
+      }
     } catch (err) {
       console.error(err);
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this event?")) return;
+    try {
+      await api.delete(`/events/${id}`);
+      setApprovedEvents(approvedEvents.filter((e) => e._id !== id));
+    } catch (err) {
+      console.error("Error deleting event:", err);
+    }
+  };
+
   useEffect(() => {
-    fetchPendingEvents();
+    fetchEvents();
   }, []);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -80,157 +100,177 @@ export default function AdminEvent() {
           </div>
           <div>
             <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
-              Pending Event Proposals
+              Event Management
             </h1>
             <p className="text-slate-400 text-sm">
-              <span className="text-green-400">$</span> Review and approve pending event submissions
+              <span className="text-green-400">$</span> Review, approve, and
+              manage event proposals
             </p>
           </div>
         </motion.div>
 
-        {/* Quick Stats */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl p-6 mb-8"
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
-              Review Queue
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700/50">
-              <div className="text-2xl font-bold text-emerald-400">{events.length}</div>
-              <div className="text-slate-400 text-sm">Pending Events</div>
-            </div>
-            <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700/50">
-              <div className="text-2xl font-bold text-blue-400">{events.filter(e => e.status === 'pending').length}</div>
-              <div className="text-slate-400 text-sm">Awaiting Review</div>
-            </div>
-            <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700/50">
-              <div className="text-2xl font-bold text-amber-400">{events.length > 0 ? Math.floor(events.length / 2) : 0}</div>
-              <div className="text-slate-400 text-sm">Avg. Response Time (hrs)</div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Events List */}
-        <div className="space-y-6">
-          {loading ? (
-            // Loading Skeleton
-            Array.from({ length: 3 }).map((_, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0.5 }}
-                animate={{ opacity: 0.8 }}
-                transition={{ repeat: Infinity, repeatType: "reverse", duration: 1.5 }}
-                className="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl p-6 h-40"
-              />
-            ))
-          ) : events.length === 0 ? (
-            // No events state
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12 bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl"
-            >
-              <AlertCircle className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-slate-400 mb-2">No pending events</h3>
-              <p className="text-slate-500">All event proposals have been reviewed</p>
-            </motion.div>
-          ) : (
-            // Events list
-            <AnimatePresence>
-              {events.map((event, index) => (
-                <motion.div
-                  key={event._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.3 }}
-                  className="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl p-6"
-                >
-                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-white mb-2">Event Name : { event.title}</h3>
-                      <p className="text-slate-300 mb-4 line-clamp-2">DESCRIPTION : {event.description}</p>
-                      
-                      {/* ✅ Poster Preview */}
-                      {event.poster && (
-                        <img
-                          src={`http://localhost:5000${event.poster}`}
-                          alt="Poster"
-                          className="w-64 h-40 object-cover rounded mb-4"
-                        />
-                      )}
-
-                      <div className="flex flex-wrap gap-4 text-sm text-slate-400">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-blue-400" />
-                          <span>{formatDate(event.date)}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-red-400" />
-                          <span>{event.venue}</span>
-                        </div>
-                        {event.createdAt && (
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-amber-400" />
-                            <span>Submitted {new Date(event.createdAt).toLocaleDateString()}</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {event.submittedBy && (
-                        <div className="mt-3 text-xs text-slate-500">
-                          Submitted by: {event.submittedBy}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex gap-2 md:flex-col">
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleAction(event._id, "approved")}
-                        className="px-4 py-2 bg-emerald-900/30 hover:bg-emerald-800/50 text-emerald-400 rounded-lg border border-emerald-800/50 transition-colors flex items-center gap-2"
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        Approve
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleAction(event._id, "rejected")}
-                        className="px-4 py-2 bg-rose-900/30 hover:bg-rose-800/50 text-rose-400 rounded-lg border border-rose-800/50 transition-colors flex items-center gap-2"
-                      >
-                        <XCircle className="w-4 h-4" />
-                        Reject
-                      </motion.button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+        {/* Pending Events Section */}
+        <Section
+          title="Pending Event Proposals"
+          icon={<Sparkles className="w-5 h-5 text-emerald-400" />}
+          events={pendingEvents}
+          loading={loading}
+          emptyMessage="No pending events"
+          actionButtons={(event) => (
+            <>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleAction(event._id, "approved")}
+                className="px-4 py-2 bg-emerald-900/30 hover:bg-emerald-800/50 text-emerald-400 rounded-lg border border-emerald-800/50 transition-colors flex items-center gap-2"
+              >
+                <CheckCircle className="w-4 h-4" />
+                Approve
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleAction(event._id, "rejected")}
+                className="px-4 py-2 bg-rose-900/30 hover:bg-rose-800/50 text-rose-400 rounded-lg border border-rose-800/50 transition-colors flex items-center gap-2"
+              >
+                <XCircle className="w-4 h-4" />
+                Reject
+              </motion.button>
+            </>
           )}
-        </div>
+        />
 
-        {/* Footer Note */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-8 text-center text-slate-500 text-sm"
-        >
-          <p>Review all pending event proposals and take appropriate action</p>
-          <code className="bg-slate-900/50 px-2 py-1 rounded text-xs mt-2 inline-block">
-            $ admin review --events
-          </code>
-        </motion.div>
+        {/* Approved Events Section */}
+        <Section
+          title="Approved Events"
+          icon={<CheckCircle className="w-5 h-5 text-blue-400" />}
+          events={approvedEvents}
+          loading={loading}
+          emptyMessage="No approved events"
+          actionButtons={(event) => (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleDelete(event._id)}
+              className="px-4 py-2 bg-rose-900/30 hover:bg-rose-800/50 text-rose-400 rounded-lg border border-rose-800/50 transition-colors flex items-center gap-2"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete
+            </motion.button>
+          )}
+        />
       </div>
     </div>
+  );
+}
+
+// ✅ Reusable Section Component
+function Section({
+  title,
+  icon,
+  events,
+  loading,
+  emptyMessage,
+  actionButtons,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  events: Event[];
+  loading: boolean;
+  emptyMessage: string;
+  actionButtons: (event: Event) => React.ReactNode;
+}) {
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.2 }}
+      className="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl p-6 mb-8"
+    >
+      <div className="flex items-center gap-2 mb-6">
+        {icon}
+        <h2 className="text-lg font-semibold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
+          {title}
+        </h2>
+      </div>
+
+      {loading ? (
+        Array.from({ length: 3 }).map((_, i) => (
+          <div
+            key={i}
+            className="bg-slate-800/40 animate-pulse h-40 rounded-lg mb-4"
+          />
+        ))
+      ) : events.length === 0 ? (
+        <div className="text-center py-8">
+          <AlertCircle className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+          <p className="text-slate-400">{emptyMessage}</p>
+        </div>
+      ) : (
+        <AnimatePresence>
+          {events.map((event, i) => (
+            <motion.div
+              key={event._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ delay: i * 0.1, duration: 0.3 }}
+              className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 mb-4"
+            >
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                <div className="flex-1">
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    {event.title}
+                  </h3>
+                  <p className="text-slate-300 mb-3 line-clamp-2">
+                    {event.description}
+                  </p>
+
+                  {event.poster && (
+                    <img
+                      src={`http://localhost:5000${event.poster}`}
+                      alt="Poster"
+                      className="w-64 h-40 object-cover rounded mb-4"
+                    />
+                  )}
+
+                  <div className="flex flex-wrap gap-4 text-sm text-slate-400">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-blue-400" />
+                      <span>{formatDate(event.date)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-red-400" />
+                      <span>{event.venue}</span>
+                    </div>
+                    {event.createdAt && (
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-amber-400" />
+                        <span>
+                          Submitted {new Date(event.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex gap-2 md:flex-col">
+                  {actionButtons(event)}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      )}
+    </motion.div>
   );
 }

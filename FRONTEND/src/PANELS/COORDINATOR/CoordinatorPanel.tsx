@@ -18,73 +18,42 @@ export default function CoordinatorPanel() {
   const userId = localStorage.getItem("userId");
   const [clubName, setClubName] = useState("");
   const [clubId, setClubId] = useState("");
+  const [loadingClub, setLoadingClub] = useState(true);
 
   useEffect(() => {
     const fetchClub = async () => {
       if (!userId) return console.warn("No userId in localStorage");
-
       try {
         const res = await api.get(`/coordinator/myclub/${userId}`);
+        console.log("Fetched club data:", res.data);
         if (res.data.clubName) {
           setClubName(res.data.clubName);
           setClubId(res.data.clubId || "");
         }
       } catch (err) {
         console.error("Error fetching club", err);
+      } finally {
+        setLoadingClub(false);
       }
     };
-
     fetchClub();
   }, [userId]);
 
-  const handleLogout = () => {
-    navigate("/");
-  };
+  const handleLogout = () => navigate("/");
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
 
-  const cards = [
-    {
-      title: "Dashboard",
-      description: "Overview of your club activities",
-      icon: <Terminal className="w-6 h-6 text-blue-400" />,
-      path: "/coordinatorpanel",
-      color: "from-blue-900/50 to-blue-900/30",
-      borderColor: "border-blue-800/30",
-      hoverColor: "from-blue-800/50 to-blue-800/30",
-    },
-    {
-      title: "Events",
-      description: "Create and manage events",
-      icon: <Calendar className="w-6 h-6 text-emerald-400" />,
-      path: "/eventcreate",
-      color: "from-emerald-900/50 to-emerald-900/30",
-      borderColor: "border-emerald-800/30",
-      hoverColor: "from-emerald-800/50 to-emerald-800/30",
-    },
-    {
-      title: "Requests",
-      description: "Manage membership requests",
-      icon: <UserPlus className="w-6 h-6 text-amber-400" />,
-      path: `/requests/${clubId}`,
-      color: "from-amber-900/50 to-amber-900/30",
-      borderColor: "border-amber-800/30",
-      hoverColor: "from-amber-800/50 to-amber-800/30",
-      disabled: !clubId
-    },
-    {
-      title: "Members",
-      description: "View and manage club members",
-      icon: <Users className="w-6 h-6 text-purple-400" />,
-      path: "/coordinator/members",
-      color: "from-purple-900/50 to-purple-900/30",
-      borderColor: "border-purple-800/30",
-      hoverColor: "from-purple-800/50 to-purple-800/30",
-    }
-  ];
+  // If club is loading, show a loader or placeholder
+  if (loadingClub) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Loading club info...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white py-25">
@@ -121,7 +90,7 @@ export default function CoordinatorPanel() {
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <span className="text-blue-200 hidden sm:block">Welcome, {username}</span>
             <motion.button
@@ -154,30 +123,97 @@ export default function CoordinatorPanel() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {cards.map((card, index) => (
+            {/* Dashboard Card */}
+            <motion.div
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover={{ y: -5 }}
+              className="rounded-xl p-5 cursor-pointer bg-gradient-to-br from-blue-900/50 to-blue-900/30 border border-blue-800/30 hover:from-blue-800/50 hover:to-blue-800/30 transition-all duration-200 h-full"
+              onClick={() => navigate("/coordinatorpanel")}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                  <Terminal className="w-6 h-6 text-blue-400" />
+                </div>
+                <h3 className="text-lg font-bold">Dashboard</h3>
+              </div>
+              <p className="text-slate-300 text-sm mb-2">Overview of your club activities</p>
+            </motion.div>
+
+            {/* Events Card */}
+            <motion.div
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover={{ y: -5 }}
+              className="rounded-xl p-5 cursor-pointer bg-gradient-to-br from-emerald-900/50 to-emerald-900/30 border border-emerald-800/30 hover:from-emerald-800/50 hover:to-emerald-800/30 transition-all duration-200 h-full"
+              onClick={() => navigate("/eventcreate")}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                  <Calendar className="w-6 h-6 text-emerald-400" />
+                </div>
+                <h3 className="text-lg font-bold">Events</h3>
+              </div>
+              <p className="text-slate-300 text-sm mb-2">Create and manage events</p>
+            </motion.div>
+
+            {/* Requests Card */}
+            {clubId ? (
               <motion.div
-                key={index}
                 variants={cardVariants}
                 initial="hidden"
                 animate="visible"
-                transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className={`rounded-xl p-5 cursor-pointer bg-gradient-to-br ${card.color} border ${card.borderColor} hover:${card.hoverColor} transition-all duration-200 h-full ${card.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                onClick={() => !card.disabled && navigate(card.path)}
-                title={card.disabled ? "You need to be assigned to a club first" : ""}
+                className="rounded-xl p-5 cursor-pointer bg-gradient-to-br from-amber-900/50 to-amber-900/30 border border-amber-800/30 hover:from-amber-800/50 hover:to-amber-800/30 transition-all duration-200 h-full"
+                onClick={() => navigate(`/requests/${clubId}`)}
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50">
-                    {card.icon}
+                    <UserPlus className="w-6 h-6 text-amber-400" />
                   </div>
-                  <h3 className="text-lg font-bold">{card.title}</h3>
+                  <h3 className="text-lg font-bold">Requests</h3>
                 </div>
-                <p className="text-slate-300 text-sm mb-2">{card.description}</p>
-                {card.disabled && (
-                  <p className="text-amber-500 text-xs mt-2">Assign club access required</p>
-                )}
+                <p className="text-slate-300 text-sm mb-2">Manage membership requests</p>
               </motion.div>
-            ))}
+            ) : (
+              <motion.div
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover={{ y: -5 }}
+                className="rounded-xl p-5 opacity-50 cursor-not-allowed bg-gradient-to-br from-amber-900/50 to-amber-900/30 border border-amber-800/30 transition-all duration-200 h-full"
+                title="You need to be assigned to a club first"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                    <UserPlus className="w-6 h-6 text-amber-400" />
+                  </div>
+                  <h3 className="text-lg font-bold">Requests</h3>
+                </div>
+                <p className="text-slate-300 text-sm mb-2">Assign club access required</p>
+              </motion.div>
+            )}
+
+            {/* Members Card */}
+            <motion.div
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover={{ y: -5 }}
+              className="rounded-xl p-5 cursor-pointer bg-gradient-to-br from-purple-900/50 to-purple-900/30 border border-purple-800/30 hover:from-purple-800/50 hover:to-purple-800/30 transition-all duration-200 h-full"
+              onClick={() => navigate("/coordinator/members")}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                  <Users className="w-6 h-6 text-purple-400" />
+                </div>
+                <h3 className="text-lg font-bold">Members</h3>
+              </div>
+              <p className="text-slate-300 text-sm mb-2">View and manage club members</p>
+            </motion.div>
+
           </div>
         </motion.div>
 
