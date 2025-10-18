@@ -170,18 +170,27 @@ export default function Navbar() {
 
       {/* Main Navbar with scroll animations */}
       <motion.nav
-        initial={{ y: 0, opacity: 1 }}
-        animate={{ 
-          y: isVisible ? 0 : -100,
-          opacity: isVisible ? 1 : 0
-        }}
-        transition={{ 
-          type: "spring", 
-          stiffness: 300, 
-          damping: 30 
-        }}
-        className={`fixed top-0 left-0 right-0 w-full z-50 px-4 py-3 transition-all duration-500 `}
-      >
+  initial={{ y: 0, opacity: 1 }}
+  animate={{ 
+    y: isVisible ? 0 : -100,
+    opacity: isVisible ? 1 : 0
+  }}
+  transition={{ 
+    type: "spring", 
+    stiffness: 300, 
+    damping: 30 
+  }}
+  className="fixed top-0 left-0 right-0 w-full z-50 px-4 py-3 transition-all duration-500"
+
+>
+<motion.div
+  className="absolute inset-0 -z-10"
+  animate={{
+    backgroundColor: isScrolled ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0)"
+  }}
+  transition={{ duration: 0.4 }}
+/>
+
         <div className="relative mx-auto max-w-15xl flex justify-between items-center h-12">
 
           {/* Logo with scaling animation */}

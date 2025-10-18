@@ -1,4 +1,3 @@
-//MEMBER/MemberPanel.tsx
 import api from "@/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,98 +8,122 @@ interface Club {
   coordinator: { username: string; email: string };
 }
 
+interface Announcement {
+  _id: string;
+  title: string;
+  message: string;
+  createdAt: string;
+}
+
 export default function MemberPanel() {
   const navigate = useNavigate();
-  // Retrieve user-specific data from local storage
   const username = localStorage.getItem("username");
   const clubId = localStorage.getItem("clubId");
 
-  // State to store the fetched club details
   const [club, setClub] = useState<Club | null>(null);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [loadingAnnouncements, setLoadingAnnouncements] = useState(true);
 
-  // useEffect hook to fetch club details when the component mounts or clubId changes
+  // Fetch club info
   useEffect(() => {
-  if (clubId) {
+    if (!clubId) return;
     const fetchClub = async () => {
       try {
-        const res = await api.get(`/clubs/${clubId}`); // ✅ Auto handles base URL
+        const res = await api.get(`/clubs/${clubId}`);
         setClub(res.data);
       } catch (error) {
         console.error("Error fetching club details:", error);
-        setClub(null); // Handle error state safely
+        setClub(null);
       }
     };
-
     fetchClub();
-  }
-}, [clubId]);
+  }, [clubId]);
 
-  // Handler for user logout
+  // Fetch club announcements
+  useEffect(() => {
+    if (!clubId) return;
+    const fetchAnnouncements = async () => {
+      setLoadingAnnouncements(true);
+      try {
+        const res = await api.get(`/announcements?clubId=${clubId}`);
+        setAnnouncements(res.data);
+      } catch (err) {
+        console.error("Failed to fetch announcements", err);
+        setAnnouncements([]);
+      } finally {
+        setLoadingAnnouncements(false);
+      }
+    };
+    fetchAnnouncements();
+  }, [clubId]);
+
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/"); // redirect to landing page
+    navigate("/");
   };
 
   return (
-    // Main container: full screen, black background, centered content
-    <div className="min-h-screen flex items-center justify-center bg-black text-white px-4">
+    <div className="min-h-screen flex flex-col items-center bg-gray-950 text-white pt-25 px-4 py-8 space-y-8">
 
-      {/* Panel container for a clean, contained look */}
-      <div className="w-full max-w-lg p-8 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 space-y-8">
-        
-        {/* Header Section */}
-        <div className="text-center space-y-2 border-b border-gray-700 pb-6">
-          <h1 className="text-4xl font-extrabold text-blue-400 tracking-tight">
-            Member Dashboard
-          </h1>
-          <p className="text-xl text-gray-300">
-            Welcome, <span className="font-semibold text-blue-300">{username || 'Guest'}</span>
-          </p>
-        </div>
+      {/* Dashboard Header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-4xl font-extrabold text-blue-400 tracking-tight">
+          Member Dashboard
+        </h1>
+        <p className="text-xl text-gray-300">
+          Welcome, <span className="font-semibold text-blue-300">{username || 'Guest'}</span>
+        </p>
+      </div>
 
-        {/* Club Details Section */}
-        <div className="space-y-6">
-          {club ? (
-            <div className="bg-gray-700 p-6 rounded-lg shadow-inner">
-              <h2 className="text-2xl font-bold mb-3 text-blue-400 border-b border-gray-600 pb-2">
-                Your Club:
-              </h2>
-              <div className="space-y-3">
-                <p className="text-lg flex justify-between items-center">
-                  <span className="text-gray-300">Name:</span>
-                  <span className="font-bold text-xl text-white">{club.name}</span>
-                </p>
-                <div className="pt-2 border-t border-gray-600">
-                  <h3 className="text-md font-semibold text-gray-300 mb-1">
-                    Coordinator Details:
-                  </h3>
-                  <p className="text-md pl-4">
-                    <span className="font-medium text-gray-200">{club.coordinator.username}</span> 
-                    <span className="text-gray-400"> • {club.coordinator.email}</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center p-6 bg-gray-700 rounded-lg">
-              <p className="text-gray-400 font-medium">
-                {clubId ? 'Loading club details...' : 'Club ID not found.'}
+      {/* Club Info Box */}
+      <div className="w-full max-w-lg bg-slate-900/70 p-6 rounded-xl shadow-2xl border border-gray-700 space-y-4">
+        <h2 className="text-2xl font-bold text-blue-400 border-b border-gray-600 pb-2">
+          Your Club
+        </h2>
+        {club ? (
+          <div className="space-y-3">
+            <p className="text-lg flex justify-between items-center">
+              <span className="text-gray-300">Name:</span>
+              <span className="font-bold text-xl text-white">{club.name}</span>
+            </p>
+            <div className="pt-2 border-t border-gray-600">
+              <h3 className="text-md font-semibold text-gray-300 mb-1">
+                Coordinator Details:
+              </h3>
+              <p className="text-md pl-4">
+                <span className="font-medium text-gray-200">{club.coordinator.username}</span> 
+                <span className="text-gray-400"> • {club.coordinator.email}</span>
               </p>
             </div>
+          </div>
+        ) : (
+          <p className="text-gray-400 font-medium">{clubId ? 'Loading club details...' : 'Club ID not found.'}</p>
+        )}
+      </div>
+
+      {/* Announcements Box */}
+      {clubId && (
+        <div className="w-full max-w-lg bg-slate-900/70 p-6 rounded-xl shadow-inner space-y-4 max-h-96 overflow-y-auto">
+          <h2 className="text-2xl font-bold text-blue-400 border-b border-gray-600 pb-2">
+            Announcements
+          </h2>
+          {loadingAnnouncements ? (
+            <p className="text-gray-400">Loading announcements...</p>
+          ) : announcements.length === 0 ? (
+            <p className="text-gray-400">No announcements yet.</p>
+          ) : (
+            announcements.map(a => (
+              <div key={a._id} className="p-3 bg-gray-800 rounded border border-gray-600">
+                <h3 className="font-semibold text-white">{a.title}</h3>
+                <p className="text-gray-300">{a.message}</p>
+                <span className="text-gray-500 text-xs">{new Date(a.createdAt).toLocaleString()}</span>
+              </div>
+            ))
           )}
         </div>
+      )}
 
-        {/* Action Section */}
-        <div className="pt-4">
-          <button
-            onClick={handleLogout}
-            className="w-full px-5 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold text-lg rounded-xl shadow-lg transition duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-            aria-label="Logout and clear session"
-          >
-            Log Out
-          </button>
-        </div>
-      </div>
+      
     </div>
   );
 }

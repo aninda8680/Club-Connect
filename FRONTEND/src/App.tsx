@@ -48,7 +48,7 @@ function App() {
             <Route
               path="/feed"
               element={
-                <ProtectedRoute role={["member", "visitor", "coordinator", "leader"]}>
+                <ProtectedRoute role={["member", "visitor", "coordinator", "leader", "admin"]}>
                   <FeedPage />
                 </ProtectedRoute>
               }

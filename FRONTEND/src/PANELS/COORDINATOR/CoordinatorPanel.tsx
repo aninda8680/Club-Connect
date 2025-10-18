@@ -9,8 +9,16 @@ import {
   UserPlus, 
   LogOut,
   Sparkles,
-  Club
+  Club,
+  MessageCircle
 } from "lucide-react";
+
+interface Announcement {
+  _id: string;
+  title: string;
+  message: string;
+  createdAt: string;
+}
 
 export default function CoordinatorPanel() {
   const navigate = useNavigate();
@@ -19,6 +27,12 @@ export default function CoordinatorPanel() {
   const [clubName, setClubName] = useState("");
   const [clubId, setClubId] = useState("");
   const [loadingClub, setLoadingClub] = useState(true);
+
+  // Announcements
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [newTitle, setNewTitle] = useState("");
+  const [newMessage, setNewMessage] = useState("");
+  const [posting, setPosting] = useState(false);
 
   useEffect(() => {
     const fetchClub = async () => {
@@ -39,14 +53,46 @@ export default function CoordinatorPanel() {
     fetchClub();
   }, [userId]);
 
+  // Fetch announcements
+  useEffect(() => {
+    if (!clubId) return;
+    const fetchAnnouncements = async () => {
+      try {
+        const res = await api.get(`/announcements?clubId=${clubId}`);
+        setAnnouncements(res.data);
+      } catch (err) {
+        console.error("Failed to fetch announcements", err);
+      }
+    };
+    fetchAnnouncements();
+  }, [clubId]);
+
   const handleLogout = () => navigate("/");
+
+  const postAnnouncement = async () => {
+    if (!newTitle || !newMessage) return;
+    setPosting(true);
+    try {
+      const res = await api.post("/announcements", {
+        title: newTitle,
+        message: newMessage,
+        clubId
+      });
+      setAnnouncements(prev => [res.data, ...prev]);
+      setNewTitle("");
+      setNewMessage("");
+    } catch (err) {
+      console.error("Failed to post announcement", err);
+    } finally {
+      setPosting(false);
+    }
+  };
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
   };
 
-  // If club is loading, show a loader or placeholder
   if (loadingClub) {
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
@@ -213,100 +259,68 @@ export default function CoordinatorPanel() {
               </div>
               <p className="text-slate-300 text-sm mb-2">View and manage club members</p>
             </motion.div>
-
           </div>
         </motion.div>
 
-        {/* Club Status */}
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl p-6 mb-8"
-        >
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Club className="w-5 h-5 text-blue-400" />
-            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Club Status
-            </span>
-          </h3>
-          
-          {clubName ? (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-blue-900/10 border border-blue-800/30 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <Club className="w-5 h-5 text-blue-400" />
-                  <span className="text-blue-400 font-medium">Active Club</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="text-xs text-blue-400 mr-2">Assigned</span>
-                  <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
-                  <div className="text-lg font-bold text-emerald-400">12</div>
-                  <div className="text-slate-400">Total Members</div>
-                </div>
-                <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
-                  <div className="text-lg font-bold text-blue-400">5</div>
-                  <div className="text-slate-400">Upcoming Events</div>
-                </div>
-                <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50">
-                  <div className="text-lg font-bold text-amber-400">3</div>
-                  <div className="text-slate-400">Pending Requests</div>
-                </div>
-              </div>
+        {/* Announcements Section */}
+        {clubId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl p-6 mb-8"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <MessageCircle className="w-5 h-5 text-blue-400" />
+              <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Announcements
+              </h3>
             </div>
-          ) : (
-            <div className="text-center py-6">
-              <Club className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-              <h4 className="text-slate-400 font-medium mb-2">No Club Assigned</h4>
-              <p className="text-slate-500 text-sm">You haven't been assigned to manage any club yet</p>
-              <p className="text-slate-600 text-xs mt-2">Contact an administrator for club assignment</p>
-            </div>
-          )}
-        </motion.div>
 
-        {/* Recent Activity Placeholder */}
-        {/* <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          className="bg-slate-900/70 backdrop-blur-sm border border-slate-800 rounded-xl p-6"
-        >
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-purple-400" />
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Recent Activity
-            </span>
-          </h3>
-          
-          <div className="space-y-3">
-            <div className="flex items-start">
-              <div className="bg-green-500 rounded-full h-2 w-2 mt-2 mr-3"></div>
-              <div>
-                <p className="text-sm">New member joined</p>
-                <p className="text-slate-400 text-xs">2 hours ago</p>
-              </div>
+            {/* New Announcement Form */}
+            <div className="mb-6 space-y-2">
+              <input
+                type="text"
+                placeholder="Title"
+                className="w-full p-2 rounded border border-gray-600 bg-gray-800 text-white"
+                value={newTitle}
+                onChange={e => setNewTitle(e.target.value)}
+              />
+              <textarea
+                placeholder="Message"
+                className="w-full p-2 rounded border border-gray-600 bg-gray-800 text-white"
+                value={newMessage}
+                onChange={e => setNewMessage(e.target.value)}
+              />
+              <button
+                onClick={postAnnouncement}
+                disabled={posting}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-semibold"
+              >
+                {posting ? "Posting..." : "Post Announcement"}
+              </button>
             </div>
-            <div className="flex items-start">
-              <div className="bg-blue-500 rounded-full h-2 w-2 mt-2 mr-3"></div>
-              <div>
-                <p className="text-sm">Event created</p>
-                <p className="text-slate-400 text-xs">1 day ago</p>
-              </div>
+
+            {/* Announcements List */}
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {announcements.length === 0 ? (
+                <p className="text-gray-400">No announcements yet.</p>
+              ) : (
+                announcements.map(a => (
+                  <div
+                    key={a._id}
+                    className="p-3 bg-gray-800 rounded border border-gray-700"
+                  >
+                    <h4 className="font-semibold text-blue-300">{a.title}</h4>
+                    <p className="text-gray-300">{a.message}</p>
+                    <span className="text-gray-500 text-xs">{new Date(a.createdAt).toLocaleString()}</span>
+                  </div>
+                ))
+              )}
             </div>
-            <div className="flex items-start">
-              <div className="bg-purple-500 rounded-full h-2 w-2 mt-2 mr-3"></div>
-              <div>
-                <p className="text-sm">Membership request received</p>
-                <p className="text-slate-400 text-xs">2 days ago</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>  */}
+          </motion.div>
+        )}
+
       </div>
     </div>
   );

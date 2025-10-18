@@ -16,6 +16,7 @@ import eventRoutes from "./routes/eventRoutes.js";
 import joinRequestRoutes from "./routes/joinRequests.js";
 import postRoutes from "./routes/post.js";
 import notificationRoutes from "./routes/notifications.js";
+import announcementRoutes from "./routes/announcementRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -63,6 +64,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/join", joinRequestRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/announcements", announcementRoutes);
 
 // ✅ Root Route for Render or Browser Check
 app.get("/", (req, res) => {
