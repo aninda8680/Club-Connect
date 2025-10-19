@@ -1,6 +1,6 @@
 import api from "@/api";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 // Defines the structure for a Club object
 interface Club {
@@ -16,7 +16,7 @@ interface Announcement {
 }
 
 export default function MemberPanel() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const username = localStorage.getItem("username");
   const clubId = localStorage.getItem("clubId");
 
@@ -57,10 +57,10 @@ export default function MemberPanel() {
     fetchAnnouncements();
   }, [clubId]);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
+  // const handleLogout = () => {
+  //   localStorage.clear();
+  //   navigate("/");
+  // };
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-950 text-white pt-25 px-4 py-8 space-y-8">
