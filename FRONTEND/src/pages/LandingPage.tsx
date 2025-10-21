@@ -286,9 +286,12 @@ export default function LandingPage() {
   };
 
   useEffect(() => {
-  if (isAuthenticated()) {
-    const user = getCurrentUser();
-    switch (user.role) {
+  // Check if user is logged in
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
+  if (token && role) {
+    switch (role) {
       case "admin":
         navigate("/adminpanel", { replace: true });
         break;
@@ -301,14 +304,11 @@ export default function LandingPage() {
       case "member":
         navigate("/memberpanel", { replace: true });
         break;
-      case "visitor":
-        navigate("/publicpanel", { replace: true });
-        break;
       default:
-        navigate("/feed", { replace: true });
+        navigate("/publicpanel", { replace: true });
     }
   }
-}, []); // only run on mount
+}, []);
 
 
   // --- Main Render ---
