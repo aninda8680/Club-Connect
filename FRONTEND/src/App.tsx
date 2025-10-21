@@ -21,13 +21,10 @@ import FeedPage from "./pages/FeedPage";
 import Profile from "./pages/Profile";
 import Notification from "./pages/NotificationPage";
 import Layout from "./components/Layout";
-import { Analytics } from "@vercel/analytics/next"
-
 
 function App() {
   return (
     <div className="h-screen w-screen bg-black overflow-x-hidden text-white">
-      <Analytics />
       <Router>
         <Routes>
           {/* ---------- 🌐 PUBLIC ROUTES ---------- */}
