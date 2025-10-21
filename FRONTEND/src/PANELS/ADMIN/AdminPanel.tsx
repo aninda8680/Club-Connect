@@ -22,10 +22,6 @@ export default function AdminPanel() {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
 
-  const handleLogout = () => {
-    navigate("/");
-  };
-
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
@@ -119,14 +115,6 @@ export default function AdminPanel() {
               >
                 Welcome, {username}
               </motion.span>
-              <motion.button
-                onClick={handleLogout}
-                className="px-5 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium rounded-lg shadow-lg transition-all duration-300 border border-red-500/30"
-                whileHover={{ scale: 1.05, y: -1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Logout
-              </motion.button>
             </div>
           </motion.header>
 

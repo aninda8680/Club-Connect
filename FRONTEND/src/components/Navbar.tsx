@@ -286,18 +286,19 @@ export default function Navbar() {
                   </Link>
                 </motion.div>
 
-                {/* Logout Button (Monochromatic) */}
-                <motion.button
-                  onClick={handleLogout}
-                  // Logout button uses a slightly different dark tone to stand out
-                  className="hidden md:flex items-center space-x-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl text-white text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl border border-white/10"
-                  whileHover={{ scale: 1.05, y: -1 }}
-                  whileTap={{ scale: 0.95 }}
-                  title="Logout"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span className="hidden lg:inline">Logout</span>
-                </motion.button>
+                {/* Logout Button (Red) */}
+<motion.button
+  onClick={handleLogout}
+  className="hidden md:flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-xl text-white text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl border border-white/10"
+  whileHover={{ scale: 1.05, y: -1 }}
+  whileTap={{ scale: 0.95 }}
+  title="Logout"
+>
+  <LogOut className="w-4 h-4" />
+  <span className="hidden lg:inline">Logout</span>
+</motion.button>
+
+
               </>
             )}
 
