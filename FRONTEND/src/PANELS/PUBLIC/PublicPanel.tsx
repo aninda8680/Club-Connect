@@ -1,11 +1,14 @@
 // PublicPanel.tsx
 import { useEffect, useState, useRef } from "react";
-import { Star, Calendar, ChevronDown, Code, Cpu, Zap, Sparkles } from "lucide-react";
+import { Mail, Phone, MapPin, Instagram, Linkedin, Github, Code, Cpu } from "lucide-react";
 import ClubCard from "../../components/ClubCard";
-import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import EventCard from "../../components/EventCard";
-
+import DotGrid from '../../components/DotGrid';
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { FiArrowRight, FiStar } from "react-icons/fi";
+import { Typewriter } from 'react-simple-typewriter';
+import { useNavigate } from "react-router-dom";
 import api from "@/api";
 import Loader from "@/components/Loader";
 
@@ -14,7 +17,10 @@ export default function PublicPanel() {
   const [, setHoveredClub] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<any[]>([]);
-  const [activeSection, setActiveSection] = useState(0);
+  const [, setActiveSection] = useState(0);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const navigate = useNavigate();
+  
   
   const sectionRefs = [
     useRef<HTMLDivElement>(null),
@@ -91,405 +97,637 @@ export default function PublicPanel() {
     sectionRefs[index].current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  return (
-    <div className="h-screen w-screen overflow-y-scroll overflow-x-hidden bg-black text-white scroll-smooth">
-      {/* Navigation Dots */}
-      <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-50 flex flex-col gap-3">
-        {[0, 1, 2, 3, 4, 5].map((index) => (
-          <button
-            key={index}
-            onClick={() => scrollToSection(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              activeSection === index 
-                ? 'bg-cyan-400 scale-125' 
-                : 'bg-gray-600 hover:bg-gray-400'
-            }`}
-            aria-label={`Scroll to section ${index + 1}`}
+   const testimonials = [
+      { id: 1, name: "Alex Chen", role: "Club President", text: "Club-Connect revolutionized how we manage our members and events. The engagement has doubled since we started using it!", },
+      { id: 2, name: "Maria Garcia", role: "Student", text: "I found all my favorite clubs in one place and never miss their events anymore. The platform is so intuitive!", },
+      { id: 3, name: "James Wilson", role: "Event Coordinator", text: "The event management tools saved us countless hours. RSVP tracking is now a breeze with Club-Connect.", },
+    ];
+  
+    // Animation Variants (Kept as is)
+    const fadeUp = { hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } };
+    const fadeIn = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.8 } } };
+    const staggerContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.15 } } };
+  
+  
+    // --- Components (Colors Updated) ---
+  
+    const AuroraBackground: React.FC = () => {
+      const isBrowser = typeof window !== 'undefined';
+      const mouseX = useMotionValue(0);
+      const mouseY = useMotionValue(0);
+  
+      const rotateX = isBrowser ? useTransform(mouseY, [0, window.innerHeight], [15, -15]) : 0;
+      const rotateY = isBrowser ? useTransform(mouseX, [0, window.innerWidth], [-15, 15]) : 0;
+  
+      const handleMouseMove = (e: React.MouseEvent) => {
+        const { clientX, clientY } = e;
+        mouseX.set(clientX);
+        mouseY.set(clientY);
+      };
+
+      return (
+        <motion.div
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+          onMouseMove={isBrowser ? handleMouseMove : undefined}
+          style={{ perspective: 1000 }}
+        >
+          <motion.div
+            className="absolute -top-40 -left-40 w-[40rem] h-[40rem] rounded-full bg-blue-500/10 blur-3xl"
+            style={{ rotateX, rotateY }}
           />
-        ))}
+          <motion.div
+            className="absolute -bottom-40 -right-40 w-[35rem] h-[35rem] rounded-full bg-purple-500/10 blur-3xl"
+            style={{ rotateX, rotateY }}
+          />
+        </motion.div>
+      );
+    };
+
+   return (
+    <div className="bg-gradient-to-b from-black via-gray-900 to-black text-white w-full overflow-x-hidden scroll-smooth relative">
+      {/* Aurora Background */}
+      <AuroraBackground />
+      {/* Global Dot Grid Pattern */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <DotGrid 
+          dotColor="rgba(147, 197, 253, 0.15)"
+          dotSize={1.5}
+          gap={30}
+        />
       </div>
 
-      {/* Section 1: Hero Intro */}
 
-      <section 
-        ref={sectionRefs[0]}
-        className="h-screen w-full flex flex-col items-center justify-center px-4 md:px-8 text-center space-y-6 relative overflow-hidden"
-      >
-        {/* Animated background elements */}
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-400 rounded-full filter blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-fuchsia-500 rounded-full filter blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        </div>
-        
-        {/* Binary rain effect */}
-        <div className="absolute inset-0 z-0 opacity-10 overflow-hidden">
-          {[...Array(30)].map((_, i) => (
-            <motion.span
-              key={i}
-              className="text-green-400 font-mono absolute top-0"
-              style={{ left: `${Math.random() * 100}%` }}
-              initial={{ y: -100, opacity: 0 }}
-              animate={{ 
-                y: window.innerHeight + 100, 
-                opacity: [0, 0.7, 0] 
-              }}
-              transition={{ 
-                duration: 5 + Math.random() * 10, 
-                repeat: Infinity,
-                delay: Math.random() * 5
-              }}
-            >
-              {Math.random() > 0.5 ? '1' : '0'}
-            </motion.span>
-          ))}
-        </div>
-
-        <motion.div
-          className="relative z-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
+      {/* Hero Section */}
+      <section id = "hero-section" className="min-h-screen flex flex-col justify-center items-center text-center px-4 md:px-6 relative overflow-hidden z-10">
+        <DotGrid dotColor="rgba(148, 163, 184, 0.15)" dotSize={2} gap={20} />        <div className="relative z-20">
+          {/* Main Title */}
           <motion.h1
-            className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-transparent bg-clip-text font-mono mb-6"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600" // Blue/Purple gradient title
+            initial={{ opacity: 0, y: -60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, type: "spring", stiffness: 80 }}
           >
-            CLUB_CONNECT<span className="text-cyan-400">⚡</span>
+            Welcome to <span className="text-blue-500">Club-Connect</span> ⚡
           </motion.h1>
-          <motion.div 
-            className="h-1 w-24 bg-cyan-400 mx-auto mb-6"
-            initial={{ width: 0 }}
-            animate={{ width: 96 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-          />
-          <motion.p
-            className="text-gray-400 text-lg max-w-2xl font-mono tracking-wide"
+
+          {/* GenZ Typewriter Heading (Kept as is) */}
+          <motion.h2
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
           >
-            {"<coder-first club management platform />"}
-          </motion.p>
-        </motion.div>
-
-        <motion.div
-          className="absolute bottom-10 animate-bounce"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-        >
-          <ChevronDown className="w-8 h-8 text-cyan-400" />
-        </motion.div>
-      </section>
-
-      {/* Section 2: Club Listing */}
-      <section 
-        ref={sectionRefs[1]}
-        className="min-h-screen w-full flex items-center justify-center px-4 md:px-8 py-20"
-      >
-        <div className="w-full max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex items-center gap-3 mb-10"
-          >
-            <div className="p-2 bg-cyan-400/10 rounded-lg">
-              <Star className="w-6 h-6 text-cyan-400" />
-            </div>
-            <h2 className="text-3xl font-bold text-white font-mono">
-              FEATURED_CLUBS
-            </h2>
-          </motion.div>
-
-          {clubs.length === 0 ? (
-            <motion.div 
-              className="text-center text-gray-400 py-12"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <Code className="w-12 h-12 mx-auto text-gray-600 mb-4" />
-              <p className="text-xl font-mono">NO_CLUBS_AVAILABLE</p>
-              <p className="text-sm mt-2 font-mono">CHECK_BACK_LATER</p>
-            </motion.div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {clubs.map((club, index) => (
-                <motion.div
-                  key={club._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  onMouseEnter={() => setHoveredClub(club._id)}
-                  onMouseLeave={() => setHoveredClub(null)}
-                  whileHover={{ y: -5 }}
-                >
-                  <ClubCard
-                    _id={club._id}
-                    name={club.name}
-                    description={club.description}
-                  />
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Section 3: Approved Events */}
-      <section 
-        ref={sectionRefs[2]}
-        className="min-h-screen w-full flex items-center justify-center px-4 md:px-8 py-20"
-      >
-        <div className="w-full max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="flex items-center gap-3 mb-10"
-          >
-            <div className="p-2 bg-purple-400/10 rounded-lg">
-              <Calendar className="w-6 h-6 text-purple-400" />
-            </div>
-            <h2 className="text-3xl font-bold text-white font-mono">
-              UPCOMING_EVENTS
-            </h2>
-          </motion.div>
-
-          {events.length === 0 ? (
-            <motion.div 
-              className="text-center text-gray-400 py-12"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              <Cpu className="w-12 h-12 mx-auto text-gray-600 mb-4" />
-              <p className="text-xl font-mono">NO_EVENTS_SCHEDULED</p>
-              <p className="text-sm mt-2 font-mono">STAY_TUNED</p>
-            </motion.div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {events.map((event, index) => (
-                <motion.div
-                  key={event._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -5 }}
-                >
-                  <EventCard
-                    key={event._id}
-                    _id={event._id}
-                    title={event.title}
-                    description={event.description}
-                    date={event.date}
-                    venue={event.venue}
-                    poster={event.poster}
-                    status={event.status}
-                    clubName={event.club?.name}
-                    clubLogo={event.club?.logo}
-                  />
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Section 4: Why Join Clubs */}
-      <section 
-        ref={sectionRefs[3]}
-        className="min-h-screen w-full flex flex-col items-center justify-center px-4 md:px-8 py-20 text-center"
-      >
-        <div className="max-w-4xl mx-auto">
-          <motion.h2
-            className="text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text font-mono mb-2"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            WHY_JOIN_CLUBS?
+            <Typewriter
+              words={[
+                "Grades fade. Memories don't.", "Because college is not just 9 to 5.",
+                "More than attendance, it's about presence.", "Forget library hours. These are club hours.",
+                "Every club is a playlist. Find yours."
+              ]}
+              loop={true}
+              cursor
+              cursorStyle="|"
+              typeSpeed={60}
+              deleteSpeed={40}
+              delaySpeed={2000}
+            />
           </motion.h2>
-          
-          <motion.div 
-            className="h-1 w-16 bg-green-400 mx-auto mb-10"
-            initial={{ width: 0 }}
-            whileInView={{ width: 64 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            viewport={{ once: true }}
-          />
-          
-          <motion.p
-            className="text-gray-400 max-w-xl mx-auto mb-16 font-mono"
+
+          {/* Subheading (Kept as is) */}
+          <motion.h3
+            className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.8 }}
           >
-            Clubs help you grow beyond academics — improve leadership, communication, and real-world project skills.
-          </motion.p>
-          
+            After classes comes the real fun — clubs, events, and memories waiting to happen.
+          </motion.h3>
+
+                  {/* Minecraft-themed Buttons with Blue/Purple Colors */}
+        <motion.div
+          className="flex flex-col sm:flex-row justify-center gap-4 mt-8 md:mt-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.8, duration: 0.8 }}
+        >
+          <motion.button
+            className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
+            style={{
+              background: 'linear-gradient(135deg, #3D5AA6 0%, #8B5FBF 100%)', // Blue to Purple
+              borderTopColor: '#4A6BC6',
+              borderLeftColor: '#4A6BC6',
+              borderRightColor: '#2D4080',
+              borderBottomColor: '#2D4080',
+              color: 'white',
+              textShadow: '2px 2px #2D4080',
+              fontFamily: "'Minecraft', monospace"
+            }}
+            whileHover={{ 
+              scale: 1.05,
+              y: -1
+            }}
+            whileTap={{ 
+              scale: 0.95,
+              y: 2,
+              borderTopColor: '#2D4080',
+              borderLeftColor: '#2D4080',
+              borderRightColor: '#4A6BC6',
+              borderBottomColor: '#4A6BC6'
+            }}
+            onClick={() => scrollToSection(1)}
+          >
+            🌟 Explore Clubs <FiArrowRight />
+          </motion.button>
+
+          <motion.button
+            className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
+            style={{
+              background: 'transparent',
+              borderTopColor: '#4A6BC6',
+              borderLeftColor: '#4A6BC6',
+              borderRightColor: '#2D4080',
+              borderBottomColor: '#2D4080',
+              color: 'white',
+              textShadow: '2px 2px #2D4080',
+              fontFamily: "'Minecraft', monospace",
+              backgroundColor: 'rgba(45, 64, 128, 0.3)'
+            }}
+            whileHover={{ 
+              scale: 1.05,
+              y: -1,
+              backgroundColor: 'rgba(74, 107, 198, 0.4)'
+            }}
+            whileTap={{ 
+              scale: 0.95,
+              y: 2,
+              borderTopColor: '#2D4080',
+              borderLeftColor: '#2D4080',
+              borderRightColor: '#4A6BC6',
+              borderBottomColor: '#4A6BC6'
+            }}
+            onClick={() => scrollToSection(2)}
+          >
+            🎉 Explore Events <FiArrowRight />
+          </motion.button>
+        </motion.div>
+        </div>
+
+        {/* Scrolling indicator */}
+        <motion.div
+          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.5 }}
+        >
+          <span className="text-sm text-gray-400 mb-2">Scroll Down</span>
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-4 h-4 border-r-2 border-b-2 border-blue-500 transform rotate-45"></div> {/* Blue Arrow */}
+          </motion.div>
+        </motion.div>
+      </section>
+
+
+      {/* <section className="py-20 relative z-10 bg-black/50">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div
+            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
           >
-            {[
-              { icon: "🤝", text: "Network with peers" },
-              { icon: "🚀", text: "Boost your portfolio" },
-              { icon: "🎯", text: "Learn Leadership" },
-              { icon: "💡", text: "Build cool things" }
-            ].map((item, index) => (
+            {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                className="bg-[#1a1a2e] p-6 rounded-xl border border-[#2d2d3d] hover:border-cyan-400 transition-all duration-300 group"
-                whileHover={{ 
-                  y: -5,
-                  boxShadow: "0 10px 25px -5px rgba(34, 211, 238, 0.1)"
-                }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                viewport={{ once: true }}
+                className="text-center"
+                variants={fadeUp}
               >
-                <div className="text-2xl mb-3">{item.icon}</div>
-                <h3 className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
-                  {item.text}
-                </h3>
+                <div className="flex justify-center mb-4 text-blue-500"> {/* Blue Icons 
+                  {/* {stat.icon}
+                </div>
+                <div className="text-3xl font-bold mb-2">{stat.value}</div>
+                <div className="text-gray-400 text-sm">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
         </div>
-      </section>
+      </section> */} 
 
-      {/* Section 5: Testimonials */}
-      <section 
-        ref={sectionRefs[4]}
-        className="min-h-screen w-full flex flex-col items-center justify-center px-4 md:px-8 py-20 text-center"
+      {/* --- */}
+
+      {/* Featured Clubs */}
+     <section
+  id="clubs-section"
+  ref={sectionRefs[1]}
+  className="min-h-screen w-full flex items-center justify-center px-4 md:px-8 py-20"
+>
+  <div className="w-full max-w-6xl mx-auto">
+    {/* Header */}
+    <motion.div
+      className="text-center mb-16"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7 }}
+      viewport={{ once: true }}
+    >
+      <div className="inline-flex items-center gap-3 mb-4 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30">
+        <FiStar className="text-blue-400" size={16} />
+        <span className="text-sm font-semibold text-blue-400">EXPLORE COMMUNITIES</span>
+      </div>
+      <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+        Featured <span className="text-blue-500">Clubs</span>
+      </h2>
+      <motion.p
+        className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        viewport={{ once: true }}
       >
-        <div className="max-w-4xl mx-auto">
-          <motion.h2
-            className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text font-mono mb-10"
+        Dive into vibrant communities where passion meets purpose. Find your tribe and start creating together.
+      </motion.p>
+    </motion.div>
+
+    {/* Cards */}
+    <motion.div
+      className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+    >
+      {clubs.length === 0 ? (
+        <motion.div
+          className="col-span-full text-center text-gray-400 py-12"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          viewport={{ once: true }}
+        >
+          <Code className="w-12 h-12 mx-auto text-gray-600 mb-4" />
+          <p className="text-xl font-mono">NO_CLUBS_AVAILABLE</p>
+          <p className="text-sm mt-2 font-mono">CHECK_BACK_LATER</p>
+        </motion.div>
+      ) : (
+        clubs.map((club, index) => (
+          <motion.div
+            key={club._id}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            viewport={{ once: true }}
+            onMouseEnter={() => setHoveredClub(club._id)}
+            onMouseLeave={() => setHoveredClub(null)}
+            whileHover={{ y: -5 }}
+            className="flex justify-center"
+          >
+            <div className="w-full max-w-sm h-full">
+              <ClubCard
+                _id={club._id}
+                name={club.name}
+                description={club.description}
+              />
+            </div>
+          </motion.div>
+        ))
+      )}
+    </motion.div>
+  </div>
+</section>
+
+
+      {/* --- */}
+
+      
+
+      {/* --- */}
+
+      {/* Featured Events */}
+<section
+  id="events-section"
+  className="min-h-screen py-20 px-4 md:px-6 relative z-10 flex items-center justify-center"
+>
+  <div className="w-full max-w-6xl mx-auto">
+    {/* Heading */}
+    <motion.h2
+      className="text-center text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7 }}
+      viewport={{ once: true }}
+    >
+      Upcoming <span className="text-emerald-500">Events</span>
+    </motion.h2>
+
+    <motion.p
+      className="text-center text-gray-400 max-w-2xl mx-auto mb-12"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+      viewport={{ once: true }}
+    >
+      Don’t miss out on these exciting events and opportunities to connect and grow together.
+    </motion.p>
+
+    {/* Event Cards */}
+    <motion.div
+      className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+    >
+      {events.length === 0 ? (
+        <motion.div
+          className="col-span-full text-center text-gray-400 py-12"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          viewport={{ once: true }}
+        >
+          <Cpu className="w-12 h-12 mx-auto text-gray-600 mb-4" />
+          <p className="text-xl font-mono">NO_EVENTS_SCHEDULED</p>
+          <p className="text-sm mt-2 font-mono">STAY_TUNED</p>
+        </motion.div>
+      ) : (
+        events.map((event, index) => (
+          <motion.div
+            key={event._id}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -5 }}
+            className="flex justify-center"
+          >
+            {/* Card Wrapper for uniform sizing */}
+            <div className="w-full max-w-sm h-full">
+              <EventCard
+                _id={event._id}
+                title={event.title}
+                description={event.description}
+                date={event.date}
+                venue={event.venue}
+                poster={event.poster}
+                status={event.status}
+                clubName={event.club?.name}
+                clubLogo={event.club?.logo}
+              />
+            </div>
+          </motion.div>
+        ))
+      )}
+    </motion.div>
+  </div>
+</section>
+
+
+     {/* CTA Section */}
+<section id="cta-section" className="py-20 relative z-10">
+  <div className="container mx-auto px-4 md:px-6">
+    <motion.div
+      className="bg-gradient-to-r from-black to-gray-900 rounded-2xl p-8 md:p-12 border border-gray-800 shadow-2xl overflow-hidden relative"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeIn}
+    >
+      <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-blue-900/20 blur-3xl"></div>
+
+      <div className="relative z-10 text-center">
+        <motion.h2
+          className="text-3xl md:text-4xl font-bold mb-6"
+          variants={fadeUp}
+        >
+          Want to <span className="text-blue-500">Start</span> Your Own Club?
+        </motion.h2>
+
+        <motion.p
+          className="text-gray-400 mb-8 max-w-2xl mx-auto"
+          variants={fadeUp}
+        >
+          Turn your passion into a movement! Submit your idea and we’ll help you set up your own club on <span className="text-blue-400 font-semibold">Club-Connect</span>. 
+          Share your vision, choose your members, and make an impact on campus.
+        </motion.p>
+
+        <motion.div
+          variants={fadeUp}
+          className="flex flex-col sm:flex-row justify-center items-center gap-4"
+        >
+          <motion.button
+            className="px-8 py-3 rounded-full text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-800 hover:from-blue-500 hover:to-purple-700 transition flex items-center gap-2"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/create-club')} // 👈 redirect to your form page
+          >
+            Create My Club <FiArrowRight />
+          </motion.button>
+
+          {/* <motion.button
+            className="px-8 py-3 rounded-full text-lg font-semibold bg-gray-800 hover:bg-gray-700 transition flex items-center gap-2"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleLoginClick} // Your existing login handler
+          >
+            Join Existing Clubs
+          </motion.button> */}
+        </motion.div>
+      </div>
+    </motion.div>
+  </div>
+</section>
+
+
+{/* Testimonials Widget */}
+      <section id = "testimonials-section" className="py-20 relative z-10">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.h2
+            className="text-center text-3xl font-bold mb-12"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
-            USER_TESTIMONIALS
+            What <span className="text-blue-500">Members</span> Say {/* Blue Text */}
           </motion.h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="bg-[#1a1a2e] p-8 rounded-xl border border-[#2d2d3d] text-left"
-            >
-              <div className="flex items-start mb-4">
-                <div className="bg-cyan-400/10 p-2 rounded-lg mr-4">
-                  <Zap className="w-5 h-5 text-cyan-400" />
+          <div className="max-w-4xl mx-auto relative h-64">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={testimonials[activeTestimonial].id}
+                className="bg-black border border-gray-800 rounded-xl p-8 absolute inset-0 backdrop-blur-sm flex flex-col justify-center"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="text-blue-500 mb-4"> {/* Blue Stars */}
+                  {[...Array(5)].map((_, i) => (
+                    <FiStar key={i} className="inline mr-1" />
+                  ))}
                 </div>
-                <p className="text-gray-300 italic">
-                  "Being in the Robotics Club changed how I approach tech — real teamwork, real impact."
-                </p>
-              </div>
-              <p className="text-sm text-cyan-400 font-mono">
-                — Arjun, 2nd Year ECE
-              </p>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="bg-[#1a1a2e] p-8 rounded-xl border border-[#2d2d3d] text-left"
-            >
-              <div className="flex items-start mb-4">
-                <div className="bg-purple-400/10 p-2 rounded-lg mr-4">
-                  <Sparkles className="w-5 h-5 text-purple-400" />
+                <p className="text-lg italic mb-6 line-clamp-3">"{testimonials[activeTestimonial].text}"</p>
+                <div>
+                  <p className="font-bold">{testimonials[activeTestimonial].name}</p>
+                  <p className="text-gray-400 text-sm">{testimonials[activeTestimonial].role}</p>
                 </div>
-                <p className="text-gray-300 italic">
-                  "Club-Connect made it so easy to find and join clubs that match my interests!"
-                </p>
-              </div>
-              <p className="text-sm text-purple-400 font-mono">
-                — Priya, 3rd Year CSE
-              </p>
-            </motion.div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <div className="flex justify-center gap-2 mt-8">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveTestimonial(index)}
+                className={`w-3 h-3 rounded-full transition ${
+                  activeTestimonial === index ? 'bg-blue-500' : 'bg-gray-700' // Blue dots
+                }`}
+              />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Section 6: Call to Action */}
-      <section 
-        ref={sectionRefs[5]}
-        className="min-h-screen w-full flex flex-col items-center justify-center px-4 md:px-8 text-center relative overflow-hidden"
+
+      {/* --- */}
+
+ 
+
+      
+      <section
+  id="footer-section"
+  className="bg-gradient-to-br from-gray-900 via-blue-950 to-black text-gray-300 py-16 mt-0 overflow-hidden relative border-t border-blue-800/30"
+>
+  <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+    {/* Column 1: Logo + About */}
+    <div className="flex flex-col space-y-6">
+      <motion.img
+        src="/logo.png"
+        alt="Club Logo"
+        className="w-32"
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      />
+      <p className="text-sm leading-relaxed text-gray-400 border-l-2 border-blue-500 pl-4">
+        Empowering students through collaboration, innovation, and hands-on learning. 
+        We foster a community where creativity meets technology to build the future.
+      </p>
+    </div>
+
+    {/* Column 2: Quick Links */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="flex flex-col items-center md:items-start"
+    >
+      <h2 className="text-white text-lg font-semibold mb-6 pb-2 border-b border-blue-800/30 w-full text-center md:text-left">
+        Quick Links
+      </h2>
+      <ul className="space-y-3 text-sm w-full">
+        {[
+          { label: "Home", id: "hero-section" },
+          { label: "Clubs", id: "clubs-section" },
+          { label: "Events", id: "events-section" },
+          { label: "Gallery", id: "gallery-section" },
+          { label: "Contact", id: "footer-section" },
+        ].map(({ label, id }) => (
+          <li key={id} className="group">
+            <span
+              onClick={() => {
+                const el = document.getElementById(id);
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="cursor-pointer text-gray-400 group-hover:text-white transition-all duration-300 flex items-center gap-2"
+            >
+              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              {label}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+
+    {/* Column 3: Contact */}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="flex flex-col items-center md:items-start"
+    >
+      <h2 className="text-white text-lg font-semibold mb-6 pb-2 border-b border-blue-800/30 w-full text-center md:text-left">
+        Contact Us
+      </h2>
+      <ul className="space-y-4 text-sm text-gray-400 w-full">
+        <li className="flex items-center gap-3 hover:text-white transition-all duration-300 group">
+          <div className="p-2 bg-blue-900/30 rounded-lg group-hover:bg-blue-600 transition-colors duration-300">
+            <Mail size={16} className="text-blue-400 group-hover:text-white" />
+          </div>
+          anindadebta8680@gmail.com
+        </li>
+        <li className="flex items-center gap-3 hover:text-white transition-all duration-300 group">
+          <div className="p-2 bg-blue-900/30 rounded-lg group-hover:bg-green-600 transition-colors duration-300">
+            <Phone size={16} className="text-green-400 group-hover:text-white" />
+          </div>
+          +91 82828 87603
+        </li>
+        <li className="flex items-center gap-3 hover:text-white transition-all duration-300 group">
+          <div className="p-2 bg-blue-900/30 rounded-lg group-hover:bg-red-600 transition-colors duration-300">
+            <MapPin size={16} className="text-red-400 group-hover:text-white" />
+          </div>
+          Adamas University, Barasat
+        </li>
+      </ul>
+
+      {/* Social icons */}
+      <div className="flex gap-3 mt-6 pt-4 border-t border-blue-800/30 w-full justify-center md:justify-start">
+        {[
+          { icon: Instagram, href: "#", color: "hover:text-pink-400" },
+          { icon: Linkedin, href: "#", color: "hover:text-blue-400" },
+          { icon: Github, href: "#", color: "hover:text-gray-100" },
+        ].map(({ icon: Icon, href, color }) => (
+          <a
+            key={href}
+            href={href}
+            className={`p-3 bg-blue-900/30 rounded-lg transition-all duration-300 hover:bg-blue-700 hover:scale-110 ${color}`}
+          >
+            <Icon size={18} />
+          </a>
+        ))}
+      </div>
+    </motion.div>
+  </div>
+
+  {/* Divider */}
+  <motion.div
+    initial={{ opacity: 0 }}
+    whileInView={{ opacity: 1 }}
+    transition={{ duration: 0.6, delay: 0.2 }}
+    className="border-t border-gray-800 mt-12 pt-6 text-center text-sm text-gray-500 space-y-2"
+  >
+    <p>
+      © {new Date().getFullYear()}{" "}
+      <span className="text-gray-400 font-medium">Club</span>. All rights reserved.
+    </p>
+    <p className="text-gray-500">
+      Developed by{" "}
+      <a
+        href="https://aninda-hi.vercel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-300 hover:underline"
       >
-        {/* Background elements */}
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-cyan-400 rounded-full filter blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-orange-500 rounded-full filter blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        </div>
-        
-        <div className="relative z-10 max-w-2xl mx-auto">
-          <motion.h2
-            className="text-4xl font-bold bg-gradient-to-r from-orange-400 to-red-500 text-transparent bg-clip-text font-mono mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            READY_TO_GET_STARTED?
-          </motion.h2>
-          
-          <motion.p
-            className="text-gray-400 mb-10 font-mono"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            Browse through our amazing clubs and find your perfect match. Your journey starts here!
-          </motion.p>
-          
-          <motion.button
-            className="bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-white px-8 py-4 rounded-full font-semibold font-mono tracking-wide hover:shadow-lg hover:shadow-cyan-400/20 transition-all duration-300 relative overflow-hidden group"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.05 }}
-            onClick={() => scrollToSection(1)}
-          >
-            <span className="relative z-10">EXPLORE_CLUBS</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-500 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </motion.button>
-        </div>
-        
-        <motion.div 
-          className="mt-20 text-gray-500 text-sm font-mono"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          viewport={{ once: true }}
-        >
-          CLUB_CONNECT v1.0 • DEVELOPER_PLATFORM
-        </motion.div>
-      </section>
+        Aninda Debta
+      </a>
+    </p>
+  </motion.div>
+</section>
+
+
+
     </div>
   );
 }

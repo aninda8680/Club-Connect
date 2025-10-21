@@ -828,6 +828,62 @@ export default function LandingPage() {
         </div>
       </section>
 
+     {/* CTA Section */}
+<section id="cta-section" className="py-20 relative z-10">
+  <div className="container mx-auto px-4 md:px-6">
+    <motion.div
+      className="bg-gradient-to-r from-black to-gray-900 rounded-2xl p-8 md:p-12 border border-gray-800 shadow-2xl overflow-hidden relative"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={fadeIn}
+    >
+      <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-blue-900/20 blur-3xl"></div>
+
+      <div className="relative z-10 text-center">
+        <motion.h2
+          className="text-3xl md:text-4xl font-bold mb-6"
+          variants={fadeUp}
+        >
+          Want to <span className="text-blue-500">Start</span> Your Own Club?
+        </motion.h2>
+
+        <motion.p
+          className="text-gray-400 mb-8 max-w-2xl mx-auto"
+          variants={fadeUp}
+        >
+          Turn your passion into a movement! Submit your idea and we’ll help you set up your own club on <span className="text-blue-400 font-semibold">Club-Connect</span>. 
+          Share your vision, choose your members, and make an impact on campus.
+        </motion.p>
+
+        <motion.div
+          variants={fadeUp}
+          className="flex flex-col sm:flex-row justify-center items-center gap-4"
+        >
+          <motion.button
+            className="px-8 py-3 rounded-full text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-800 hover:from-blue-500 hover:to-purple-700 transition flex items-center gap-2"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/create-club')} // 👈 redirect to your form page
+          >
+            Create My Club <FiArrowRight />
+          </motion.button>
+
+          <motion.button
+            className="px-8 py-3 rounded-full text-lg font-semibold bg-gray-800 hover:bg-gray-700 transition flex items-center gap-2"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleLoginClick} // Your existing login handler
+          >
+            Join Existing Clubs
+          </motion.button>
+        </motion.div>
+      </div>
+    </motion.div>
+  </div>
+</section>
+
+
 {/* Testimonials Widget */}
       <section id = "testimonials-section" className="py-20 relative z-10">
         <div className="container mx-auto px-4 md:px-6">
@@ -882,44 +938,8 @@ export default function LandingPage() {
 
       {/* --- */}
 
-      {/* CTA Section */}
-      <section id="cta-section" className="py-20 relative z-10">
-        <div className="container mx-auto px-4 md:px-6">
-          <motion.div
-            className="bg-gradient-to-r from-black to-gray-900 rounded-2xl p-8 md:p-12 border border-gray-800 shadow-2xl overflow-hidden relative"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeIn}
-          >
-            <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-blue-900/20 blur-3xl"></div> {/* Blue Blur */}
-            <div className="relative z-10">
-              <motion.h2
-                className="text-3xl md:text-4xl font-bold mb-6"
-                variants={fadeUp}
-              >
-                Ready to <span className="text-blue-500">Elevate</span> Your Club Experience? {/* Blue Text */}
-              </motion.h2>
-              <motion.p
-                className="text-gray-400 mb-8 max-w-2xl"
-                variants={fadeUp}
-              >
-                Join thousands of students and club coordinators who are already using Club-Connect to revolutionize their campus organizations.
-              </motion.p>
-              <motion.div variants={fadeUp}>
-                <motion.button
-                  className="px-8 py-3 rounded-full text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-800 hover:from-blue-500 hover:to-purple-700 transition flex items-center gap-2" // Blue/Purple Button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleLoginClick}
-                >
-                  Get Started Now <FiArrowRight />
-                </motion.button>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+ 
+
       
       <section
   id="footer-section"
