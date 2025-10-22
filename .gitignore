@@ -53,3 +53,5 @@ FRONTEND/.zencode/
 .vscode/
 .idea/
 Thumbs.db
+.zencoder
+.gitignore
