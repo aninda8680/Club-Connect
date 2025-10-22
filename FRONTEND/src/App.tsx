@@ -21,6 +21,7 @@ import FeedPage from "./pages/FeedPage";
 import Profile from "./pages/Profile";
 import Notification from "./pages/NotificationPage";
 import Layout from "./components/Layout";
+import CClub from "./PANELS/PUBLIC/CClub";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/complete-profile" element={<ProfileCompletionPage />} />
+          <Route path="/complete-profile" element={<ProfileCompletionPage />} />
+          <Route path="/cclub" element={<CClub />} />
 
           {/* ---------- ROUTES WITH NAVBAR (Persistent) ---------- */}
           <Route element={<Layout />}>

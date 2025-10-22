@@ -500,7 +500,7 @@ export default function PublicPanel() {
           className="text-3xl md:text-4xl font-bold mb-6"
           variants={fadeUp}
         >
-          Want to <span className="text-blue-500">Start</span> Your Own Club?
+          Want to <span className="text-blue-500">Start Your Own Club?</span>
         </motion.h2>
 
         <motion.p
@@ -519,7 +519,7 @@ export default function PublicPanel() {
             className="px-8 py-3 rounded-full text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-800 hover:from-blue-500 hover:to-purple-700 transition flex items-center gap-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate('/create-club')} // 👈 redirect to your form page
+            onClick={() => navigate('/cclub')} // 👈 redirect to your form page
           >
             Create My Club <FiArrowRight />
           </motion.button>
