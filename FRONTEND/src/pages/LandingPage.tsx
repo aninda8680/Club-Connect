@@ -864,7 +864,7 @@ export default function LandingPage() {
             className="px-8 py-3 rounded-full text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-800 hover:from-blue-500 hover:to-purple-700 transition flex items-center gap-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate('/create-club')} // 👈 redirect to your form page
+            onClick={handleLoginClick} // 👈 redirect to your form page
           >
             Create My Club <FiArrowRight />
           </motion.button>
