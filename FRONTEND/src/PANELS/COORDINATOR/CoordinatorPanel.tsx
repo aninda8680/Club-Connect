@@ -39,6 +39,7 @@ export default function CoordinatorPanel() {
   const [posting, setPosting] = useState(false);
 
   useEffect(() => {
+
     const fetchClub = async () => {
       if (!userId) return console.warn("No userId in localStorage");
       try {
@@ -268,6 +269,7 @@ export default function CoordinatorPanel() {
 
                     {/* Announcements Section */}
             {clubId && (
+              
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

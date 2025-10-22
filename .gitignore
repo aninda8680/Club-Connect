@@ -30,8 +30,6 @@ BACKEND/dist/
 BACKEND/build/
 BACKEND/.env
 BACKEND/.env.*
-BACKEND/package.json
-BACKEND/package-lock.json
 BACKEND/yarn.lock
 BACKEND/.zencode/
 
@@ -43,7 +41,6 @@ FRONTEND/dist/
 FRONTEND/build/
 FRONTEND/.env
 FRONTEND/.env.*
-FRONTEND/package-lock.json
 FRONTEND/yarn.lock
 FRONTEND/.zencode/
 
