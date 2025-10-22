@@ -266,106 +266,106 @@ export default function CoordinatorPanel() {
           </div>
         </motion.div>
 
-        {/* Announcements Section */}
-{clubId && (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.4, duration: 0.5 }}
-    className="bg-gradient-to-br from-slate-900/90 via-blue-950/50 to-slate-900/90 backdrop-blur-lg border border-blue-800/30 rounded-2xl p-6 mb-8 shadow-2xl"
-  >
-    <div className="flex items-center gap-3 mb-6">
-      <div className="p-2 bg-blue-600/20 rounded-lg">
-        <MessageCircle className="w-5 h-5 text-blue-400" />
-      </div>
-      <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-        Club Announcements
-      </h3>
-    </div>
+                    {/* Announcements Section */}
+            {clubId && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="bg-gradient-to-br from-slate-900/90 via-blue-950/50 to-slate-900/90 backdrop-blur-lg border border-blue-800/30 rounded-2xl p-6 mb-8 shadow-2xl"
+              >
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 bg-blue-600/20 rounded-lg">
+                    <MessageCircle className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                    Club Announcements
+                  </h3>
+                </div>
 
-    {/* New Announcement Form */}
-    <div className="mb-8 p-4 bg-slate-800/50 rounded-xl border border-slate-700/50">
-      <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
-        <Plus className="w-4 h-4 text-blue-400" />
-        New Announcement
-      </h4>
-      <div className="space-y-4">
-        <div>
-          <input
-            type="text"
-            placeholder="Announcement Title"
-            className="w-full p-3 rounded-xl border border-slate-600 bg-slate-900/80 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-            value={newTitle}
-            onChange={e => setNewTitle(e.target.value)}
-          />
-        </div>
-        <div>
-          <textarea
-            placeholder="Announcement Message"
-            rows={3}
-            className="w-full p-3 rounded-xl border border-slate-600 bg-slate-900/80 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-none"
-            value={newMessage}
-            onChange={e => setNewMessage(e.target.value)}
-          />
-        </div>
-        <button
-          onClick={postAnnouncement}
-          disabled={posting}
-          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl text-white font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center gap-2"
-        >
-          {posting ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Posting...
-            </>
-          ) : (
-            <>
-              <Send className="w-4 h-4" />
-              Post Announcement
-            </>
-          )}
-        </button>
-      </div>
-    </div>
+                {/* New Announcement Form */}
+                <div className="mb-8 p-4 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                  <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
+                    <Plus className="w-4 h-4 text-blue-400" />
+                    New Announcement
+                  </h4>
+                  <div className="space-y-4">
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Announcement Title"
+                        className="w-full p-3 rounded-xl border border-slate-600 bg-slate-900/80 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                        value={newTitle}
+                        onChange={e => setNewTitle(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <textarea
+                        placeholder="Announcement Message"
+                        rows={3}
+                        className="w-full p-3 rounded-xl border border-slate-600 bg-slate-900/80 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-none"
+                        value={newMessage}
+                        onChange={e => setNewMessage(e.target.value)}
+                      />
+                    </div>
+                    <button
+                      onClick={postAnnouncement}
+                      disabled={posting}
+                      className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl text-white font-semibold transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center gap-2"
+                    >
+                      {posting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Posting...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4" />
+                          Post Announcement
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
 
-    {/* Announcements List */}
-    <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
-      {announcements.length === 0 ? (
-        <div className="text-center py-8">
-          <MessageCircle className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400 text-lg">No announcements yet.</p>
-          <p className="text-gray-500 text-sm">Be the first to post an announcement!</p>
-        </div>
-      ) : (
-        announcements.map(a => (
-          <motion.div
-            key={a._id}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-            className="p-4 bg-gradient-to-r from-slate-800/80 to-slate-900/80 rounded-xl border border-slate-700/50 hover:border-blue-500/30 transition-all duration-300 group"
-          >
-            <div className="flex items-start justify-between mb-2">
-              <h4 className="font-bold text-white group-hover:text-blue-300 transition-colors duration-300">
-                {a.title}
-              </h4>
-              <div className="flex items-center gap-2 text-xs text-gray-400">
-                <Clock className="w-3 h-3" />
-                {new Date(a.createdAt).toLocaleString()}
-              </div>
-            </div>
-            <p className="text-gray-300 leading-relaxed">{a.message}</p>
-            <div className="mt-3 pt-3 border-t border-slate-700/50">
-              <span className="text-xs text-cyan-400 font-medium">
-                Posted by Admin
-              </span>
-            </div>
-          </motion.div>
-        ))
-      )}
-    </div>
-  </motion.div>
-)}
+                {/* Announcements List */}
+                <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+                  {announcements.length === 0 ? (
+                    <div className="text-center py-8">
+                      <MessageCircle className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+                      <p className="text-gray-400 text-lg">No announcements yet.</p>
+                      <p className="text-gray-500 text-sm">Be the first to post an announcement!</p>
+                    </div>
+                  ) : (
+                    announcements.map(a => (
+                      <motion.div
+                        key={a._id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="p-4 bg-gradient-to-r from-slate-800/80 to-slate-900/80 rounded-xl border border-slate-700/50 hover:border-blue-500/30 transition-all duration-300 group"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <h4 className="font-bold text-white group-hover:text-blue-300 transition-colors duration-300">
+                            {a.title}
+                          </h4>
+                          <div className="flex items-center gap-2 text-xs text-gray-400">
+                            <Clock className="w-3 h-3" />
+                            {new Date(a.createdAt).toLocaleString()}
+                          </div>
+                        </div>
+                        <p className="text-gray-300 leading-relaxed">{a.message}</p>
+                        <div className="mt-3 pt-3 border-t border-slate-700/50">
+                          <span className="text-xs text-cyan-400 font-medium">
+                            Posted by Admin
+                          </span>
+                        </div>
+                      </motion.div>
+                    ))
+                  )}
+                </div>
+              </motion.div>
+            )}
 
       </div>
     </div>
