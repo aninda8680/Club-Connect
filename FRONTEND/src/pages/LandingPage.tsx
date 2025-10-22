@@ -214,9 +214,9 @@ export default function LandingPage() {
   // --- Data & Constants (Colors Updated to Blue/Purple/Emerald) ---
 
   const testimonials = [
-    { id: 1, name: "Alex Chen", role: "Club President", text: "Club-Connect revolutionized how we manage our members and events. The engagement has doubled since we started using it!", },
-    { id: 2, name: "Maria Garcia", role: "Student", text: "I found all my favorite clubs in one place and never miss their events anymore. The platform is so intuitive!", },
-    { id: 3, name: "James Wilson", role: "Event Coordinator", text: "The event management tools saved us countless hours. RSVP tracking is now a breeze with Club-Connect.", },
+    { id: 1, name: "-------", role: "----", text: "--------- ----- ------ ----- -------- -- ---------", },
+    { id: 2, name: "-------", role: "----", text: "--------- ----- ------ ----- -------- -- ---------", },
+    { id: 3, name: "-------", role: "----", text: "--------- ----- ------ ----- -------- -- ---------", },
   ];
 
   // Animation Variants (Kept as is)
