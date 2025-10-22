@@ -355,11 +355,7 @@ export default function CoordinatorPanel() {
                           </div>
                         </div>
                         <p className="text-gray-300 leading-relaxed">{a.message}</p>
-                        <div className="mt-3 pt-3 border-t border-slate-700/50">
-                          <span className="text-xs text-cyan-400 font-medium">
-                            Posted by Admin
-                          </span>
-                        </div>
+                        
                       </motion.div>
                     ))
                   )}
