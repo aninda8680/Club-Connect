@@ -22,6 +22,7 @@ import Profile from "./pages/Profile";
 import Notification from "./pages/NotificationPage";
 import Layout from "./components/Layout";
 import CClub from "./PANELS/PUBLIC/CClub";
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   return (
@@ -187,6 +188,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      <Analytics />
     </div>
   );
 }
