@@ -8,6 +8,7 @@ import EventCard from "../components/EventCard";
 import type { EventCardProps } from "../components/EventCard";
 import api from "@/api";
 
+
 // Create the skeleton component locally
 const EventCardSkeleton: React.FC = () => {
   return (

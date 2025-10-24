@@ -23,6 +23,7 @@ import Notification from "./pages/NotificationPage";
 import Layout from "./components/Layout";
 import CClub from "./PANELS/PUBLIC/CClub";
 import { Analytics } from '@vercel/analytics/react';
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -188,6 +189,17 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#1D3B6F",
+            color: "#fff",
+            border: "2px solid #2C5AA0",
+          },
+        }}
+      />
       <Analytics />
     </div>
   );

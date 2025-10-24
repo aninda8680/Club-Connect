@@ -7,7 +7,7 @@ import api from "../api";
 import Loader from "@/components/Loader";
 import DotGrid from '../components/DotGrid';
 import { Mail, Phone, MapPin, Instagram, Linkedin, Github } from "lucide-react";
-
+import { toast } from "react-hot-toast";
 
 
 // --- Types (Kept as is) ---
@@ -104,8 +104,9 @@ export default function LandingPage() {
     try {
       const response = await api.get("/clubs");
       return response.data;
-    } catch (error) {
-      console.error('Error fetching clubs:', error);
+    } catch (error:any) {
+      toast.error(error);
+      toast.error(error.response?.data?.message || "Error fetching clubs");
       return [];
     }
   };
@@ -120,8 +121,9 @@ export default function LandingPage() {
         maxAttendees: 100,
         attendees: event.attendees || [],
       }));
-    } catch (error) {
-      console.error('Error fetching events:', error);
+    } catch (err: any) {
+      // console.error(err);
+      toast.error(err.response?.data?.message || "Error Fetching Events");
       return [];
     }
   };
@@ -172,8 +174,9 @@ export default function LandingPage() {
         if (isAuthenticated()) {
           fetchUserClubStatus(typedClubs);
         }
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      } catch (error: any) {
+        // console.error(error);
+        toast.error(error.response?.data?.message || "Error Fetching Data");
       } finally {
         setLoading(false);
       }
@@ -190,13 +193,15 @@ export default function LandingPage() {
 
 
   const handleJoin = async (clubId: string) => {
-    if (!isAuthenticated()) {
-      navigate("/auth");
-      return;
-    }
-    alert("Join request feature will be implemented with the backend API!");
-    setJoinedClubs(prev => new Set([...prev, clubId]));
-  };
+  if (!isAuthenticated()) {
+    navigate("/auth");
+    return;
+  }
+
+  toast("Join request feature will be implemented with the backend API!", { icon: "ℹ️",});
+  setJoinedClubs(prev => new Set([...prev, clubId]));
+};
+
 
   const handleInterested = async (eventId: string) => {
     if (!isAuthenticated()) {

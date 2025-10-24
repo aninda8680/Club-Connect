@@ -3,6 +3,7 @@ import { Loader2, ImagePlus, X, Smile, Hash } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PostCard from "../components/PostCard";
 import api from "@/api";
+import { toast } from "react-hot-toast";
 
 const getProfileColor = (username: string) => {
   const charCode = username.charCodeAt(0);
@@ -89,8 +90,9 @@ export default function CreatePostPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyPosts(res.data);
-    } catch (err) {
-      console.error("Error fetching posts", err);
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.response?.data?.message || "❌ Error fetching posts");
     } finally {
       setLoadingPosts(false);
     }
@@ -122,7 +124,7 @@ export default function CreatePostPage() {
       await fetchMyPosts();
       setActiveTab("posts");
     } catch (err: any) {
-      alert(err.response?.data?.msg || "Error creating post");
+      toast.error(err.response?.data?.msg || "Error creating post");
     } finally {
       setIsLoading(false);
     }
@@ -134,8 +136,9 @@ export default function CreatePostPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyPosts(myPosts.filter((p) => p._id !== postId));
-    } catch (err) {
-      console.error("Error deleting post", err);
+    } catch (err:any) {
+      console.error(err);
+      toast.error(err.response?.data?.message || " Error deleting post");
     }
   };
 

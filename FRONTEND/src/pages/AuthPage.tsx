@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Terminal, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import api from "../api";
+import { toast } from "react-hot-toast";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,7 +15,6 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -59,11 +59,11 @@ export default function AuthPage() {
           email,
           password,
         });
-        alert("Registration successful! Please login.");
+        toast.success("Registration successful! Please login.");
         setIsLogin(true);
       }
     } catch (err: any) {
-      alert(err.response?.data?.message || "Authentication failed");
+      toast.error(err.response?.data?.message || "Authentication failed");
     } finally {
       setIsLoading(false);
     }

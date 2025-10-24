@@ -4,6 +4,7 @@ import api from "@/api";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
+  import { toast } from "react-hot-toast";
 import { FiUser, FiCalendar, FiPhone, FiChevronDown, FiArrowLeft } from "react-icons/fi";
 
 export default function ProfileCompletionPage() {
@@ -28,30 +29,37 @@ export default function ProfileCompletionPage() {
     "4th": ["7", "8"],
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setIsSubmitting(true);
-    try {
-      const { data } = await api.put(
-        "/user/complete-profile",
-        { dob, gender, stream, phone, course, year, semester },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  try {
+    const { data } = await api.put(
+      "/user/complete-profile",
+      { dob, gender, stream, phone, course, year, semester },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-      login(data.user, token!);
-      const role = data.user?.role;
-      if (role === "admin") navigate("/adminpanel");
-      else if (role === "coordinator") navigate("/coordinatorpanel");
-      else navigate("/publicpanel");
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.message || err?.message || "Something went wrong";
-      setError(message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    // Login user
+    login(data.user, token!);
+
+    // Show success toast
+    toast.success("Profile completed successfully!");
+
+    // Navigate based on role
+    const role = data.user?.role;
+    if (role === "admin") navigate("/adminpanel");
+    else if (role === "coordinator") navigate("/coordinatorpanel");
+    else navigate("/publicpanel");
+  } catch (err: any) {
+    // Show error toast instead of setError
+    const message =
+      err?.response?.data?.message || err?.message || "Something went wrong";
+    toast.error(message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-black via-slate-900 to-blue-900 p-4 overflow-hidden">

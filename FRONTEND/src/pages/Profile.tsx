@@ -37,7 +37,7 @@ const Profile: React.FC = () => {
 
         setUser(res.data.user);
       } catch (err: any) {
-        console.error(err);
+        // console.error(err);
         toast.error(err.response?.data?.msg || "Failed to load profile");
       } finally {
         setLoading(false);

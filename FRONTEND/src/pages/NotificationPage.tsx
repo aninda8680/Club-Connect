@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "@/api";
 import { motion } from "framer-motion";
 import NotificationCard from "./../components/NotificationCard"; 
+import { toast } from "react-hot-toast";
 
 // Interface for a single raw notification (from the API)
 interface Notification {
@@ -49,8 +50,9 @@ const NotificationPage: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotifications(res.data);
-    } catch (err) {
-      console.error("Error fetching notifications", err);
+    } catch (err: any) {
+      // console.error(err);
+      toast.error(err.response?.data?.message || "Error fetching notifications");
     } finally {
       setLoading(false);
     }
