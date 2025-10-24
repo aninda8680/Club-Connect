@@ -30,7 +30,7 @@ export default function ClubCard({
         const res = await api.get(`/clubs/${_id}/counts`); // ✅ use api
         const data = res.data;
         if (data.success) {
-          setMemberCount(data.memberCount);
+          setMemberCount(data.counts.members);
           setRequestCount(data.requestCount || requestCount); // optional
         } else {
           console.warn("Failed to fetch counts:", data.message);
