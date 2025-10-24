@@ -61,7 +61,7 @@ export default function PublicPanel() {
         const res = await api.get("/clubs");
         setClubs(res.data);
       } catch (err) {
-        console.error("Error fetching clubs", err);
+        // console.error("Error fetching clubs", err);
         toast.error("Failed to fetch clubs");
       } finally {
         setLoading(false);
@@ -76,7 +76,7 @@ export default function PublicPanel() {
         const res = await api.get("/events/approved");
         setEvents(res.data);
       } catch (err) {
-        console.error("Error fetching events", err);
+        // console.error("Error fetching events", err);
         toast.error("Failed to fetch events");
       }
     };

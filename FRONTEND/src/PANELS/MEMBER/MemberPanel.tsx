@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Crown
 } from "lucide-react";
+// import { toast } from "react-hot-toast";
 
 interface Club {
   name: string;
@@ -34,52 +35,33 @@ export default function MemberPanel() {
   const [loadingAnnouncements, setLoadingAnnouncements] = useState(true);
   const [loadingClub, setLoadingClub] = useState(true);
 
-  // Container animation variants
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
   };
 
-  // Item animation variants
   const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut" as const
-      }
-    }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } }
   };
 
-  // Card hover animation
   const cardVariants: Variants = {
     initial: { scale: 1 },
-    hover: {
-      scale: 1.02,
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut" as const
-      }
-    }
+    hover: { scale: 1.02, transition: { duration: 0.3, ease: "easeInOut" as const } }
   };
 
   // Fetch club info
   useEffect(() => {
     if (!clubId) return;
+
     const fetchClub = async () => {
       setLoadingClub(true);
       try {
         const res = await api.get(`/clubs/${clubId}`);
         setClub(res.data);
-      } catch (error) {
-        console.error("Error fetching club details:", error);
+      } catch (err: any) {
+        // Error fetching club details
+        // toast.error(err?.response?.data?.message || "Failed to fetch club details");
         setClub(null);
       } finally {
         setLoadingClub(false);
@@ -91,13 +73,15 @@ export default function MemberPanel() {
   // Fetch club announcements
   useEffect(() => {
     if (!clubId) return;
+
     const fetchAnnouncements = async () => {
       setLoadingAnnouncements(true);
       try {
         const res = await api.get(`/announcements?clubId=${clubId}`);
         setAnnouncements(res.data);
-      } catch (err) {
-        console.error("Failed to fetch announcements", err);
+      } catch (err: any) {
+        // Failed to fetch announcements
+        // toast.error(err?.response?.data?.message || "Failed to fetch announcements");
         setAnnouncements([]);
       } finally {
         setLoadingAnnouncements(false);

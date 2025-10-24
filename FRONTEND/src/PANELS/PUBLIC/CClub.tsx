@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { FiSend, FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
-
+import { toast } from "react-hot-toast";
 export default function CClub() {
   const [formData, setFormData] = useState({
     clubName: "",
@@ -41,12 +41,14 @@ export default function CClub() {
         "CCw9tJ8un0WEPdImV"
       )
       .then(
-        (response) => {
-          console.log("SUCCESS!", response.status, response.text);
+        () => {
+          // Email sent successfully
+          toast.success("Form submitted successfully!");
           setSuccess(true);
         },
-        (err) => {
-          console.error("FAILED...", err);
+        () => {
+          // Failed to send email
+          toast.error("Failed to submit form. Please try again.");
         }
       )
       .finally(() => setLoading(false));
@@ -56,6 +58,7 @@ export default function CClub() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
+
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white flex items-center justify-center px-4 py-20">
