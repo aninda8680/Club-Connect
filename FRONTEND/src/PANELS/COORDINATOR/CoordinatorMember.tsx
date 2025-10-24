@@ -11,6 +11,7 @@ import {
   UserCheck,
   Search
 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 interface Member {
   _id: string;
@@ -46,7 +47,11 @@ export default function CoordinatorMembers() {
     api
       .get(`/clubs/${clubId}/members`)
       .then((res) => setMembers(res.data))
-      .catch((err) => console.error("Error fetching members:", err))
+      .catch((err) => {
+        // Error fetching members
+        // console.error("Error fetching members:", err);
+        toast.error(err?.response?.data?.message || "Failed to fetch members");
+      })
       .finally(() => setLoading(false));
   }, [clubId]);
 
@@ -57,8 +62,11 @@ export default function CoordinatorMembers() {
     try {
       await api.delete(`/clubs/${clubId}/members/${userId}`);
       setMembers((prev) => prev.filter((m) => m._id !== userId));
-    } catch (err) {
-      console.error("Error removing member:", err);
+      toast.success("Member removed successfully");
+    } catch (err: any) {
+      // Error removing member
+      // console.error("Error removing member:", err);
+      toast.error(err?.response?.data?.message || "Failed to remove member");
     } finally {
       setRemoving(null);
     }
@@ -90,6 +98,7 @@ export default function CoordinatorMembers() {
   const streams = [...new Set(members.map((m) => m.stream).filter(Boolean))];
   const years = [...new Set(members.map((m) => m.year).filter(Boolean))];
   const semesters = [...new Set(members.map((m) => m.semester).filter(Boolean))];
+
 
   return (
     <div className="min-h-screen bg-black text-white py-25">

@@ -12,6 +12,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import api from "@/api";
+import { toast } from "react-hot-toast";
 
 interface Request {
   _id: string;
@@ -38,34 +39,33 @@ export default function RequestsPage() {
 
   useEffect(() => {
     if (!clubId) {
-      console.warn("⚠️ No clubId found in localStorage");
+      // No clubId found in localStorage
+      // console.warn("⚠️ No clubId found in localStorage");
       setLoading(false);
       return;
     }
 
-    console.log("Fetching requests for clubId:", clubId);
     setLoading(true);
 
-    
-
     api.get<Request[]>(`/join/club/${clubId}`)
-  .then((res) => {
-    console.log("Fetched requests:", res.data);
-    const updatedRequests: Request[] = res.data.map((req: Request) => ({
-      ...req,
-      course,
-      stream,
-      year,
-      semester,
-    }));
-    setRequests(updatedRequests);
-  })
-
-      .catch((err: unknown) => {
-        console.error("Error fetching join requests:", err);
+      .then((res) => {
+        // Fetched requests successfully
+        const updatedRequests: Request[] = res.data.map((req: Request) => ({
+          ...req,
+          course,
+          stream,
+          year,
+          semester,
+        }));
+        setRequests(updatedRequests);
+      })
+      .catch((err: any) => {
+        // Error fetching join requests
+        // console.error("Error fetching join requests:", err);
+        toast.error(err?.response?.data?.message || "Failed to fetch join requests");
         setRequests([]);
       })
-      .finally((): void => {
+      .finally(() => {
         setLoading(false);
       });
   }, [clubId, course, stream, year, semester]);
@@ -73,13 +73,12 @@ export default function RequestsPage() {
   const handleAction = async (id: string, action: string) => {
     setProcessing(id);
     try {
-      // ✅ Using api.put instead of fetch
       await api.put(`/join/${id}`, { action });
-
-      // Remove request locally
+      toast.success(`Request ${action}ed successfully`);
       setRequests((prev) => prev.filter((r) => r._id !== id));
-    } catch (err) {
-      console.error("Error processing request:", err);
+    } catch (err: any) {
+      // console.error("Error processing request:", err);
+      toast.error(err?.response?.data?.message || `Failed to ${action} request`);
     } finally {
       setProcessing(null);
     }

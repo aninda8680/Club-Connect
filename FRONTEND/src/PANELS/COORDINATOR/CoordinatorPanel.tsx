@@ -16,6 +16,7 @@ import {
   Loader2,
   Clock
 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 interface Announcement {
   _id: string;
@@ -39,18 +40,25 @@ export default function CoordinatorPanel() {
   const [posting, setPosting] = useState(false);
 
   useEffect(() => {
-
     const fetchClub = async () => {
-      if (!userId) return console.warn("No userId in localStorage");
+      if (!userId) {
+        // No userId in localStorage
+        // console.warn("No userId in localStorage");
+        toast.error("No user ID found. Please login again.");
+        setLoadingClub(false);
+        return;
+      }
       try {
         const res = await api.get(`/coordinator/myclub/${userId}`);
-        console.log("Fetched club data:", res.data);
+        // console.log("Fetched club data:", res.data);
         if (res.data.clubName) {
           setClubName(res.data.clubName);
           setClubId(res.data.clubId || "");
         }
-      } catch (err) {
-        console.error("Error fetching club", err);
+      } catch (err: any) {
+        // Error fetching club
+        // console.error("Error fetching club", err);
+        toast.error(err?.response?.data?.message || "Failed to fetch club info");
       } finally {
         setLoadingClub(false);
       }
@@ -65,8 +73,10 @@ export default function CoordinatorPanel() {
       try {
         const res = await api.get(`/announcements?clubId=${clubId}`);
         setAnnouncements(res.data);
-      } catch (err) {
-        console.error("Failed to fetch announcements", err);
+      } catch (err: any) {
+        // Failed to fetch announcements
+        // console.error("Failed to fetch announcements", err);
+        toast.error(err?.response?.data?.message || "Failed to fetch announcements");
       }
     };
     fetchAnnouncements();
@@ -75,7 +85,10 @@ export default function CoordinatorPanel() {
   const handleLogout = () => navigate("/");
 
   const postAnnouncement = async () => {
-    if (!newTitle || !newMessage) return;
+    if (!newTitle || !newMessage) {
+      toast.error("Title and message cannot be empty");
+      return;
+    }
     setPosting(true);
     try {
       const res = await api.post("/announcements", {
@@ -86,8 +99,11 @@ export default function CoordinatorPanel() {
       setAnnouncements(prev => [res.data, ...prev]);
       setNewTitle("");
       setNewMessage("");
-    } catch (err) {
-      console.error("Failed to post announcement", err);
+      toast.success("Announcement posted successfully!");
+    } catch (err: any) {
+      // Failed to post announcement
+      // console.error("Failed to post announcement", err);
+      toast.error(err?.response?.data?.message || "Failed to post announcement");
     } finally {
       setPosting(false);
     }
@@ -105,6 +121,7 @@ export default function CoordinatorPanel() {
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-black text-white py-25">

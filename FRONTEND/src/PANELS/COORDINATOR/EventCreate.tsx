@@ -14,6 +14,7 @@ import {
   Heart,
   Star
 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 interface Event {
   _id: string;
@@ -43,6 +44,10 @@ export default function EventCreate() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!title || !description || !date || !venue) {
+      toast.error("All fields are required!");
+      return;
+    }
     setSubmitting(true);
     try {
       const formData = new FormData();
@@ -58,6 +63,8 @@ export default function EventCreate() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
+      toast.success("Event submitted successfully!");
+      
       // Reset form
       setTitle(""); 
       setDescription(""); 
@@ -66,8 +73,9 @@ export default function EventCreate() {
       setPoster(null);
       
       fetchApprovedEvents(); // refresh approved events after submission
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      // console.error(err);
+      toast.error(err?.response?.data?.message || "Failed to submit event");
     } finally {
       setSubmitting(false);
     }
@@ -79,8 +87,10 @@ export default function EventCreate() {
       setLoading(true);
       const res = await api.get(`/events/approved/${coordinatorId}`);
       setApprovedEvents(res.data);
-    } catch (err) {
-      console.error("Error fetching approved events:", err);
+    } catch (err: any) {
+      // Error fetching approved events
+      // console.error("Error fetching approved events:", err);
+      toast.error(err?.response?.data?.message || "Failed to fetch approved events");
     } finally {
       setLoading(false);
     }
