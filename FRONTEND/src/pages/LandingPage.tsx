@@ -977,7 +977,7 @@ export default function LandingPage() {
           { label: "Home", id: "hero-section" },
           { label: "Clubs", id: "clubs-section" },
           { label: "Events", id: "events-section" },
-          { label: "Gallery", id: "gallery-section" },
+          // { label: "Gallery", id: "gallery-section" },
           { label: "Contact", id: "footer-section" },
         ].map(({ label, id }) => (
           <li key={id} className="group">
