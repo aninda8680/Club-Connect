@@ -14,6 +14,7 @@ import {
   Search,
   X
 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 interface User {
   _id: string;
@@ -53,8 +54,10 @@ export default function ManageRoles() {
       const res = await api.get("/admin/users");
       setUsers(res.data);
       setFilteredUsers(res.data);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      // Error fetching users
+      // console.error(err);
+      toast.error(err?.response?.data?.message || "Failed to fetch users");
     } finally {
       setLoading(false);
     }
@@ -76,10 +79,11 @@ export default function ManageRoles() {
       }
 
       setChangedRoles({});
-      // Show success feedback
-    } catch (err) {
-      console.error(err);
-      // Show error feedback
+      toast.success("Roles updated successfully!");
+    } catch (err: any) {
+      // Error applying role changes
+      // console.error(err);
+      toast.error(err?.response?.data?.message || "Failed to update roles");
     } finally {
       setSaving(false);
     }

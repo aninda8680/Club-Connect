@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "@/api";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-hot-toast";
 import {
   Calendar,
   MapPin,
@@ -40,8 +41,8 @@ export default function AdminEvent() {
       ]);
       setPendingEvents(pendingRes.data);
       setApprovedEvents(approvedRes.data);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to fetch events");
     } finally {
       setLoading(false);
     }
@@ -52,12 +53,14 @@ export default function AdminEvent() {
       await api.put(`/events/${id}`, { status });
       setPendingEvents(pendingEvents.filter((e) => e._id !== id));
       if (status === "approved") {
-        // instantly move to approved list for better UX
         const moved = pendingEvents.find((e) => e._id === id);
         if (moved) setApprovedEvents((prev) => [...prev, { ...moved, status }]);
+        toast.success("Event approved successfully!");
+      } else {
+        toast.error("Event rejected!");
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to update event");
     }
   };
 
@@ -66,8 +69,9 @@ export default function AdminEvent() {
     try {
       await api.delete(`/events/${id}`);
       setApprovedEvents(approvedEvents.filter((e) => e._id !== id));
-    } catch (err) {
-      console.error("Error deleting event:", err);
+      toast.success("Event deleted successfully!");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to delete event");
     }
   };
 

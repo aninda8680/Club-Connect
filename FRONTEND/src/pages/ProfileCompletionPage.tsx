@@ -17,7 +17,6 @@ export default function ProfileCompletionPage() {
   const [semester, setSemester] = useState("");
 
   const navigate = useNavigate();
-  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const token = localStorage.getItem("token");
@@ -288,20 +287,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                 </div>
               )}
             </div>
-
-            {/* Error Message */}
-            <AnimatePresence>
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="text-red-400 text-xs text-center mt-2"
-                >
-                  {error}
-                </motion.div>
-              )}
-            </AnimatePresence>
 
             {/* Submit Button */}
             <div className="mt-4">

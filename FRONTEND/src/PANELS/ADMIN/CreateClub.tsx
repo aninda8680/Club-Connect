@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "@/api";
 import { motion } from "framer-motion";
 import { Users, BookOpen, UserCheck, Terminal, Trash2, RefreshCcw } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function CreateClub() {
   const [name, setName] = useState("");
@@ -20,7 +21,9 @@ export default function CreateClub() {
       const filtered = usersArray.filter((u: any) => u.role === "coordinator");
       setCoordinators(filtered);
     } catch (err) {
-      console.error("Error fetching coordinators", err);
+      // Error fetching coordinators
+      // console.error("Error fetching coordinators", err);
+      toast.error("Failed to fetch coordinators");
     }
   };
 
@@ -30,7 +33,9 @@ export default function CreateClub() {
       const res = await api.get("/clubs");
       setClubs(res.data || []);
     } catch (err) {
-      console.error("Error fetching clubs", err);
+      // Error fetching clubs
+      // console.error("Error fetching clubs", err);
+      toast.error("Failed to fetch clubs");
     }
   };
 
@@ -51,12 +56,15 @@ export default function CreateClub() {
     try {
       await api.post("/clubs", { name, description, coordinatorId });
       setMessage("✅ Club created successfully!");
+      toast.success("Club created successfully!");
       setName("");
       setDescription("");
       setCoordinatorId("");
       fetchClubs(); // Refresh after creating
     } catch (err: any) {
-      setMessage("❌ Error creating club: " + (err.response?.data?.error || err.message));
+      const errMsg = err.response?.data?.error || err.message;
+      setMessage("❌ Error creating club: " + errMsg);
+      toast.error("Error creating club: " + errMsg);
     } finally {
       setLoading(false);
     }
@@ -68,10 +76,13 @@ export default function CreateClub() {
     try {
       await api.delete(`/clubs/${clubId}`);
       setMessage("🗑️ Club deleted successfully!");
+      toast.success("Club deleted successfully!");
       fetchClubs();
     } catch (err: any) {
-      console.error("Error deleting club:", err);
+      // Error deleting club
+      // console.error("Error deleting club:", err);
       setMessage("❌ Failed to delete club.");
+      toast.error("Failed to delete club");
     }
   };
 
@@ -80,12 +91,16 @@ export default function CreateClub() {
     try {
       await api.put(`/clubs/${clubId}/coordinator`, { coordinatorId: newCoordinatorId });
       setMessage("🔄 Coordinator updated successfully!");
+      toast.success("Coordinator updated successfully!");
       fetchClubs();
     } catch (err: any) {
-      console.error("Error changing coordinator:", err);
+      // Error changing coordinator
+      // console.error("Error changing coordinator:", err);
       setMessage("❌ Failed to update coordinator.");
+      toast.error("Failed to update coordinator");
     }
   };
+
 
   return (
     <div className="min-h-screen bg-black text-white py-25">
