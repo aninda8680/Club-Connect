@@ -8,7 +8,7 @@ const API_BASE_URL = isLocal
   ? "http://localhost:5000/api" // 🧩 Local backend for dev
   : "https://club-connect-p2o2.onrender.com/api"; // 🚀 Render backend for production
 
-console.log("✅ API Base URL:", API_BASE_URL);
+// console.log("✅ API Base URL:", API_BASE_URL);
 
 // Create axios instance
 const api = axios.create({
