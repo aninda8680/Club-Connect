@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowRight, FiUsers, FiCalendar, FiStar, FiTrendingUp, FiMapPin, FiCheck, FiLogIn, FiPlus } from "react-icons/fi";
 import { Typewriter } from 'react-simple-typewriter';
 import api from "../api";
 import Loader from "@/components/Loader";
-import DotGrid from '../components/DotGrid';
+import { ParticleText } from "@/components/ParticleText";
+import { BackgroundPaths } from "@/components/BackgroundPaths";
+import { AnimatedGradient } from "@/components/AnimatedGradient";
 import { Mail, Phone, MapPin, Instagram, Linkedin, Github } from "lucide-react";
 import { toast } from "react-hot-toast";
 
@@ -232,64 +234,6 @@ export default function LandingPage() {
 
   // --- Components (Colors Updated) ---
 
-  const AuroraBackground: React.FC = () => {
-    const isBrowser = typeof window !== 'undefined';
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    const rotateX = isBrowser ? useTransform(mouseY, [0, window.innerHeight], [15, -15]) : 0;
-    const rotateY = isBrowser ? useTransform(mouseX, [0, window.innerWidth], [-15, 15]) : 0;
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-      const { clientX, clientY } = e;
-      mouseX.set(clientX);
-      mouseY.set(clientY);
-    };
-
-    return (
-      <motion.div
-        className="fixed inset-0 overflow-hidden pointer-events-none z-0"
-        onMouseMove={handleMouseMove}
-        style={{ perspective: 1000 }}
-      >
-        <motion.div
-            style={{ rotateX, rotateY }}
-            className="w-full h-full absolute"
-        >
-            {/* Aurora layers: Red/Orange -> Blue/Purple/Cyan */}
-            <motion.div
-              className="absolute top-[20%] left-[20%] w-[60%] aspect-[2/1] rounded-full bg-blue-900/20 blur-[100px]" // Blue-900
-              animate={{ x: ["-10%", "10%", "-10%"], y: ["0%", "10%", "0%"], opacity: [0.8, 1, 0.8] }}
-              transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute top-[40%] left-[40%] w-[50%] aspect-[3/1] rounded-full bg-purple-800/15 blur-[120px]" // Purple-800
-              animate={{ x: ["10%", "-10%", "10%"], y: ["5%", "-5%", "5%"], opacity: [0.7, 0.9, 0.7] }}
-              transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-            />
-            <motion.div
-              className="absolute bottom-[10%] right-[10%] w-[40%] aspect-[4/1] rounded-full bg-cyan-700/10 blur-[80px]" // Cyan-700
-              animate={{ x: ["5%", "-5%", "5%"], y: ["-5%", "5%", "-5%"], opacity: [0.6, 0.8, 0.6] }}
-              transition={{ duration: 30, repeat: Infinity, ease: "easeInOut", delay: 10 }}
-            />
-            {/* Subtle particles */}
-            {[...Array(20)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute rounded-full bg-blue-500/10" // Blue-500
-                style={{
-                  width: Math.random() * 5 + 3, height: Math.random() * 5 + 3,
-                  left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
-                }}
-                animate={{ y: [0, (Math.random() - 0.5) * 50], opacity: [0.2, 0.5, 0.2] }}
-                transition={{ duration: Math.random() * 10 + 10, repeat: Infinity, repeatType: "reverse", delay: Math.random() * 5 }}
-              />
-            ))}
-        </motion.div>
-      </motion.div>
-    );
-  };
-
   useEffect(() => {
   // Check if user is logged in
   const token = localStorage.getItem("token");
@@ -331,164 +275,89 @@ export default function LandingPage() {
 
 
   return (
-    <div className="bg-gradient-to-b from-black via-gray-900 to-black text-white w-full overflow-x-hidden scroll-smooth relative">
-      {/* Aurora Background */}
-      <AuroraBackground />
-      {/* Global Dot Grid Pattern */}
+    <div className="bg-black text-white w-full overflow-x-hidden scroll-smooth relative">
+      {/* Floating Paths Animation above Navbar */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <DotGrid 
-          dotColor="rgba(147, 197, 253, 0.15)"
-          dotSize={1.5}
-          gap={30}
-        />
+        <BackgroundPaths />
       </div>
 
-      {/* Minecraft-themed Login Button */}
+      {/* Minecraft-themed Login Button - Updated to monochrome */}
       <motion.button
-        className="fixed top-4 right-10 z-50 py-2 px-4 rounded-none text-sm font-bold text-white shadow-lg border-2"
-        style={{
-          background: '#4eab2e', // Minecraft grass block green
-          borderTopColor: '#8FAC87',
-          borderLeftColor: '#8FAC87',
-          borderRightColor: '#5A6C55',
-          borderBottomColor: '#5A6C55',
-          textShadow: '2px 2px #4A5C45',
-          fontFamily: "'Minecraft', monospace"
-        }}
+        className="fixed top-4 right-10 z-50 py-2 px-4 text-sm font-bold text-white bg-white shadow-lg border-2 border-gray-300 hover:bg-gray-200 transition-colors"
         onClick={handleLoginClick}
-        animate={{
-          boxShadow: [
-            "4px 4px 0px rgba(90,108,85,0.8)",
-            "2px 2px 0px rgba(90,108,85,0.9)",
-            "4px 4px 0px rgba(90,108,85,0.8)"
-          ],
-        }}
-        transition={{ repeat: Infinity, duration: 1.5 }}
-        whileHover={{ 
-          scale: 1.05,
-          y: -1,
-          transition: { duration: 0.1 }
-        }}
-        whileTap={{ 
-          scale: 0.95,
-          y: 2,
-          borderTopColor: '#5A6C55',
-          borderLeftColor: '#5A6C55',
-          borderRightColor: '#8FAC87',
-          borderBottomColor: '#8FAC87'
-        }}
+        whileHover={{ scale: 1.05, y: -1 }}
+        whileTap={{ scale: 0.95, y: 2 }}
       >
         {isAuthenticated() ? '⚡ Dashboard' : '🎮 Login / Register'}
       </motion.button>
 
-      {/* Hero Section */}
-      <section id = "hero-section" className="min-h-screen flex flex-col justify-center items-center text-center px-4 md:px-6 relative overflow-hidden z-10">
-        <DotGrid dotColor="rgba(148, 163, 184, 0.15)" dotSize={2} gap={20} />        <div className="relative z-20">
-          {/* Main Title */}
-          <motion.h1
-            className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600" // Blue/Purple gradient title
-            initial={{ opacity: 0, y: -60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, type: "spring", stiffness: 80 }}
-          >
-            Welcome to <span className="text-blue-500">Club-Connect</span> ⚡
-          </motion.h1>
+      {/* Hero Section with Particle Text */}
+      <section id="hero-section" className="relative overflow-hidden min-h-screen flex flex-col justify-between">
+        {/* Particle Text Background */}
+        <div className="flex-1 flex items-start justify-center pt-20">
+          <ParticleText words={["CLUB", "CONNECT", "COMMUNITY", "EVENTS"]} />
+        </div>
 
-          {/* GenZ Typewriter Heading (Kept as is) */}
-          <motion.h2
-            className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-          >
-            <Typewriter
-              words={[
-                "Grades fade. Memories don't.", "Because college is not just 9 to 5.",
-                "More than attendance, it's about presence.", "Forget library hours. These are club hours.",
-                "Every club is a playlist. Find yours."
-              ]}
-              loop={true}
-              cursor cursorStyle="|" typeSpeed={60} deleteSpeed={40} delaySpeed={2000}
-            />
-          </motion.h2>
+        {/* Hero Content */}
+        <div className="container mx-auto text-center relative z-10 pb-8 px-4">
+          <div className="max-w-4xl mx-auto">
+            <motion.h2
+              className="text-2xl md:text-3xl font-bold text-white mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              <Typewriter
+                words={[
+                  "Grades fade. Memories don't.",
+                  "Because college is not just 9 to 5.",
+                  "More than attendance, it's about presence.",
+                  "Forget library hours. These are club hours.",
+                  "Every club is a playlist. Find yours."
+                ]}
+                loop={true}
+                cursor
+                cursorStyle="|"
+                typeSpeed={60}
+                deleteSpeed={40}
+                delaySpeed={2000}
+              />
+            </motion.h2>
 
-          {/* Subheading (Kept as is) */}
-          <motion.h3
-            className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-          >
-            After classes comes the real fun — clubs, events, and memories waiting to happen.
-          </motion.h3>
+            <motion.p
+              className="text-base text-gray-400 mb-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+            >
+              After classes comes the real fun — clubs, events, and memories waiting to happen.
+            </motion.p>
 
-                  {/* Minecraft-themed Buttons with Blue/Purple Colors */}
-        <motion.div
-          className="flex flex-col sm:flex-row justify-center gap-4 mt-8 md:mt-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.8, duration: 0.8 }}
-        >
-          <motion.button
-            className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
-            style={{
-              background: 'linear-gradient(135deg, #3D5AA6 0%, #8B5FBF 100%)', // Blue to Purple
-              borderTopColor: '#4A6BC6',
-              borderLeftColor: '#4A6BC6',
-              borderRightColor: '#2D4080',
-              borderBottomColor: '#2D4080',
-              color: 'white',
-              textShadow: '2px 2px #2D4080',
-              fontFamily: "'Minecraft', monospace"
-            }}
-            whileHover={{ 
-              scale: 1.05,
-              y: -1
-            }}
-            whileTap={{ 
-              scale: 0.95,
-              y: 2,
-              borderTopColor: '#2D4080',
-              borderLeftColor: '#2D4080',
-              borderRightColor: '#4A6BC6',
-              borderBottomColor: '#4A6BC6'
-            }}
-            onClick={() => document.getElementById("clubs-section")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            🌟 Explore Clubs <FiArrowRight />
-          </motion.button>
+            <motion.div
+              className="flex flex-col sm:flex-row justify-center gap-4 mb-12"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.0 }}
+            >
+              <motion.button
+                className="px-6 py-3 bg-white text-white font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => document.getElementById("clubs-section")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                🌟 Explore Clubs <FiArrowRight />
+              </motion.button>
 
-          <motion.button
-            className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
-            style={{
-              background: 'transparent',
-              borderTopColor: '#4A6BC6',
-              borderLeftColor: '#4A6BC6',
-              borderRightColor: '#2D4080',
-              borderBottomColor: '#2D4080',
-              color: 'white',
-              textShadow: '2px 2px #2D4080',
-              fontFamily: "'Minecraft', monospace",
-              backgroundColor: 'rgba(45, 64, 128, 0.3)'
-            }}
-            whileHover={{ 
-              scale: 1.05,
-              y: -1,
-              backgroundColor: 'rgba(74, 107, 198, 0.4)'
-            }}
-            whileTap={{ 
-              scale: 0.95,
-              y: 2,
-              borderTopColor: '#2D4080',
-              borderLeftColor: '#2D4080',
-              borderRightColor: '#4A6BC6',
-              borderBottomColor: '#4A6BC6'
-            }}
-            onClick={() => document.getElementById("events-section")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            🎉 Explore Events <FiArrowRight />
-          </motion.button>
-        </motion.div>
+              <motion.button
+                className="px-6 py-3 bg-transparent border border-white text-white hover:bg-white/10 font-semibold transition-colors flex items-center justify-center gap-2"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => document.getElementById("events-section")?.scrollIntoView({ behavior: "smooth" })}
+              >
+                🎉 Explore Events <FiArrowRight />
+              </motion.button>
+            </motion.div>
+          </div>
         </div>
 
         {/* Scrolling indicator */}
@@ -496,14 +365,14 @@ export default function LandingPage() {
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.5 }}
+          transition={{ delay: 1.5 }}
         >
           <span className="text-sm text-gray-400 mb-2">Scroll Down</span>
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           >
-            <div className="w-4 h-4 border-r-2 border-b-2 border-blue-500 transform rotate-45"></div> {/* Blue Arrow */}
+            <div className="w-4 h-4 border-r-2 border-b-2 border-white transform rotate-45"></div>
           </motion.div>
         </motion.div>
       </section>
@@ -524,7 +393,7 @@ export default function LandingPage() {
                 className="text-center"
                 variants={fadeUp}
               >
-                <div className="flex justify-center mb-4 text-blue-500"> {/* Blue Icons 
+                <div className="flex justify-center mb-4 text-white"> {/* Blue Icons 
                   {/* {stat.icon}
                 </div>
                 <div className="text-3xl font-bold mb-2">{stat.value}</div>
@@ -538,10 +407,7 @@ export default function LandingPage() {
       {/* --- */}
 
       {/* Featured Clubs */}
-      <section id="clubs-section" className="min-h-screen py-20 px-4 md:px-6 relative z-10">
-        {/* Animated background elements: Shifted to cool tones */}
-        
-        
+      <section id="clubs-section" className="min-h-screen py-20 px-4 md:px-6 relative z-10 bg-black">
         <div className="container mx-auto relative z-10">
           <motion.div
             className="text-center mb-16"
@@ -550,12 +416,12 @@ export default function LandingPage() {
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
-            <div className="inline-flex items-center gap-3 mb-4 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30">
-              <FiStar className="text-blue-400" size={16} /> {/* Blue Star */}
-              <span className="text-sm font-semibold text-blue-400">EXPLORE COMMUNITIES</span>
+            <div className="inline-flex items-center gap-3 mb-4 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+              <FiStar className="text-white" size={16} />
+              <span className="text-sm font-semibold text-white">EXPLORE COMMUNITIES</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              Featured <span className="text-blue-500">Clubs</span> {/* Blue Clubs */}
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+              Featured <span className="text-gray-400">Clubs</span>
             </h2>
             <motion.p
               className="text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed"
@@ -580,12 +446,12 @@ export default function LandingPage() {
                 className="col-span-full text-center py-20"
                 variants={fadeUp}
               >
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                  <FiUsers className="text-blue-400" size={40} /> {/* Blue Users */}
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                  <FiUsers className="text-white" size={40} />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-3">No Clubs Yet</h3>
                 <p className="text-gray-400 text-lg mb-6">Be the first to start something amazing!</p>
-                <button className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl font-semibold hover:from-blue-500 hover:to-blue-600 transition-all duration-300 transform hover:-translate-y-1"> {/* Blue Button */}
+                <button className="px-8 py-3 bg-white text-black rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300 transform hover:-translate-y-1">
                   Create First Club
                 </button>
               </motion.div>
@@ -593,127 +459,140 @@ export default function LandingPage() {
               clubs.map((club) => (
                 <motion.div
                   key={club._id}
-                  className="group relative"
+                  className="group relative overflow-hidden h-full bg-black rounded-lg border border-white/10"
                   variants={fadeUp}
                   whileHover={{ y: -8 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  style={{ filter: "url(#noise)" }}
                 >
-                  {/* Card Background with Gradient Border: Blue/Purple/Cyan */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500"></div>
+                  {/* Animated Gradient Background */}
+                  <AnimatedGradient 
+                    colors={["#1a1a1a", "#2a2a2a", "#1f1f1f"]} 
+                    speed={0.05} 
+                    blur="medium" 
+                  />
+
+                  {/* Noise Texture */}
+                  <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+                    <div
+                      className="w-full h-full"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                        backgroundSize: "256px 256px",
+                        mixBlendMode: "overlay",
+                      }}
+                    />
+                  </div>
+
+                  {/* Shine Effect */}
+                  <div className="absolute inset-0 opacity-80 transition-opacity duration-500">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:animate-[shine_4s_ease-in-out_infinite] w-[200%]" />
+                  </div>
                   
-                  <div className="relative bg-gray-900 rounded-2xl p-6 border border-gray-800 group-hover:border-blue-500/50 transition-all duration-500 backdrop-blur-sm overflow-hidden">
-                    
-                    {/* Animated Background Pattern */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full"></div>
-                    
+                  <div className="relative z-10 p-6 h-full flex flex-col">
                     {/* Club Header */}
-                    <div className="relative z-10">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          {/* Club Avatar */}
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg"> {/* Blue/Purple Avatar */}
-                            {club.name.charAt(0)}
-                          </div>
-                          <div>
-                            <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors"> {/* Blue Hover */}
-                              {club.name}
-                            </h3>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded-full border border-gray-700">
-                                #{club.category || "Tech Society"} {/* Updated placeholder for category */}
-                              </span>
-                            </div>
-                          </div>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        {/* Club Avatar */}
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white to-gray-400 flex items-center justify-center text-black font-bold text-sm shadow-lg">
+                          {club.name.charAt(0)}
                         </div>
-                        
-                        {/* Members Count - FIX: Using clubCounts to resolve the lint warning */}
-                        <div className="text-right">
-                          <div className="flex items-center gap-1 text-sm text-gray-400">
-                            <FiUsers size={14} />
-                            {/* The fix: Use the clubCounts map to display the member count. 
-                                It's a slightly redundant call since club.members.length has the same value, 
-                                but it resolves the "value is never read" warning for the state variable 'clubCounts'. */}
-                            <span className="font-semibold text-white">
-                              {clubCounts.get(club._id)?.memberCount || club.members.length}
+                        <div>
+                          <h3 className="text-xl font-bold text-white group-hover:text-gray-300 transition-colors">
+                            {club.name}
+                          </h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-xs text-gray-500 bg-white/5 px-2 py-1 rounded-full border border-white/10">
+                              #{club.category || "Community"}
                             </span>
                           </div>
-                          <div className="text-xs text-gray-500 mt-1">members</div>
                         </div>
                       </div>
-
-                      {/* Description (Kept as is) */}
-                      <p className="text-gray-300 leading-relaxed mb-6 line-clamp-3 group-hover:text-gray-200 transition-colors">
-                        {club.description || "Join this amazing community and be part of something special!"}
-                      </p>
-
-                      {/* Coordinator & Pending Requests */}
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                          {/* Coordinator Avatar */}
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-400 flex items-center justify-center text-white text-xs font-bold"> {/* Emerald/Cyan Avatar */}
-                            {club.coordinator?.username?.charAt(0) || "C"}
-                          </div>
-                          <div>
-                            <div className="text-xs text-gray-400">Coordinator</div>
-                            <div className="text-sm font-semibold text-white">
-                              {club.coordinator?.username || "Unknown"}
-                            </div>
-                          </div>
+                      
+                      {/* Members Count */}
+                      <div className="text-right">
+                        <div className="flex items-center gap-1 text-sm text-gray-400">
+                          <FiUsers size={14} />
+                          <span className="font-semibold text-white">
+                            {clubCounts.get(club._id)?.memberCount || club.members.length}
+                          </span>
                         </div>
-                        
-                        {club.joinRequests.length > 0 && (
-                          <motion.div 
-                            className="flex items-center gap-2 px-3 py-2 bg-yellow-500/20 rounded-lg border border-yellow-500/30"
-                            whileHover={{ scale: 1.05 }}
-                          >
-                            <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                            <span className="text-xs font-semibold text-yellow-400">
-                              {club.joinRequests.length} pending
-                            </span>
-                          </motion.div>
-                        )}
+                        <div className="text-xs text-gray-500 mt-1">members</div>
                       </div>
-
-                      {/* Join Button */}
-                      <motion.button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleJoin(club._id);
-                        }}
-                        className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 relative overflow-hidden group ${
-                          joinedClubs.has(club._id)
-                            ? "bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 text-emerald-400 border border-emerald-500/30" // Emerald/Green for success
-                            : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white shadow-lg hover:shadow-blue-500/25" // Blue for Join
-                        }`}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        disabled={joinedClubs.has(club._id)}
-                      >
-                        {/* Animated background */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition duration-1000"></div>
-                        
-                        {isAuthenticated() ? (
-                          <>
-                            {joinedClubs.has(club._id) ? (
-                              <>
-                                <FiCheck className="relative z-10" size={18} />
-                                <span className="relative z-10">Request Sent</span>
-                              </>
-                            ) : (
-                              <>
-                                <FiPlus className="relative z-10" size={18} />
-                                <span className="relative z-10">Join Community</span>
-                              </>
-                            )}
-                          </>
-                        ) : (
-                          <>
-                            <FiLogIn className="relative z-10" size={18} />
-                            <span className="relative z-10">Login to Join</span>
-                          </>
-                        )}
-                      </motion.button>
                     </div>
+
+                    {/* Description */}
+                    <p className="text-gray-300 leading-relaxed mb-6 line-clamp-3 group-hover:text-gray-200 transition-colors flex-grow">
+                      {club.description || "Join this amazing community and be part of something special!"}
+                    </p>
+
+                    {/* Coordinator & Pending Requests */}
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        {/* Coordinator Avatar */}
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gray-200 to-gray-400 flex items-center justify-center text-black text-xs font-bold">
+                          {club.coordinator?.username?.charAt(0) || "C"}
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-400">Coordinator</div>
+                          <div className="text-sm font-semibold text-white">
+                            {club.coordinator?.username || "Unknown"}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {club.joinRequests.length > 0 && (
+                        <motion.div 
+                          className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg border border-white/20"
+                          whileHover={{ scale: 1.05 }}
+                        >
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                          <span className="text-xs font-semibold text-white">
+                            {club.joinRequests.length} pending
+                          </span>
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Join Button */}
+                    <motion.button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleJoin(club._id);
+                      }}
+                      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 relative overflow-hidden group/btn ${
+                        joinedClubs.has(club._id)
+                          ? "bg-white/20 text-white border border-white/30"
+                          : "bg-white text-black hover:bg-gray-200 shadow-lg"
+                      }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      disabled={joinedClubs.has(club._id)}
+                    >
+                      {/* Animated background */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition duration-1000"></div>
+                      
+                      {isAuthenticated() ? (
+                        <>
+                          {joinedClubs.has(club._id) ? (
+                            <>
+                              <FiCheck className="relative z-10" size={18} />
+                              <span className="relative z-10">Request Sent</span>
+                            </>
+                          ) : (
+                            <>
+                              <FiPlus className="relative z-10" size={18} />
+                              <span className="relative z-10">Join Community</span>
+                            </>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <FiLogIn className="relative z-10 text-white" size={18} />
+                          <span className="relative z-10 text-white">Login to Join</span>
+                        </>
+                      )}
+                    </motion.button>
                   </div>
                 </motion.div>
               ))
@@ -729,17 +608,16 @@ export default function LandingPage() {
       {/* --- */}
 
       {/* Featured Events */}
-      {/* NOTE: This section was duplicated in your prompt, I'm using the original one's ID for placement */}
-      <section id="events-section" className="min-h-screen py-20 px-4 md:px-6 relative z-10">
+      <section id="events-section" className="min-h-screen py-20 px-4 md:px-6 relative z-10 bg-black">
         <div className="container mx-auto">
           <motion.h2
-            className="text-center text-3xl font-bold mb-4"
+            className="text-center text-4xl md:text-5xl font-bold mb-4 text-white"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
-            <span className="text-emerald-500">Upcoming</span> Events {/* Emerald Text */}
+            <span className="text-gray-400">Upcoming</span> Events
           </motion.h2>
           <motion.p
             className="text-center text-gray-400 max-w-2xl mx-auto mb-12"
@@ -768,7 +646,7 @@ export default function LandingPage() {
               events.map((event, i) => (
                 <motion.div
                   key={event._id}
-                  className="bg-gray-900/70 rounded-xl p-6 shadow-lg hover:shadow-blue-500/20 transition border border-gray-800 hover:border-blue-500/30 backdrop-blur-sm" // Blue Hover/Border
+                  className="bg-gray-900/70 rounded-xl p-6 shadow-lg hover:shadow-white/10 transition border border-gray-800 hover:border-white/20 backdrop-blur-sm"
                   initial={{ opacity: 0, y: 60 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: i * 0.1 }}
@@ -783,25 +661,25 @@ export default function LandingPage() {
                     viewport={{ once: true }}
                   >
                     {event.clubName && (
-                      <span className="px-3 py-1 bg-blue-900/50 text-blue-400 text-xs rounded-full border border-blue-900"> {/* Blue Chip */}
+                      <span className="px-3 py-1 bg-white/10 text-white text-xs rounded-full border border-white/20">
                         {event.clubName}
                       </span>
                     )}
                     {i % 3 === 0 && (
-                      <span className="px-3 py-1 bg-purple-900/20 text-purple-400 text-xs rounded-full border border-purple-900/50 flex items-center gap-1"> {/* Purple Chip */}
+                      <span className="px-3 py-1 bg-gray-800 text-gray-400 text-xs rounded-full border border-gray-700 flex items-center gap-1">
                         <FiTrendingUp size={12} /> Trending
                       </span>
                     )}
                   </motion.div>
-                  <h3 className="text-xl font-bold mb-3">{event.title}</h3>
+                  <h3 className="text-xl font-bold mb-3 text-white">{event.title}</h3>
                   <p className="text-gray-400 text-sm mb-4 line-clamp-2">{event.description}</p>
                   <div className="text-sm text-gray-300 mb-6 space-y-2">
                     <p className="flex items-center gap-2">
-                      <FiCalendar className="text-emerald-500" /> {formatDate(event.date)} {/* Emerald Calendar */}
+                      <FiCalendar className="text-white" /> {formatDate(event.date)}
                     </p>
                     {(event.venue || event.location) && (
                       <p className="flex items-center gap-2">
-                        <FiMapPin className="text-emerald-500" /> {event.venue || event.location || "TBA"} {/* Emerald MapPin */}
+                        <FiMapPin className="text-white" /> {event.venue || event.location || "TBA"}
                       </p>
                     )}
                     {event.maxAttendees && (
@@ -814,8 +692,8 @@ export default function LandingPage() {
                     onClick={() => handleInterested(event._id)}
                     className={`w-full px-4 py-2 rounded-lg transition flex items-center justify-center gap-2 ${
                       interestedEvents.has(event._id)
-                        ? "bg-emerald-900/50 text-emerald-400 border border-emerald-900" // Emerald/Green for Interested
-                        : "bg-gradient-to-r from-blue-600 to-purple-800 hover:from-blue-500 hover:to-purple-700" // Blue/Purple for I'm Interested
+                        ? "bg-white/20 text-white border border-white/30"
+                        : "bg-white text-black hover:bg-gray-200"
                     }`}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
@@ -835,29 +713,64 @@ export default function LandingPage() {
 
      {/* CTA Section */}
 <section id="cta-section" className="py-20 relative z-10">
+  <svg width="0" height="0" className="absolute">
+    <defs>
+      <filter id="noise-cta" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence baseFrequency="0.4" numOctaves="2" result="noise" seed="2" type="fractalNoise" />
+        <feColorMatrix in="noise" type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="discrete" tableValues="0.02 0.04 0.06" />
+        </feComponentTransfer>
+        <feComposite operator="over" in2="SourceGraphic" />
+      </filter>
+    </defs>
+  </svg>
   <div className="container mx-auto px-4 md:px-6">
     <motion.div
-      className="bg-gradient-to-r from-black to-gray-900 rounded-2xl p-8 md:p-12 border border-gray-800 shadow-2xl overflow-hidden relative"
+      className="relative overflow-hidden bg-black rounded-2xl border border-white/10 p-8 md:p-12 text-center group"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
       variants={fadeIn}
+      style={{ filter: "url(#noise-cta)" }}
     >
-      <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-blue-900/20 blur-3xl"></div>
+      {/* Animated Gradient Background */}
+      <AnimatedGradient 
+        colors={["#1a1a1a", "#2a2a2a", "#1f1f1f"]} 
+        speed={0.05} 
+        blur="medium" 
+      />
 
-      <div className="relative z-10 text-center">
+      {/* Noise Texture */}
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundSize: "256px 256px",
+            mixBlendMode: "overlay",
+          }}
+        />
+      </div>
+
+      {/* Shine Effect */}
+      <div className="absolute inset-0 opacity-80 transition-opacity duration-500">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:animate-[shine_4s_ease-in-out_infinite] w-[200%]" />
+      </div>
+
+      <div className="relative z-10">
         <motion.h2
-          className="text-3xl md:text-4xl font-bold mb-6"
+          className="text-3xl md:text-4xl font-bold mb-6 text-white"
           variants={fadeUp}
         >
-          Want to <span className="text-blue-500">Start</span> Your Own Club?
+          Want to <span className="text-gray-300">Start</span> Your Own Club?
         </motion.h2>
 
         <motion.p
           className="text-gray-400 mb-8 max-w-2xl mx-auto"
           variants={fadeUp}
         >
-          Turn your passion into a movement! Submit your idea and we’ll help you set up your own club on <span className="text-blue-400 font-semibold">Club-Connect</span>. 
+                    Turn your passion into a movement! Submit your idea and we'll help you set up your own club on <span className="text-white font-semibold">Club-Connect</span>. 
           Share your vision, choose your members, and make an impact on campus.
         </motion.p>
 
@@ -866,19 +779,19 @@ export default function LandingPage() {
           className="flex flex-col sm:flex-row justify-center items-center gap-4"
         >
           <motion.button
-            className="px-8 py-3 rounded-full text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-800 hover:from-blue-500 hover:to-purple-700 transition flex items-center gap-2"
+            className="px-8 py-3 rounded-full text-lg font-semibold bg-white text-white hover:bg-gray-200 transition flex items-center gap-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleLoginClick} // 👈 redirect to your form page
+            onClick={handleLoginClick}
           >
             Create My Club <FiArrowRight />
           </motion.button>
 
           <motion.button
-            className="px-8 py-3 rounded-full text-lg font-semibold bg-gray-800 hover:bg-gray-700 transition flex items-center gap-2"
+            className="px-8 py-3 rounded-full text-lg font-semibold bg-transparent border border-white text-white hover:bg-white/10 transition flex items-center gap-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleLoginClick} // Your existing login handler
+            onClick={handleLoginClick}
           >
             Join Existing Clubs
           </motion.button>
@@ -888,6 +801,125 @@ export default function LandingPage() {
   </div>
 </section>
 
+
+{/* FAQ Section with Animated Bento Cards */}
+<section id="faq-section" className="py-20 px-4 bg-black relative z-10">
+  <svg width="0" height="0" className="absolute">
+    <defs>
+      <filter id="noise" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence baseFrequency="0.4" numOctaves="2" result="noise" seed="2" type="fractalNoise" />
+        <feColorMatrix in="noise" type="saturate" values="0" />
+        <feComponentTransfer>
+          <feFuncA type="discrete" tableValues="0.02 0.04 0.06" />
+        </feComponentTransfer>
+        <feComposite operator="over" in2="SourceGraphic" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div className="container mx-auto max-w-6xl">
+    <div className="text-center mb-16">
+      <motion.h2
+        className="text-4xl font-bold text-white mb-4"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+      >
+        Frequently Asked <span className="text-gray-400">Questions</span>
+      </motion.h2>
+      <motion.p
+        className="text-xl text-gray-400 max-w-2xl mx-auto"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        viewport={{ once: true }}
+      >
+        Everything you need to know about Club-Connect. Can't find what you're looking for? Contact us.
+      </motion.p>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {[
+        {
+          question: "What is Club-Connect?",
+          answer: "Club-Connect is a platform that brings together students, clubs, and events in one unified space. Join communities, discover events, and stay connected with what matters.",
+          colors: ["#1a1a1a", "#2a2a2a", "#1f1f1f"],
+          delay: 0.2
+        },
+        {
+          question: "How do I join a club?",
+          answer: "Browse our clubs section, find one that interests you, and click 'Join Community'. Your request will be sent to the club coordinator for approval.",
+          colors: ["#151515", "#252525", "#1d1d1d"],
+          delay: 0.3
+        },
+        {
+          question: "Can I create my own club?",
+          answer: "Yes! Click the 'Create My Club' button in the CTA section. Submit your club details and our team will review your application.",
+          colors: ["#1c1c1c", "#2c2c2c", "#181818"],
+          delay: 0.4
+        },
+        {
+          question: "How do I register for events?",
+          answer: "Navigate to the Events section, find an event you like, and click 'I'm Interested'. You'll receive updates about the event directly.",
+          colors: ["#171717", "#272727", "#1b1b1b"],
+          delay: 0.5
+        },
+        {
+          question: "Is Club-Connect free to use?",
+          answer: "Yes! Club-Connect is completely free for all students. Join clubs, attend events, and connect with your community at no cost.",
+          colors: ["#131313", "#232323", "#191919"],
+          delay: 0.6
+        },
+        {
+          question: "How do I contact support?",
+          answer: "You can reach us via email at the address in our footer, or through our social media channels. We're here to help!",
+          colors: ["#1a1a1a", "#2a2a2a", "#1f1f1f"],
+          delay: 0.7
+        }
+      ].map((faq, index) => (
+        <motion.div
+          key={index}
+          className="relative overflow-hidden h-full bg-black rounded-lg border border-white/10 group"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: faq.delay }}
+          viewport={{ once: true }}
+          style={{ filter: "url(#noise)" }}
+        >
+          {/* Animated Gradient Background */}
+          <AnimatedGradient 
+            colors={faq.colors} 
+            speed={0.05} 
+            blur="medium" 
+          />
+
+          {/* Noise Texture */}
+          <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+            <div
+              className="w-full h-full"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                backgroundSize: "256px 256px",
+                mixBlendMode: "overlay",
+              }}
+            />
+          </div>
+
+          {/* Shine Effect */}
+          <div className="absolute inset-0 opacity-80 transition-opacity duration-500">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:animate-[shine_4s_ease-in-out_infinite] w-[200%]" />
+          </div>
+
+          <div className="relative z-10 p-6 text-white backdrop-blur-sm h-full flex flex-col justify-center">
+            <h3 className="text-lg font-bold mb-3">{faq.question}</h3>
+            <p className="text-sm text-gray-300 leading-relaxed">{faq.answer}</p>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
 
 {/* Testimonials Widget */}
       <section id = "testimonials-section" className="py-20 relative z-10">
@@ -899,7 +931,7 @@ export default function LandingPage() {
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
-            What <span className="text-blue-500">Members</span> Say {/* Blue Text */}
+            What <span className="text-white">Members</span> Say
           </motion.h2>
           
           <div className="max-w-4xl mx-auto relative h-64">
@@ -912,7 +944,7 @@ export default function LandingPage() {
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="text-blue-500 mb-4"> {/* Blue Stars */}
+                <div className="text-white mb-4">
                   {[...Array(5)].map((_, i) => (
                     <FiStar key={i} className="inline mr-1" />
                   ))}
@@ -932,7 +964,7 @@ export default function LandingPage() {
                 key={index}
                 onClick={() => setActiveTestimonial(index)}
                 className={`w-3 h-3 rounded-full transition ${
-                  activeTestimonial === index ? 'bg-blue-500' : 'bg-gray-700' // Blue dots
+                  activeTestimonial === index ? 'bg-white' : 'bg-gray-700'
                 }`}
               />
             ))}
@@ -948,7 +980,7 @@ export default function LandingPage() {
       
       <section
   id="footer-section"
-  className="bg-gradient-to-br from-gray-900 via-blue-950 to-black text-gray-300 py-16 mt-0 overflow-hidden relative border-t border-blue-800/30"
+  className="bg-gradient-to-br from-gray-900 via-black to-gray-800 text-gray-300 py-16 mt-0 overflow-hidden relative z-10 border-t border-white/10"
 >
   <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
     {/* Column 1: Logo + About */}
@@ -961,7 +993,7 @@ export default function LandingPage() {
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       />
-      <p className="text-sm leading-relaxed text-gray-400 border-l-2 border-blue-500 pl-4">
+      <p className="text-sm leading-relaxed text-gray-400 border-l-2 border-white pl-4">
         Empowering students through collaboration, innovation, and hands-on learning. 
         We foster a community where creativity meets technology to build the future.
       </p>
@@ -974,7 +1006,7 @@ export default function LandingPage() {
       transition={{ duration: 0.5, delay: 0.1 }}
       className="flex flex-col items-center md:items-start"
     >
-      <h2 className="text-white text-lg font-semibold mb-6 pb-2 border-b border-blue-800/30 w-full text-center md:text-left">
+      <h2 className="text-white text-lg font-semibold mb-6 pb-2 border-b border-white/10 w-full text-center md:text-left">
         Quick Links
       </h2>
       <ul className="space-y-3 text-sm w-full">
@@ -993,7 +1025,7 @@ export default function LandingPage() {
               }}
               className="cursor-pointer text-gray-400 group-hover:text-white transition-all duration-300 flex items-center gap-2"
             >
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               {label}
             </span>
           </li>
@@ -1008,24 +1040,24 @@ export default function LandingPage() {
       transition={{ duration: 0.5, delay: 0.2 }}
       className="flex flex-col items-center md:items-start"
     >
-      <h2 className="text-white text-lg font-semibold mb-6 pb-2 border-b border-blue-800/30 w-full text-center md:text-left">
+      <h2 className="text-white text-lg font-semibold mb-6 pb-2 border-b border-white/10 w-full text-center md:text-left">
         Contact Us
       </h2>
       <ul className="space-y-4 text-sm text-gray-400 w-full">
         <li className="flex items-center gap-3 hover:text-white transition-all duration-300 group">
-          <div className="p-2 bg-blue-900/30 rounded-lg group-hover:bg-blue-600 transition-colors duration-300">
-            <Mail size={16} className="text-blue-400 group-hover:text-white" />
+          <div className="p-2 bg-white/10 rounded-lg group-hover:bg-white/20 transition-colors duration-300">
+            <Mail size={16} className="text-white group-hover:text-white" />
           </div>
           anindadebta8680@gmail.com
         </li>
         <li className="flex items-center gap-3 hover:text-white transition-all duration-300 group">
-          <div className="p-2 bg-blue-900/30 rounded-lg group-hover:bg-green-600 transition-colors duration-300">
-            <Phone size={16} className="text-green-400 group-hover:text-white" />
+          <div className="p-2 bg-white/10 rounded-lg group-hover:bg-white/20 transition-colors duration-300">
+            <Phone size={16} className="text-white group-hover:text-white" />
           </div>
           +91 82828 87603
         </li>
         <li className="flex items-center gap-3 hover:text-white transition-all duration-300 group">
-          <div className="p-2 bg-blue-900/30 rounded-lg group-hover:bg-red-600 transition-colors duration-300">
+          <div className="p-2 bg-white/10 rounded-lg group-hover:bg-red-600 transition-colors duration-300">
             <MapPin size={16} className="text-red-400 group-hover:text-white" />
           </div>
           Adamas University, Barasat
@@ -1033,16 +1065,16 @@ export default function LandingPage() {
       </ul>
 
       {/* Social icons */}
-      <div className="flex gap-3 mt-6 pt-4 border-t border-blue-800/30 w-full justify-center md:justify-start">
+      <div className="flex gap-3 mt-6 pt-4 border-t border-white/10 w-full justify-center md:justify-start">
         {[
           { icon: Instagram, href: "#", color: "hover:text-pink-400" },
-          { icon: Linkedin, href: "#", color: "hover:text-blue-400" },
+          { icon: Linkedin, href: "#", color: "hover:text-white" },
           { icon: Github, href: "#", color: "hover:text-gray-100" },
         ].map(({ icon: Icon, href, color }) => (
           <a
             key={href}
             href={href}
-            className={`p-3 bg-blue-900/30 rounded-lg transition-all duration-300 hover:bg-blue-700 hover:scale-110 ${color}`}
+            className={`p-3 bg-white/10 rounded-lg transition-all duration-300 hover:bg-white/20 hover:scale-110 ${color}`}
           >
             <Icon size={18} />
           </a>
@@ -1068,7 +1100,7 @@ export default function LandingPage() {
         href="https://aninda-hi.vercel.app/"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-300 hover:underline"
+        className="text-white hover:text-gray-300 font-medium transition-colors duration-300 hover:underline"
       >
         Aninda Debta
       </a>
