@@ -138,7 +138,7 @@ interface ParticleTextProps {
   words?: string[]
 }
 
-const DEFAULT_WORDS = ["CLUB - CONNECT", "CONNECT", "COMMUNITY", "EVENTS"]
+const DEFAULT_WORDS = ["CLUB-CONNECT", "CONNECT", "COMMUNITY", "EVENTS"]
 
 export function ParticleText({ words = DEFAULT_WORDS }: ParticleTextProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)

@@ -295,7 +295,7 @@ export default function LandingPage() {
       <section id="hero-section" className="relative overflow-hidden min-h-screen flex flex-col justify-between">
         {/* Particle Text Background */}
         <div className="flex-1 flex items-start justify-center pt-20">
-          <ParticleText words={["CLUB", "CONNECT", "COMMUNITY", "EVENTS"]} />
+          <ParticleText words={["CLUB-CONNECT", "CONNECT", "COMMUNITY", "EVENTS"]} />
         </div>
 
         {/* Hero Content */}
@@ -602,8 +602,6 @@ export default function LandingPage() {
       </section>
 
       {/* --- */}
-
-      
 
       {/* --- */}
 
