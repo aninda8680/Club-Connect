@@ -28,7 +28,7 @@ const __dirname = path.dirname(__filename);
 
 // --- CORS Setup ---
 const allowedOrigins = [
-  "http://localhost:5173",               // local dev
+  "http://localhost:8680",               // local dev
   "https://club-connect-ad.vercel.app",  // production frontend
 ];
 
