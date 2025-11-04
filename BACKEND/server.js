@@ -30,6 +30,7 @@ const __dirname = path.dirname(__filename);
 const allowedOrigins = [
   "http://localhost:8680",               // local dev
   "https://club-connect-ad.vercel.app",  // production frontend
+  "http://192.168.0.133", // allow your local LAN (for mobile testing)
 ];
 
 app.use(
