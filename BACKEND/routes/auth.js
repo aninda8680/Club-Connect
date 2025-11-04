@@ -1,4 +1,4 @@
-// BACKEND/routes/auth.js
+//routes/auth.js
 
 import express from "express";
 import bcrypt from "bcryptjs";

@@ -1,15 +1,15 @@
-//api/apiservice.js
+// api/apiService.js
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// 👇 If you're running debug locally, use your IP
-const isLocal = __DEV__; 
+// Always use Render in Expo Go, local only if you're running the backend yourself
+const useLocalServer = false; // 👈 change to true only when your localhost backend is running
 
 const API = axios.create({
-  baseURL: isLocal
-    ? "http://192.168.0.133:5000/api/auth"   // 👈 Local backend for dev
-    : "https://club-connect-p2o2.onrender.com/api/auth", // 👈 Render backend
-//   timeout: 10000, // optional safety timeout
+  baseURL: useLocalServer
+    ? "http://192.168.0.133:5000/api"
+    : "https://club-connect-p2o2.onrender.com/api",
+  timeout: 20000,
 });
 
 API.interceptors.request.use(async (config) => {
