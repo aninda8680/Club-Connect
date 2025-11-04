@@ -22,30 +22,29 @@ import announcementRoutes from "./routes/announcementRoutes.js";
 dotenv.config();
 const app = express();
 
-// Required for __dirname in ES modules
+// --- Required for __dirname in ES modules ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// --- CORS Setup ---
-const allowedOrigins = [
-  "http://localhost:8680",               // local dev
-  "https://club-connect-ad.vercel.app",  // production frontend
-];
-
+// --- ✅ Updated CORS Setup (Works with Web + React Native) ---
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like mobile apps or curl)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
-    credentials: true, // allow cookies/auth headers
+    origin: [
+      "http://localhost:8680",              // local web frontend
+      "http://localhost",                   // localhost web
+      "http://127.0.0.1",                   // emulator
+      "http://192.168.0.133",               // local LAN for device testing
+      "https://club-connect-ad.vercel.app", // production web
+      "exp://",                             // Expo / React Native
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
+
+// Allow requests with no origin (like mobile apps or curl)
+app.options("*", cors());
 
 // --- Middleware ---
 app.use(express.json());
@@ -66,28 +65,26 @@ app.use("/api/posts", postRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/announcements", announcementRoutes);
 
-// ✅ Root Route for Render or Browser Check
+// ✅ Root Route for Render / Browser Check
 app.get("/", (req, res) => {
   res.send("✅ Club Connect backend is running successfully!");
 });
 
-// ✅ Health Check Route (optional, useful for monitoring tools)
+// ✅ Health Check Route (for monitoring or uptime ping)
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK", message: "Server is healthy 🚀" });
 });
 
-
-
-// --- Connect to MongoDB and start server ---
+// --- MongoDB Connection & Server Start ---
 const PORT = process.env.PORT || 5000;
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`✅ Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.error("MongoDB connection error:", err);
+    console.error("❌ MongoDB connection error:", err);
   });
