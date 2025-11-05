@@ -1,10 +1,27 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
+    "target": "esnext",
+    "module": "esnext",
     "jsx": "react-native",
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": [
+      "react",
+      "react-native"
+    ]
   },
-  "include": ["nativewind.d.ts", "src"]
+  "include": [
+    "App.tsx",
+    "index.ts",
+    "src",
+    "screens",
+    "nativewind.d.ts"
+  ],
+  "extends": "expo/tsconfig.base"
 }
