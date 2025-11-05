@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import 'login_page.dart';
+import 'auth_page.dart';
 
 class MemberPage extends StatefulWidget {
   const MemberPage({super.key});
@@ -35,7 +35,7 @@ class _MemberPageState extends State<MemberPage> {
     if (mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
+        MaterialPageRoute(builder: (_) => const AuthPage()),
       );
     }
   }
@@ -45,7 +45,7 @@ class _MemberPageState extends State<MemberPage> {
 
   Future<void> handleLogout() async {
     await ApiService.logout();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const AuthPage()));
   }
 
   @override

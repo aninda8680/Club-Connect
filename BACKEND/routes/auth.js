@@ -44,8 +44,16 @@ router.post("/register", async (req, res) => {
 
     await newUser.save();
 
+    const token = jwt.sign(
+      { id: newUser._id, username: newUser.username, role: newUser.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
     res.status(201).json({
       message: "User registered successfully",
+      token,
+      isProfileComplete: newUser.isProfileComplete,
       redirectPath: "/complete-profile",
     });
   } catch (err) {
