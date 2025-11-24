@@ -38,6 +38,7 @@ export default function EventCreate() {
   const [approvedEvents, setApprovedEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [category, setCategory] = useState("");
 
   const coordinatorId = localStorage.getItem("userId"); 
   const clubId = localStorage.getItem("clubId");
@@ -55,6 +56,7 @@ export default function EventCreate() {
       formData.append("description", description);
       formData.append("date", date);
       formData.append("venue", venue);
+      formData.append("category", category);
       formData.append("createdBy", coordinatorId!);
       formData.append("club", clubId!);
       if (poster) formData.append("poster", poster);
@@ -69,6 +71,7 @@ export default function EventCreate() {
       setTitle(""); 
       setDescription(""); 
       setDate(""); 
+      setCategory("");
       setVenue("");
       setPoster(null);
       
@@ -207,6 +210,32 @@ export default function EventCreate() {
                   />
                 </div>
               </div>
+
+              {/* Event Category */}
+              <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
+            <Star className="w-4 h-4 text-yellow-400" />
+            Event Category
+          </label>
+
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full p-3 rounded-lg bg-slate-800/50 border border-slate-700/50 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500/50 transition-all"
+            required
+          >
+            <option value="">Select category</option>
+            <option value="tech">Tech Event</option>
+            <option value="hackathon">Hackathon</option>
+            <option value="workshop">Workshop</option>
+            <option value="esports">E-Sports</option>
+            <option value="cultural">Cultural</option>
+            <option value="seminar">Seminar</option>
+            <option value="competition">Competition</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
 
               {/* Poster Upload */}
               <div className="space-y-2">

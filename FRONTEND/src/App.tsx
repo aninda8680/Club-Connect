@@ -1,6 +1,6 @@
 // src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 import AdminPanel from "./PANELS/ADMIN/AdminPanel";
 import CoordinatorPanel from "./PANELS/COORDINATOR/CoordinatorPanel";
 import LeaderPanel from "./PANELS/LEADER/LeaderPanel";

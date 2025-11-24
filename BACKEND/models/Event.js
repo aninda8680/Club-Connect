@@ -7,6 +7,21 @@ const EventSchema = new mongoose.Schema(
     description: { type: String },
     date: { type: Date, required: true },
     venue: { type: String },
+    category: {
+  type: String,
+  enum: [
+    "tech",
+    "hackathon",
+    "workshop",
+    "esports",
+    "cultural",
+    "seminar",
+    "competition",
+    "other"
+  ],
+  required: true
+},
+
 
     // ✅ New field for poster
     poster: { type: String },

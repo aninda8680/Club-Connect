@@ -23,9 +23,9 @@ const upload = multer({ storage });
 // ---------------------------
 router.post("/create", upload.single("poster"), async (req, res) => {
   try {
-    const { title, description, date, venue, createdBy } = req.body;
+    const { title, description, date, venue, createdBy, category } = req.body;
 
-    if (!title || !date || !createdBy) {
+    if (!title || !date || !createdBy || !category) {
       return res
         .status(400)
         .json({ message: "Title, date, and createdBy are required" });
@@ -50,6 +50,7 @@ router.post("/create", upload.single("poster"), async (req, res) => {
       description,
       date,
       venue,
+      category,
       createdBy,
       club: club._id,
       poster: req.file ? `/uploads/${req.file.filename}` : null,
