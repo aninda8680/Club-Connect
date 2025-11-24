@@ -20,6 +20,7 @@ interface Event {
   description: string;
   date: string;
   venue: string;
+  category: string; 
   status: string;
   createdAt?: string;
   submittedBy?: string;
@@ -247,6 +248,15 @@ function Section({
                       <MapPin className="w-4 h-4 text-red-400" />
                       <span>{event.venue}</span>
                     </div>
+
+                    {/* ⭐ CATEGORY */}
+  <div className="flex items-center gap-2">
+    <Sparkles className="w-4 h-4 text-purple-400" />
+    <span className="px-2 py-1 bg-purple-900/40 text-purple-300 rounded border border-purple-700/50">
+      {event.category?.toUpperCase()}
+    </span>
+  </div>
+  
                     {event.createdAt && (
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-amber-400" />

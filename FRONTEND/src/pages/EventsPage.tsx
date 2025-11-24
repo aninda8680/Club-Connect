@@ -60,6 +60,7 @@ const EventsPage: React.FC = () => {
   const [events, setEvents] = useState<EventCardProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all"); // all, upcoming, past
+  const [category, setCategory] = useState("all");
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -78,19 +79,20 @@ const EventsPage: React.FC = () => {
   }, []);
 
   // Filter events based on selection
-  const filteredEvents = events.filter(event => {
-    const eventDate = new Date(event.date);
-    const now = new Date();
-    
-    switch (filter) {
-      case "upcoming":
-        return eventDate >= now;
-      case "past":
-        return eventDate < now;
-      default:
-        return true;
-    }
-  });
+ const filteredEvents = events.filter(event => {
+  const eventDate = new Date(event.date);
+  const now = new Date();
+
+  let timeMatch = true;
+  if (filter === "upcoming") timeMatch = eventDate >= now;
+  if (filter === "past") timeMatch = eventDate < now;
+
+  const categoryMatch =
+    category === "all" || event.category === category;
+
+  return timeMatch && categoryMatch;
+});
+
 
   const staggerContainer: Variants = {
     hidden: { opacity: 0 },
@@ -178,6 +180,42 @@ const EventsPage: React.FC = () => {
             ))}
           </div>
         </motion.div>
+
+        {/* Category Filter */}
+          <motion.div
+            className="flex flex-wrap justify-center gap-3 mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            {[
+              "all",
+              "tech",
+              "hackathon",
+              "workshop",
+              "esports",
+              "cultural",
+              "seminar",
+              "competition",
+              "other"
+            ].map((cat) => (
+              <motion.button
+                key={cat}
+                onClick={() => setCategory(cat)}
+                whileHover={{ scale: 1.07 }}
+                whileTap={{ scale: 0.95 }}
+                className={`px-4 py-2 text-sm rounded-full border transition-all duration-300 ${
+                  category === cat
+                    ? "bg-purple-600 text-white border-purple-500 shadow-lg"
+                    : "bg-gray-800 text-gray-300 border-gray-700 hover:bg-gray-700"
+                }`}
+              >
+              
+                {cat.toUpperCase()}
+              </motion.button>
+            ))}
+          </motion.div>
+
 
         {/* Events Grid */}
         {loading ? (

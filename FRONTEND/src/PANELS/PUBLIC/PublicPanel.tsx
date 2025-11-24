@@ -463,17 +463,26 @@ export default function PublicPanel() {
           >
             {/* Card Wrapper for uniform sizing */}
             <div className="w-full max-w-sm h-full">
-              <EventCard
-                _id={event._id}
-                title={event.title}
-                description={event.description}
-                date={event.date}
-                venue={event.venue}
-                poster={event.poster}
-                status={event.status}
-                clubName={event.club?.name}
-                clubLogo={event.club?.logo}
-              />
+            <EventCard
+              _id={event._id}
+              title={event.title}
+              description={event.description}
+              date={event.date}
+              venue={event.venue || "TBA"}
+              poster={event.poster}
+              status={event.status}
+              category={event.category || "other"}
+
+              clubName={event.club?.name}
+              clubLogo={event.club?.logo}
+
+              /* Public user settings */
+              showActions={false}       // ❌ no like / interested since user is not logged in
+              showAdmin={false}         // ❌ no admin buttons
+              clickable={true}          // ✔ card is clickable
+              showDescription={true}    // ✔ show description
+            />
+
             </div>
           </motion.div>
         ))
