@@ -5,9 +5,19 @@ import type { Event } from "../types/event";
 
 interface Props {
   events: Event[];
+  interestedEvents: Set<string>;
+  isAuthenticated: () => boolean;
+  handleInterested: (eventId: string) => void;
+  formatDate: (dateString: string) => string;
 }
 
-const EventsSection: React.FC<Props> = ({ events }) => {
+const EventsSection: React.FC<Props> = ({ 
+  events, 
+  interestedEvents: _interestedEvents, 
+  isAuthenticated: _isAuthenticated, 
+  handleInterested: _handleInterested, 
+  formatDate: _formatDate 
+}) => {
   return (
     <section
       id="events-section"

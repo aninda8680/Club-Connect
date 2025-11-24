@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import useAuthRedirect from "./hooks/useAuthRedirect";
@@ -16,7 +16,7 @@ import FooterCombined from "./components/Footer";
 import Loader from "@/components/Loader";
 import { toast } from "react-hot-toast";
 import type  { Club } from "./types/club";
-import type { Event } from "./types/event";
+// import type { Event } from "./types/event";
 
 export default function LandingPage() {
   const navigate = useNavigate();
