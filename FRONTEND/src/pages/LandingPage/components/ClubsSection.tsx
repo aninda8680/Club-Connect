@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FiStar, FiUsers } from "react-icons/fi";
+import { FiUsers } from "react-icons/fi";
 import ClubCard from "@/components/ClubCard";
 import type { Club, ClubCounts } from "../../../components/types/club";
 import { UsersRound } from "lucide-react";

@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Typewriter } from "react-simple-typewriter";
-import { Sparkles, ArrowRight, PartyPopper } from "lucide-react";
+import { Sparkles, PartyPopper } from "lucide-react";
 
 
 
