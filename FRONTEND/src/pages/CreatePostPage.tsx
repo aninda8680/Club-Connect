@@ -5,19 +5,24 @@ import PostCard from "../components/PostCard";
 import api from "@/api";
 import { toast } from "react-hot-toast";
 
+// ---------------------------------------------------
+// PROFILE COLOR — GRADIENT FOR THE USER AVATAR
+// ---------------------------------------------------
 const getProfileColor = (username: string) => {
   const charCode = username.charCodeAt(0);
   const colors = [
-    "from-red-400 to-pink-500",
-    "from-blue-400 to-cyan-500",
-    "from-green-400 to-lime-500",
-    "from-yellow-400 to-orange-500",
-    "from-purple-400 to-indigo-500",
+    "from-red-400/80 to-pink-500/80",
+    "from-blue-400/80 to-cyan-500/80",
+    "from-green-400/80 to-lime-500/80",
+    "from-yellow-400/80 to-orange-500/80",
+    "from-purple-400/80 to-indigo-500/80",
   ];
   return colors[charCode % colors.length];
 };
 
-// ✅ Hashtag categories (used for suggestions)
+// ---------------------------------------------------
+// HASHTAG categories (flattened for suggestions)
+// ---------------------------------------------------
 const hashtagCategories = {
   "🚀 Projects": ["project", "project-idea", "update", "prototype", "open-source"],
   "💬 Discussion": ["question", "discussion", "help"],
@@ -38,7 +43,7 @@ export default function CreatePostPage() {
   const [activeTab, setActiveTab] = useState("create");
   const [selectedTag, setSelectedTag] = useState("");
 
-  // 💡 For tag input & suggestions
+  // hashtag suggestions
   const [tagInput, setTagInput] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -47,13 +52,16 @@ export default function CreatePostPage() {
   const currentUserEmail = localStorage.getItem("email");
   const profileColor = getProfileColor(currentUserEmail || "");
 
-  // ✅ Flatten hashtag list
   const allHashtags = Object.values(hashtagCategories).flat();
 
+  // ---------------------------------------------------
+  // HASHTAG INPUT HANDLING
+  // ---------------------------------------------------
   const handleTagInputChange = (value: string) => {
     setTagInput(value);
     setSelectedTag(value);
-    if (value.trim() === "") {
+
+    if (!value.trim()) {
       setShowSuggestions(false);
       setSuggestions([]);
       return;
@@ -62,6 +70,7 @@ export default function CreatePostPage() {
     const filtered = allHashtags.filter((tag) =>
       tag.toLowerCase().includes(value.toLowerCase())
     );
+
     setSuggestions(filtered);
     setShowSuggestions(true);
   };
@@ -72,6 +81,9 @@ export default function CreatePostPage() {
     setShowSuggestions(false);
   };
 
+  // ---------------------------------------------------
+  // IMAGE handling
+  // ---------------------------------------------------
   const handleImageSelect = (file: File | null) => {
     setImage(file);
     if (file) {
@@ -83,6 +95,9 @@ export default function CreatePostPage() {
     }
   };
 
+  // ---------------------------------------------------
+  // FETCH POSTS
+  // ---------------------------------------------------
   const fetchMyPosts = async () => {
     try {
       setLoadingPosts(true);
@@ -91,13 +106,15 @@ export default function CreatePostPage() {
       });
       setMyPosts(res.data);
     } catch (err: any) {
-      console.error(err);
       toast.error(err.response?.data?.message || "❌ Error fetching posts");
     } finally {
       setLoadingPosts(false);
     }
   };
 
+  // ---------------------------------------------------
+  // SUBMIT THREAD
+  // ---------------------------------------------------
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() && !image) return;
@@ -121,6 +138,7 @@ export default function CreatePostPage() {
       setImagePreview(null);
       setSelectedTag("");
       setTagInput("");
+
       await fetchMyPosts();
       setActiveTab("posts");
     } catch (err: any) {
@@ -130,15 +148,17 @@ export default function CreatePostPage() {
     }
   };
 
+  // ---------------------------------------------------
+  // DELETE POST
+  // ---------------------------------------------------
   const handleDeletePost = async (postId: string) => {
     try {
       await api.delete(`/posts/${postId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMyPosts(myPosts.filter((p) => p._id !== postId));
-    } catch (err:any) {
-      console.error(err);
-      toast.error(err.response?.data?.message || " Error deleting post");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Error deleting post");
     }
   };
 
@@ -147,41 +167,47 @@ export default function CreatePostPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white py-20 px-6 flex justify-center gap-6">
-      {/* LEFT SIDEBAR — HASHTAG INPUT */}
-      <div className="hidden lg:block w-64 bg-gray-900 border border-gray-800 rounded-2xl p-4 h-[50vh]">
-        <h3 className="text-lg font-semibold mb-4 text-blue-400">
-          Hashtags
-        </h3>
+    <div className="min-h-screen bg-black/95 text-white py-40 px-6 flex justify-center gap-10 relative">
 
-        {/* Tag Input Box */}
+      {/* LIGHT GLASS GLOW EFFECT */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-32 -left-20 w-[380px] h-[380px] rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-[260px] h-[260px] rounded-full bg-purple-500/10 blur-3xl" />
+      </div>
+
+      {/* ------------------------------ LEFT SIDEBAR ------------------------------ */}
+      <div className="hidden lg:block w-64 glass-panel backdrop-blur-xl bg-white/5 border border-white/10 shadow-xl rounded-2xl p-5 h-[52vh]">
+        <h3 className="text-lg font-semibold mb-4 text-cyan-300">Hashtags</h3>
+
+        {/* TAG INPUT */}
         <div className="relative">
-          <div className="flex items-center bg-gray-800 rounded-lg px-3 py-2 border border-gray-700">
-            <Hash className="w-4 h-4 text-gray-500 mr-2" />
+          <div className="flex items-center bg-white/5 rounded-xl px-3 py-2 border border-white/10 backdrop-blur-md">
+            <Hash className="w-4 h-4 text-gray-400 mr-2" />
             <input
               type="text"
               value={tagInput}
               onChange={(e) => handleTagInputChange(e.target.value)}
-              placeholder="Type a hashtag..."
-              className="bg-transparent flex-1 outline-none text-sm text-gray-200 placeholder-gray-500"
+              placeholder="Search tags..."
+              className="bg-transparent flex-1 outline-none text-sm text-gray-200"
               onFocus={() => setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 120)}
             />
           </div>
 
+          {/* SUGGESTIONS DROPDOWN */}
           <AnimatePresence>
             {showSuggestions && suggestions.length > 0 && (
               <motion.ul
-                initial={{ opacity: 0, y: -5 }}
+                initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                className="absolute z-10 mt-2 bg-gray-900 border border-gray-800 rounded-xl w-full max-h-48 overflow-y-auto"
+                exit={{ opacity: 0, y: 4 }}
+                className="absolute mt-2 w-full bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl shadow-xl max-h-48 overflow-y-auto z-20"
               >
                 {suggestions.map((sug) => (
                   <li
                     key={sug}
                     onClick={() => handleSuggestionClick(sug)}
-                    className="px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 cursor-pointer"
+                    className="px-4 py-2 text-sm text-gray-200 hover:bg-white/10 cursor-pointer transition"
                   >
                     #{sug}
                   </li>
@@ -193,192 +219,188 @@ export default function CreatePostPage() {
 
         {selectedTag && (
           <p className="text-xs text-gray-400 mt-4">
-            Selected:{" "}
-            <span className="text-blue-400 font-medium">#{selectedTag}</span>
+            Selected: <span className="text-cyan-300 font-semibold">#{selectedTag}</span>
           </p>
         )}
       </div>
 
-      {/* CENTER — CREATE + MY POSTS */}
+      {/* ------------------------------ CENTER PANEL ------------------------------ */}
       <div className="w-full max-w-2xl">
-        {/* Tabs */}
-        <div className="bg-gray-900 rounded-xl shadow-lg mb-8 p-1 flex space-x-1 border border-gray-700">
+
+        {/* TABS */}
+        <div className="glass-panel bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 shadow-lg p-1 flex space-x-1 mb-10">
           <button
             onClick={() => setActiveTab("create")}
-            className={`flex-1 py-3 px-4 rounded-lg text-center font-medium transition-all text-sm ${
+            className={`flex-1 py-3 rounded-xl text-center text-sm font-semibold transition ${
               activeTab === "create"
-                ? "bg-gray-800 text-white shadow-inner"
-                : "text-gray-400 hover:bg-gray-800"
+                ? "bg-white/20 text-white shadow-lg border border-white/10"
+                : "text-gray-300 hover:bg-white/10"
             }`}
           >
             Create Thread
           </button>
+
           <button
             onClick={() => setActiveTab("posts")}
-            className={`flex-1 py-3 px-4 rounded-lg text-center font-medium transition-all text-sm ${
+            className={`flex-1 py-3 rounded-xl text-center text-sm font-semibold transition ${
               activeTab === "posts"
-                ? "bg-gray-800 text-white shadow-inner"
-                : "text-gray-400 hover:bg-gray-800"
+                ? "bg-white/20 text-white shadow-lg border border-white/10"
+                : "text-gray-300 hover:bg-white/10"
             }`}
           >
             My Threads ({myPosts.length})
           </button>
         </div>
 
+        {/* ---------------------- CREATE THREAD ---------------------- */}
         <AnimatePresence mode="wait">
           {activeTab === "create" && (
             <motion.div
-              key="create"
-              initial={{ opacity: 0, y: 20 }}
+              key="create-tab"
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, y: -25 }}
+              transition={{ duration: 0.35 }}
+              className="glass-panel bg-white/10 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-xl p-8"
             >
-              {/* Create Thread Box */}
-              <form
-                onSubmit={handleSubmit}
-                className="bg-gray-900 rounded-xl shadow-lg p-6 border border-gray-800"
-              >
-                <h2 className="text-xl font-bold text-white mb-6">
-                  Start a new thread
-                </h2>
+              <h2 className="text-2xl font-bold mb-6 text-white">Start a new thread</h2>
 
-                <div className="flex items-start space-x-4">
-                  <div
-                    className={`w-10 h-10 rounded-full bg-gradient-to-r ${profileColor} flex items-center justify-center font-bold`}
-                  >
-                    {currentUserEmail?.charAt(0).toUpperCase()}
-                  </div>
+              <div className="flex items-start gap-4">
+                {/* PROFILE AVATAR */}
+                <div
+                  className={`w-12 h-12 rounded-full bg-gradient-to-br ${profileColor} flex items-center justify-center text-lg font-bold shadow-lg`}
+                >
+                  {currentUserEmail?.charAt(0).toUpperCase()}
+                </div>
 
-                  <div className="flex-1 space-y-4">
-                    <textarea
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      placeholder="Start a thread..."
-                      className="w-full bg-transparent border-0 text-lg resize-none focus:ring-0 focus:outline-none placeholder-gray-500 min-h-[160px] text-gray-200"
-                    />
+                {/* TEXT + IMAGE */}
+                <div className="flex-1 space-y-5">
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Share your thoughts..."
+                    className="w-full bg-transparent text-lg min-h-[150px] outline-none text-gray-200 placeholder-gray-400 resize-none"
+                  />
 
-                    {/* Image Preview */}
-                    {imagePreview && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="relative rounded-xl overflow-hidden border border-gray-700 max-w-sm"
+                  {/* PREVIEW */}
+                  {imagePreview && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="relative max-w-sm rounded-xl overflow-hidden border border-white/10 shadow-xl"
+                    >
+                      <img src={imagePreview} className="w-full h-auto object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => handleImageSelect(null)}
+                        className="absolute top-2 right-2 bg-black/60 backdrop-blur-md p-1 rounded-full"
                       >
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
-                          className="w-full h-auto max-h-48 object-cover"
+                        <X className="w-4 h-4 text-white" />
+                      </button>
+                    </motion.div>
+                  )}
+
+                  {/* ACTION BAR */}
+                  <div className="flex items-center justify-between border-t border-white/10 pt-4">
+                    {/* LEFT ICONS */}
+                    <div className="flex items-center gap-4 text-gray-400">
+                      <label className="cursor-pointer hover:text-cyan-300 transition">
+                        <ImagePlus className="w-6 h-6" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) =>
+                            handleImageSelect(e.target.files?.[0] || null)
+                          }
                         />
-                        <button
-                          type="button"
-                          onClick={() => handleImageSelect(null)}
-                          className="absolute top-2 right-2 bg-black bg-opacity-70 text-white p-1 rounded-full hover:bg-opacity-90"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </motion.div>
-                    )}
+                      </label>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-800">
-                      <div className="flex items-center space-x-3">
-                        <label className="cursor-pointer text-gray-500 hover:text-blue-400">
-                          <ImagePlus className="w-6 h-6" />
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) =>
-                              handleImageSelect(e.target.files?.[0] || null)
-                            }
-                          />
-                        </label>
-                        <button
-                          type="button"
-                          className="text-gray-500 hover:text-blue-400"
-                        >
-                          <Smile className="w-6 h-6" />
-                        </button>
-                      </div>
-
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        type="submit"
-                        disabled={isLoading || (!content.trim() && !image)}
-                        className="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:bg-blue-500"
+                      <button
+                        type="button"
+                        className="hover:text-cyan-300 transition"
                       >
-                        {isLoading ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        ) : (
-                          "Post"
-                        )}
-                      </motion.button>
+                        <Smile className="w-6 h-6" />
+                      </button>
                     </div>
 
-                    {selectedTag && (
-                      <p className="text-sm text-gray-400">
-                        Selected hashtag:{" "}
-                        <span className="text-blue-400 font-medium">
-                          #{selectedTag}
-                        </span>
-                      </p>
-                    )}
+                    {/* POST BUTTON */}
+                    <motion.button
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.95 }}
+                      type="submit"
+                      disabled={isLoading || (!content.trim() && !image)}
+                      className="px-6 py-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={handleSubmit}
+                    >
+                      {isLoading ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        "Post"
+                      )}
+                    </motion.button>
                   </div>
+
+                  {selectedTag && (
+                    <p className="text-sm text-gray-300">
+                      Hashtag:{" "}
+                      <span className="text-cyan-300 font-semibold">#{selectedTag}</span>
+                    </p>
+                  )}
                 </div>
-              </form>
+              </div>
             </motion.div>
           )}
 
+          {/* ---------------------- MY POSTS ---------------------- */}
           {activeTab === "posts" && (
             <motion.div
-              key="posts"
-              initial={{ opacity: 0, y: 20 }}
+              key="posts-tab"
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, y: -25 }}
+              transition={{ duration: 0.35 }}
+              className="glass-panel bg-white/10 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-xl p-8"
             >
-              <div className="bg-gray-900 rounded-xl shadow-lg p-6 border border-gray-800">
-                <h3 className="text-xl font-bold mb-6 text-white">
-                  Your Threads
-                </h3>
-                {loadingPosts ? (
-                  <div className="flex justify-center py-12">
-                    <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-                  </div>
-                ) : myPosts.length === 0 ? (
-                  <p className="text-center text-gray-500 py-12">
-                    No threads yet.
-                  </p>
-                ) : (
-                  <div className="divide-y divide-gray-800">
-                    {myPosts.map((post, index) => (
-                      <motion.div
-                        key={post._id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="py-6"
-                      >
-                        <PostCard {...post} onDeletePost={handleDeletePost} />
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <h3 className="text-2xl font-bold text-white mb-8">
+                Your Threads
+              </h3>
+
+              {loadingPosts ? (
+                <div className="flex justify-center py-16">
+                  <Loader2 className="w-8 h-8 animate-spin text-cyan-300" />
+                </div>
+              ) : myPosts.length === 0 ? (
+                <p className="text-center text-gray-400 py-14">
+                  You haven't posted anything yet.
+                </p>
+              ) : (
+                <div className="space-y-6">
+                  {myPosts.map((post, index) => (
+                    <motion.div
+                      key={post._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <PostCard {...post} onDeletePost={handleDeletePost} />
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* RIGHT SIDEBAR (Mirrors Left Input) */}
-      <div className="hidden lg:block w-64 bg-gray-900 border border-gray-800 rounded-2xl p-4 h-[50vh]">
-        <h3 className="text-lg font-semibold mb-4 text-blue-400">
+      {/* ------------------------------ RIGHT SIDEBAR ------------------------------ */}
+      <div className="hidden lg:block w-64 glass-panel backdrop-blur-xl bg-white/5 border border-white/10 shadow-xl rounded-2xl p-5 h-[52vh]">
+        <h3 className="text-lg font-semibold mb-4 text-cyan-300">
           Categories
         </h3>
-        <div className="text-sm text-gray-400">
-          Type or choose a hashtag on the left to label your thread.
-        </div>
+        <p className="text-sm text-gray-300">
+          Select or type a hashtag to label your thread.
+        </p>
       </div>
     </div>
   );

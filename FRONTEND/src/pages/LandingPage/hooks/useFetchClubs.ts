@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "@/api";
-import type { Club, ClubCounts } from "../types/club";
+import type { Club, ClubCounts } from "../../../components/types/club";
 import { toast } from "react-hot-toast";
 
 export default function useFetchClubs() {

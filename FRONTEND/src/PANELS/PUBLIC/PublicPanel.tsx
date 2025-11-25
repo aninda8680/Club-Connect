@@ -388,6 +388,10 @@ export default function PublicPanel() {
                 _id={club._id}
                 name={club.name}
                 description={club.description}
+                category={club.category}
+                coordinator={club.coordinator}
+                members={club.members}
+                joinRequests={club.joinRequests}
               />
             </div>
           </motion.div>

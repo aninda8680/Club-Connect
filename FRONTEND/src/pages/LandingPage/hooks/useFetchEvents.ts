@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "@/api";
-import type { Event } from "../types/event";
+import type { Event } from "../../../components/types/event";
 import { toast } from "react-hot-toast";
 
 export default function useFetchEvents() {

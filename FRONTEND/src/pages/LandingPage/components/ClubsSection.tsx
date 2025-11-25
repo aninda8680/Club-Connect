@@ -1,7 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FiStar, FiUsers, FiPlus, FiCheck, FiLogIn } from "react-icons/fi";
-import type { Club, ClubCounts } from "../types/club";
+import { FiStar, FiUsers } from "react-icons/fi";
+import ClubCard from "@/components/ClubCard";
+import type { Club, ClubCounts } from "../../../components/types/club";
 
 interface Props {
   clubs: Club[];
@@ -23,7 +24,7 @@ const staggerContainer = {
 
 const ClubsSection: React.FC<Props> = ({
   clubs,
-  clubCounts,
+  clubCounts: _clubCounts,
   joinedClubs,
   isAuthenticated,
   handleJoin,
@@ -93,124 +94,22 @@ const ClubsSection: React.FC<Props> = ({
             clubs.map((club) => (
               <motion.div
                 key={club._id}
-                className="group relative"
                 variants={fadeUp}
                 whileHover={{ y: -8 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                {/* Outer Gradient Border */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl blur opacity-30 group-hover:opacity-70 transition duration-500"></div>
-
-                <div className="relative bg-gray-900 rounded-2xl p-6 border border-gray-800 group-hover:border-blue-500/50 transition-all duration-500 backdrop-blur-sm overflow-hidden">
-                  {/* Soft Background Shape */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full"></div>
-
-                  {/* Club Header */}
-                  <div className="relative z-10">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        {/* Avatar */}
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                          {club.name.charAt(0)}
-                        </div>
-
-                        <div>
-                          <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                            {club.name}
-                          </h3>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded-full border border-gray-700">
-                              #{club.category || "Tech Society"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Member Count */}
-                      <div className="text-right">
-                        <div className="flex items-center gap-1 text-sm text-gray-400">
-                          <FiUsers size={14} />
-                          <span className="font-semibold text-white">
-                            {clubCounts.get(club._id)?.memberCount ||
-                              club.members.length}
-                          </span>
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1">members</div>
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-gray-300 leading-relaxed mb-6 line-clamp-3 group-hover:text-gray-200 transition-colors">
-                      {club.description ||
-                        "Join this amazing community and be part of something special!"}
-                    </p>
-
-                    {/* Coordinator & Pending Requests */}
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-400 flex items-center justify-center text-white text-xs font-bold">
-                          {club.coordinator?.username?.charAt(0) || "C"}
-                        </div>
-
-                        <div>
-                          <div className="text-xs text-gray-400">Coordinator</div>
-                          <div className="text-sm font-semibold text-white">
-                            {club.coordinator?.username || "Unknown"}
-                          </div>
-                        </div>
-                      </div>
-
-                      {club.joinRequests.length > 0 && (
-                        <motion.div
-                          className="flex items-center gap-2 px-3 py-2 bg-yellow-500/20 rounded-lg border border-yellow-500/30"
-                          whileHover={{ scale: 1.05 }}
-                        >
-                          <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                          <span className="text-xs font-semibold text-yellow-400">
-                            {club.joinRequests.length} pending
-                          </span>
-                        </motion.div>
-                      )}
-                    </div>
-
-                    {/* Join Button */}
-                    <motion.button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleJoin(club._id);
-                      }}
-                      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3 relative overflow-hidden group ${
-                        joinedClubs.has(club._id)
-                          ? "bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 text-emerald-400 border border-emerald-500/30"
-                          : "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white shadow-lg hover:shadow-blue-500/25"
-                      }`}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      disabled={joinedClubs.has(club._id)}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition duration-1000"></div>
-
-                      {isAuthenticated() ? (
-                        joinedClubs.has(club._id) ? (
-                          <>
-                            <FiCheck className="relative z-10" size={18} />
-                            <span className="relative z-10">Request Sent</span>
-                          </>
-                        ) : (
-                          <>
-                            <FiPlus className="relative z-10" size={18} />
-                            <span className="relative z-10">Join Community</span>
-                          </>
-                        )
-                      ) : (
-                        <>
-                          <FiLogIn className="relative z-10" size={18} />
-                          <span className="relative z-10">Login to Join</span>
-                        </>
-                      )}
-                    </motion.button>
-                  </div>
-                </div>
+                <ClubCard
+                  _id={club._id}
+                  name={club.name}
+                  description={club.description}
+                  category={club.category}
+                  coordinator={club.coordinator}
+                  members={club.members}
+                  joinRequests={club.joinRequests}
+                  isAuthenticated={isAuthenticated()}
+                  alreadyJoined={joinedClubs.has(club._id)}
+                  onJoinSuccess={() => handleJoin(club._id)}
+                />
               </motion.div>
             ))
           )}

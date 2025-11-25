@@ -15,7 +15,7 @@ import FooterCombined from "./components/Footer";
 
 import Loader from "@/components/Loader";
 import { toast } from "react-hot-toast";
-import type  { Club } from "./types/club";
+import type  { Club } from "../../components/types/club";
 // import type { Event } from "./types/event";
 
 export default function LandingPage() {

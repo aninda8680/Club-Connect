@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import EventCard from "../../../components/EventCard"; // <-- Adjust path if needed
-import type { Event } from "../types/event";
+import type { Event } from "../../../components/types/event";
 
 interface Props {
   events: Event[];
