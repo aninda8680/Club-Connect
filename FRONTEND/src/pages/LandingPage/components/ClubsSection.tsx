@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { FiStar, FiUsers } from "react-icons/fi";
 import ClubCard from "@/components/ClubCard";
 import type { Club, ClubCounts } from "../../../components/types/club";
+import { UsersRound } from "lucide-react";
+
 
 interface Props {
   clubs: Club[];
@@ -44,11 +46,11 @@ const ClubsSection: React.FC<Props> = ({
           viewport={{ once: true }}
         >
           <div className="inline-flex items-center gap-3 mb-4 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30">
-            <FiStar className="text-blue-400" size={16} />
-            <span className="text-sm font-semibold text-blue-400">
-              EXPLORE COMMUNITIES
-            </span>
-          </div>
+  <UsersRound className="text-blue-400" size={16} />
+  <span className="text-sm font-semibold text-blue-400">
+    EXPLORE COMMUNITIES
+  </span>
+</div>
 
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
             Featured <span className="text-blue-500">Clubs</span>

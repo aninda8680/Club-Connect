@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Typewriter } from "react-simple-typewriter";
+import { Sparkles, ArrowRight, PartyPopper } from "lucide-react";
+
 
 
 
@@ -75,64 +77,63 @@ const Hero: React.FC<Props> = ({
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8, duration: 0.8 }}
         >
-          {/* Explore Clubs */}
           <motion.button
-            className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
-            style={{
-              background: "linear-gradient(135deg, #3D5AA6 0%, #8B5FBF 100%)",
-              borderTopColor: "#4A6BC6",
-              borderLeftColor: "#4A6BC6",
-              borderRightColor: "#2D4080",
-              borderBottomColor: "#2D4080",
-              color: "white",
-              textShadow: "2px 2px #2D4080",
-              fontFamily: "'Minecraft', monospace",
-            }}
-            whileHover={{ scale: 1.05, y: -1 }}
-            whileTap={{
-              scale: 0.95,
-              y: 2,
-              borderTopColor: "#2D4080",
-              borderLeftColor: "#2D4080",
-              borderRightColor: "#4A6BC6",
-              borderBottomColor: "#4A6BC6",
-            }}
-            onClick={handleScrollToClubs}
-          >
-            🌟 Explore Clubs <FiArrowRight />
-          </motion.button>
+  className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
+  style={{
+    background: "linear-gradient(135deg, #3D5AA6 0%, #8B5FBF 100%)",
+    borderTopColor: "#4A6BC6",
+    borderLeftColor: "#4A6BC6",
+    borderRightColor: "#2D4080",
+    borderBottomColor: "#2D4080",
+    color: "white",
+    textShadow: "2px 2px #2D4080",
+    fontFamily: "'Minecraft', monospace",
+  }}
+  whileHover={{ scale: 1.05, y: -1 }}
+  whileTap={{
+    scale: 0.95,
+    y: 2,
+    borderTopColor: "#2D4080",
+    borderLeftColor: "#2D4080",
+    borderRightColor: "#4A6BC6",
+    borderBottomColor: "#4A6BC6",
+  }}
+  onClick={handleScrollToClubs}
+>
+  Explore Clubs <Sparkles size={20} />
+</motion.button>
 
           {/* Explore Events */}
-          <motion.button
-            className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
-            style={{
-              background: "transparent",
-              borderTopColor: "#4A6BC6",
-              borderLeftColor: "#4A6BC6",
-              borderRightColor: "#2D4080",
-              borderBottomColor: "#2D4080",
-              color: "white",
-              textShadow: "2px 2px #2D4080",
-              fontFamily: "'Minecraft', monospace",
-              backgroundColor: "rgba(45, 64, 128, 0.3)",
-            }}
-            whileHover={{
-              scale: 1.05,
-              y: -1,
-              backgroundColor: "rgba(74, 107, 198, 0.4)",
-            }}
-            whileTap={{
-              scale: 0.95,
-              y: 2,
-              borderTopColor: "#2D4080",
-              borderLeftColor: "#2D4080",
-              borderRightColor: "#4A6BC6",
-              borderBottomColor: "#4A6BC6",
-            }}
-            onClick={handleScrollToEvents}
-          >
-            🎉 Explore Events <FiArrowRight />
-          </motion.button>
+<motion.button
+  className="px-6 py-3 rounded-none text-base font-bold border-2 flex items-center justify-center gap-2"
+  style={{
+    background: "transparent",
+    borderTopColor: "#4A6BC6",
+    borderLeftColor: "#4A6BC6",
+    borderRightColor: "#2D4080",
+    borderBottomColor: "#2D4080",
+    color: "white",
+    textShadow: "2px 2px #2D4080",
+    fontFamily: "'Minecraft', monospace",
+    backgroundColor: "rgba(45, 64, 128, 0.3)",
+  }}
+  whileHover={{
+    scale: 1.05,
+    y: -1,
+    backgroundColor: "rgba(74, 107, 198, 0.4)",
+  }}
+  whileTap={{
+    scale: 0.95,
+    y: 2,
+    borderTopColor: "#2D4080",
+    borderLeftColor: "#2D4080",
+    borderRightColor: "#4A6BC6",
+    borderBottomColor: "#4A6BC6",
+  }}
+  onClick={handleScrollToEvents}
+>
+  Explore Events <PartyPopper size={20} /> <FiArrowRight />
+</motion.button>
         </motion.div>
       </div>
 
