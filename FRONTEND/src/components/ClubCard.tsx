@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Users, UserPlus, Loader2, Check, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
 import api from "@/api";
 
 interface ClubCardProps {
@@ -87,21 +88,28 @@ export default function ClubCard({
       const res = await api.post("/join/request", { userId, clubId: _id });
       const data = res.data;
 
-      if (data.success) {
+      // Backend returns the join request object directly on success
+      if (res.status === 200 && data._id) {
         setRequestCount((prev) => prev + 1);
         setHasJoined(true);
-        setMessage(data.message || "Request sent!");
+        const successMessage = "Join request sent successfully!";
+        setMessage(successMessage);
+        toast.success(successMessage);
         
         // Call the success callback if provided
         if (onJoinSuccess) {
           onJoinSuccess();
         }
       } else {
-        setMessage(data.message || "Request failed");
+        const errorMessage = data.message || "Request failed";
+        setMessage(errorMessage);
+        toast.error(errorMessage);
       }
     } catch (err: any) {
       console.error("Join request error:", err);
-      setMessage(err.response?.data?.message || "Something went wrong!");
+      const errorMessage = err.response?.data?.message || err.response?.data?.error || "Something went wrong!";
+      setMessage(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
